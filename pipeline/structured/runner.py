@@ -43,6 +43,7 @@ from pipeline.profiling.discovery import (
     verify_sources_unchanged,
 )
 
+from .live_validation import LiveQueryValidationError, run_live_query_validation
 from .loader import ConnectionLike, iter_typed_rows, load_all
 from .reports import G2B_REPORT_FILENAMES, write_g2b_reports
 from .schema import (
@@ -651,6 +652,14 @@ def _compile_query_preflight(
     )
 
 
+def _compute_g2b_status(database_status: str, live_query_status: str) -> str:
+    if database_status == "PASS" and live_query_status == "PASS":
+        return "PASS"
+    if database_status == "FAIL" or live_query_status == "FAIL":
+        return "FAIL"
+    return "PARTIAL"
+
+
 def _database_not_run(reason: str, *, requested: bool) -> dict[str, Any]:
     return {
         "status": "NOT_RUN",
@@ -874,13 +883,7 @@ def run_g2b(
 
     database_status = database["status"]
     live_query_status = database["live_query_validation"]["status"]
-    g2b_status = (
-        "PASS"
-        if database_status == "PASS" and live_query_status == "PASS"
-        else "FAIL"
-        if database_status == "FAIL" or live_query_status == "FAIL"
-        else "PARTIAL"
-    )
+    g2b_status = _compute_g2b_status(database_status, live_query_status)
     generated_at = _utc_now()
     core_field_mapping = {
         "g2b_format_version": G2B_FORMAT_VERSION,
@@ -963,8 +966,175 @@ def run_g2b(
     }
 
 
+def _run_live_validation(*, database_url: str, registry: Any) -> dict[str, Any]:
+    """Run read-only Live Structured Query Validation, failing closed.
+
+    This never loads or replaces PostgreSQL data -- it only opens read-only
+    intent connections for ``run_live_query_validation``, which issues
+    SELECT-only statements through the production query path and its own
+    independent oracle.  Errors are reported by type only; the exception
+    message (which could echo connection details) is never logged or
+    returned.
+    """
+
+    try:
+        import psycopg
+    except ImportError:
+        return {
+            "status": "BLOCKED",
+            "reason": "The PostgreSQL driver is unavailable in this environment.",
+            "error_type": "ImportError",
+        }
+
+    def connection_factory() -> Any:
+        connection = psycopg.connect(database_url, connect_timeout=5)
+        connection.autocommit = True
+        return connection
+
+    try:
+        return run_live_query_validation(connection_factory, registry)
+    except LiveQueryValidationError as error:
+        return {
+            "status": "FAIL",
+            "reason": (
+                "Live query validation could not run against a CONFIRMED "
+                "Priority A probe field."
+            ),
+            "error_type": type(error).__name__,
+        }
+    except Exception as error:
+        return {
+            "status": "BLOCKED",
+            "reason": "Live PostgreSQL query validation failed to execute.",
+            "error_type": type(error).__name__,
+        }
+
+
+def run_g2b_live_validation(
+    raw_dir: str | Path,
+    schema_dir: str | Path,
+    g1_report_dir: str | Path,
+    g2a_report_dir: str | Path,
+    g2b_report_dir: str | Path,
+    *,
+    database_url: str,
+) -> dict[str, Any]:
+    """Run read-only Live Structured Query Validation against the already
+    loaded PostgreSQL staging tables, and record the result into the
+    existing G2-B report set.
+
+    This is a companion entry point to :func:`run_g2b`, not a replacement.
+    It never loads, replaces, or reloads any PostgreSQL data -- it requires
+    an existing G2-B report set whose ``database.status`` is already
+    ``"PASS"`` (i.e. the 145,393-row staging load already happened, most
+    likely via ``run_g2b(..., execute_database=True, ...)``), rebuilds a
+    ``TrustedQueryRegistry`` read-only from the same official inputs, then
+    executes only the SELECT-only Live Structured Query Validation shapes
+    and merges their result into a fresh copy of the report.  Every other
+    section of the existing report (``database.load``, ``offline_preflight``,
+    ``source_integrity``, ``upstream_validation``, etc.) is carried over
+    unchanged.
+    """
+
+    if not database_url:
+        raise G2BRunnerError("database_url is required for live validation")
+
+    raw_directory = _resolve_directory(raw_dir, label="raw_dir")
+    schema_directory = _resolve_directory(schema_dir, label="schema_dir")
+    g1_directory = _resolve_directory(g1_report_dir, label="g1_report_dir")
+    g2a_directory = _resolve_directory(g2a_report_dir, label="g2a_report_dir")
+    g2b_directory = _resolve_directory(g2b_report_dir, label="g2b_report_dir")
+
+    g2b_documents, _g2b_paths = _load_report_set(
+        g2b_directory,
+        filenames=G2B_REPORT_FILENAMES,
+        label="G2-B report directory",
+    )
+    existing_validation_summary = g2b_documents["g2b_validation_summary.json"]
+    existing_structured_schema = g2b_documents["g2b_structured_schema.json"]
+    existing_core_field_mapping = g2b_documents["g2b_core_field_mapping.json"]
+    existing_database = existing_validation_summary.get("database")
+    if not isinstance(existing_database, Mapping):
+        raise G2BRunnerError("existing G2-B report has no database section")
+    if existing_database.get("status") != "PASS":
+        raise G2BRunnerError(
+            "database.status in the existing G2-B report is not PASS; "
+            "run the PostgreSQL load first (this function never reloads data)"
+        )
+
+    # Rebuild a read-only TrustedQueryRegistry from the same official,
+    # checksum-verified inputs the original run used.  This re-derives the
+    # registry only -- it never re-scans typed rows and never touches
+    # PostgreSQL until the live-validation call below.
+    sources = discover_workbooks(raw_directory, schema_directory)
+    g1_documents, _g1_paths = _load_report_set(
+        g1_directory,
+        filenames=REPORT_FILENAMES,
+        label="G1 report directory",
+    )
+    g2a_documents, _g2a_paths = _load_report_set(
+        g2a_directory,
+        filenames=G2A_REPORT_FILENAMES,
+        label="G2-A report directory",
+    )
+    schema_profile, data_profile = _validate_g1(g1_documents, sources)
+    rules = tuple(build_rules_from_profiles(schema_profile, data_profile))
+    _validate_g2a(g2a_documents, rules=rules)
+    _validate_core_mapping_evidence(
+        CORE_FIELD_MAPPINGS,
+        schema_profile=schema_profile,
+        rules=rules,
+    )
+    schema = build_staging_schema(rules)
+    _structured_query_preflight, trusted_registry = _compile_query_preflight(schema=schema)
+
+    existing_registry_meta = existing_structured_schema.get("trusted_query_registry")
+    if not isinstance(existing_registry_meta, Mapping):
+        raise G2BRunnerError("existing G2-B report has no trusted_query_registry section")
+    if (
+        int(existing_registry_meta.get("table_count", -1)) != trusted_registry.table_count
+        or int(existing_registry_meta.get("agent_allowed_field_count", -1))
+        != trusted_registry.field_count
+    ):
+        raise G2BRunnerError(
+            "the rebuilt trusted query registry does not match the existing "
+            "G2-B report; re-run run_g2b before live validation"
+        )
+
+    if not verify_sources_unchanged(sources):
+        raise G2BRunnerError("a source workbook changed since the G2-B report was written")
+
+    live_result = _run_live_validation(database_url=database_url, registry=trusted_registry)
+
+    database = dict(existing_database)
+    database["live_query_validation"] = live_result
+    g2b_status = _compute_g2b_status(database["status"], live_result["status"])
+
+    validation_summary = dict(existing_validation_summary)
+    validation_summary["g2b_status"] = g2b_status
+    validation_summary["database"] = database
+    validation_summary["generated_at_utc"] = _utc_now()
+
+    report_paths = write_g2b_reports(
+        g2b_directory,
+        core_field_mapping=existing_core_field_mapping,
+        structured_schema=existing_structured_schema,
+        validation_summary=validation_summary,
+    )
+    if tuple(Path(path).name for path in report_paths.values()) != G2B_REPORT_FILENAMES:
+        raise AssertionError("G2-B writer did not produce the exact report contract")
+
+    return {
+        "status": g2b_status,
+        "database_status": database["status"],
+        "live_query_validation_status": live_result["status"],
+        "report_paths": report_paths,
+    }
+
+
 __all__ = [
     "G2B_FORMAT_VERSION",
     "G2BRunnerError",
     "run_g2b",
+    "run_g2b_live_validation",
 ]
