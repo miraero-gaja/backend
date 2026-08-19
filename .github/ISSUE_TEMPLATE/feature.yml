@@ -1,0 +1,46 @@
+name: Feature request
+description: 평가 목표 또는 운영 품질을 개선하는 변경을 제안합니다.
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 해결하려는 문제
+      description: 구현안보다 사용자·평가·운영 관점의 문제를 먼저 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: 기대 결과와 성공 기준
+      description: 측정 가능한 acceptance criteria를 포함해 주세요.
+    validations:
+      required: true
+  - type: dropdown
+    id: gate
+    attributes:
+      label: 관련 Gate
+      options:
+        - Foundation (G1 이전)
+        - G1 Data
+        - G2 Core QA
+        - G3 Grounding
+        - G4 Retrieval
+        - G5 API
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 필요한 데이터 또는 근거
+      description: 공식 schema, snapshot, ontology, gold case 등 선행 자료를 적어 주세요.
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: 제외 범위와 위험
+      description: 이번 변경에서 하지 않을 일과 공식 계약·보안·timeout 위험을 적어 주세요.
+    validations:
+      required: true
+
