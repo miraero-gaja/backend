@@ -1,10 +1,14 @@
 # Data pipeline
 
-G1 Data에서 공식 4종 금융상품 snapshot의 구조와 값 품질을 원본 보존
-상태로 확인하는 작업 영역입니다. 현재 구현된 실행 단계는
-[`profiling/`](profiling/README.md)의 read-only profiler뿐이며, 데이터 적재나
-canonical type/schema를 추정하지 않습니다.
+The implemented offline pipeline currently has two read-only stages:
 
-후속 `ingest`, `normalize`, `entity_resolution`, `indexing` 디렉터리는 계획된
-경계만 나타냅니다. 각 단계를 구현할 때 입력 snapshot/version, 출력 artifact,
-lineage, validation 결과를 명시해야 다음 단계로 넘어갑니다.
+- [`profiling/`](profiling/README.md): G1 source discovery, schema/data profiling,
+  integrity checks, and aggregate reports.
+- [`normalize/`](normalize/README.md): G2-A deterministic typed-staging rules,
+  technical row lineage, whitespace-impact evidence, and complete source-column
+  coverage mapping.
+
+Neither stage is imported by the FastAPI request path. G2-A does not create a
+database or copy source rows. Future ingest, entity-resolution, and indexing
+stages remain unimplemented and must define explicit snapshot, lineage,
+validation, and rollback contracts before they are added.
