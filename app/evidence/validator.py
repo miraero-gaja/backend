@@ -64,7 +64,7 @@ class EvidenceValidator:
             )
         return SupportDecision(
             status=SupportStatus.UNSUPPORTED,
-            reason_codes=(ReasonCode.OUT_OF_SCOPE,),
+            reason_codes=(ReasonCode.FIELD_NOT_AVAILABLE,),
             evidence=items,
             summary="evidence_does_not_support_answer",
         )

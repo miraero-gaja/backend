@@ -13,13 +13,19 @@
 - Query, Tool Result, Evidence, Support Decision의 typed runtime contract
 - 환경변수 기반 설정, 구조화된 운영 로그 필드, deadline 기반 실행 경계
 - 비활성 HCX interface와 no-evidence fallback
+- G1 4종 workbook profiling과 원본 불변성 검증
+- G2-A 전체 207개 컬럼 typed rule, raw-preserving lineage와 coverage mapping
+- G2-B 4개 PostgreSQL staging table 계약, streaming loader와 적재 검증
+- 공식 설명으로 확인한 Priority-A 34개 필드 allowlist와 parameterized Structured Query compiler
+- EQ/NE/LT/LE/GT/GE, 다중 filter, ASC/DESC, Top-N, COUNT의 결정론적 실행 계약
 - 단위·통합·계약·장애 테스트를 확장할 수 있는 테스트 구조
 - Python 3.13 non-root 최소 Docker runtime
 
 ## 아직 구현하지 않은 범위
 
-- 공식 4종 금융상품 데이터 적재, profiling, 정규화, entity resolution
-- PostgreSQL schema와 실제 금융 SQL 또는 자유 NL2SQL
+- 인증된 PostgreSQL에 대한 공식 145,393행 live 적재 완료 증거
+- 자연어를 검증된 Structured Query Contract로 만드는 parser/grounding
+- entity resolution과 자유 NL2SQL (자유 NL2SQL은 계획하지 않음)
 - 실제 금융 Ontology class/property와 TTL 산출물
 - Vector/Graph 검색, embedding, re-ranking, 별도 GraphDB 또는 pgvector
 - 실제 세금·Total Cost 계산 규칙
@@ -48,7 +54,7 @@ ToolResult → Evidence validation → SupportDecision
 HCX boundary (disabled) / Safe fallback → Answer guard → 5-field serializer
 ```
 
-현재 실행 경로는 데이터 source와 HCX가 연결되지 않았음을 확인한 뒤 `no-evidence` fallback으로 종료합니다. 각 adapter 경계는 향후 구현을 위한 계약일 뿐, 검색이나 계산이 이미 구현되었다는 뜻이 아닙니다.
+현재 공개 `/answer` 실행 경로는 자연어 structured parser와 DB connection이 주입되지 않아 `no-evidence` fallback으로 종료합니다. Structured compiler/loader는 구현되어 있지만 명시적인 typed query와 인증된 `DATABASE_URL` 없이는 실행되지 않습니다. Graph, Vector, Cost, HCX adapter는 여전히 미연결입니다.
 
 ## 개발 환경
 
