@@ -4,10 +4,12 @@ import asyncio
 
 from app.agent.contracts import QueryContract, RouteHint, ToolResult
 from app.agent.executor import ToolExecutor
+from app.agent.grounder import OntologyGrounder
 from app.core.deadline import Deadline
 from app.evidence.models import ReasonCode, SupportStatus
 from app.evidence.validator import EvidenceValidator
 from app.tools.structured import StructuredToolAdapter
+from app.structured import AggregateFunction, StructuredQueryContract
 
 
 class SlowAdapter:
@@ -61,3 +63,17 @@ def test_unconnected_tool_adapter_returns_no_candidates() -> None:
     assert result.candidates == ()
     assert result.error_code is ReasonCode.TOOL_FAILURE
     assert result.warnings == ("adapter_not_connected",)
+
+
+def test_only_an_explicit_unambiguous_structured_plan_is_grounded() -> None:
+    explicit = _query().model_copy(
+        update={
+            "structured_query": StructuredQueryContract(
+                product_scope="PREF01N001",
+                aggregate=AggregateFunction.COUNT,
+            )
+        }
+    )
+
+    assert OntologyGrounder().ground(explicit).route_hint is RouteHint.STRUCTURED
+    assert OntologyGrounder().ground(_query()).route_hint is RouteHint.UNSUPPORTED

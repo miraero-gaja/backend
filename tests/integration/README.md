@@ -1,6 +1,6 @@
 # Integration tests
 
-External data stores, retrieval adapters, and HCX are intentionally not connected in this
-foundation. Add integration tests here when those boundaries exist; keep the current API
-contract tests independent of external services.
-
+The normal test suite remains independent of external services. PostgreSQL live
+tests must be opt-in, use a dedicated test database URL, and leave no persistent
+fixtures. A missing test URL is reported as a skip, never simulated as a live
+database pass. HCX and other external retrieval services remain disconnected.
