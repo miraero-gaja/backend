@@ -51,7 +51,8 @@ async def answer(
     grounded_query = grounder.ground(query)
     route = query_router.route(grounded_query)
     tool_results = await executor.execute(grounded_query, route, deadline)
-    decision = evidence_validator.validate(grounded_query, tool_results)
+    evidence = tuple(item for result in tool_results for item in result.evidence)
+    decision = evidence_validator.validate(grounded_query, tool_results, evidence)
     retrieved_context = serialize_evidence(decision)
 
     candidate: str | None = None

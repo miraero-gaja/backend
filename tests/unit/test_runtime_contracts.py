@@ -28,6 +28,7 @@ def test_query_contract_exposes_required_runtime_fields() -> None:
         "ambiguity",
         "required_inputs",
         "route_hint",
+        "structured_query",
     }
 
     assert set(QueryContract.model_fields) == expected_fields
@@ -42,6 +43,7 @@ def test_tool_result_exposes_required_runtime_fields() -> None:
         "elapsed_ms",
         "warnings",
         "error_code",
+        "evidence",
     }
 
     assert set(ToolResult.model_fields) == expected_fields

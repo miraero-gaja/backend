@@ -4,7 +4,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.evidence.models import ReasonCode, ScalarValue
+from app.evidence.models import EvidenceItem, ReasonCode, ScalarValue
+from app.structured.contracts import StructuredQueryContract
 
 
 class RouteHint(StrEnum):
@@ -31,6 +32,7 @@ class QueryContract(BaseModel):
     ambiguity: tuple[str, ...] = ()
     required_inputs: tuple[str, ...] = ()
     route_hint: RouteHint = RouteHint.UNSUPPORTED
+    structured_query: StructuredQueryContract | None = None
 
 
 class ToolResult(BaseModel):
@@ -45,4 +47,4 @@ class ToolResult(BaseModel):
     elapsed_ms: float = Field(default=0.0, ge=0)
     warnings: tuple[str, ...] = ()
     error_code: ReasonCode | None = None
-
+    evidence: tuple[EvidenceItem, ...] = ()
