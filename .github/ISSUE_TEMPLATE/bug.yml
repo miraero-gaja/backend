@@ -1,0 +1,64 @@
+name: Bug report
+description: 재현 가능한 결함 또는 공식 계약 위반을 보고합니다.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        실제 secret, 고객 데이터, 참가자 공유자료 또는 질문 원문 전체를 첨부하지 마세요.
+  - type: textarea
+    id: summary
+    attributes:
+      label: 문제 요약
+      description: 기대 동작과 실제 동작의 차이를 간결하게 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 재현 절차
+      placeholder: |
+        1. 환경을 준비합니다.
+        2. 요청을 보냅니다.
+        3. 결과를 확인합니다.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 결과
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 결과
+      description: 민감정보를 제거한 상태 코드, 응답 schema, 오류 코드만 첨부해 주세요.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Commit 또는 버전
+      placeholder: commit SHA 또는 이미지 태그
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 환경
+      options:
+        - local
+        - test
+        - staging
+        - production
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: 정보 보호 확인
+      options:
+        - label: 첨부 내용에서 secret과 민감정보를 제거했습니다.
+          required: true
+
