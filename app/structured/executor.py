@@ -11,8 +11,12 @@ from typing import Any, Protocol
 
 from app.evidence.models import EvidenceItem, ScalarValue
 
-from .compiler import CompiledStructuredQuery, StructuredQueryCompiler
-from .contracts import StructuredQueryContract
+from .compiler import CompiledStructuredQuery
+from .contracts import (
+    SemanticGateTrace,
+    StructuredQueryContract,
+    StructuredQueryStatus,
+)
 from .errors import StructuredQueryValidationError
 from .evidence import row_to_candidate, row_to_evidence
 
@@ -23,6 +27,15 @@ class AsyncQueryBackend(Protocol):
         sql: str,
         parameters: Sequence[Any],
     ) -> Sequence[Mapping[str, Any]]: ...
+
+
+class StructuredQueryPlanner(Protocol):
+    """Compiler-compatible planning boundary used by the executor."""
+
+    def compile(
+        self,
+        query: StructuredQueryContract,
+    ) -> CompiledStructuredQuery: ...
 
 
 def structured_query_fingerprint(query: StructuredQueryContract) -> str:
@@ -40,16 +53,24 @@ class StructuredExecutionResult:
     columns: tuple[str, ...]
     evidence: tuple[EvidenceItem, ...]
     compiled_query: CompiledStructuredQuery
+    status: StructuredQueryStatus = StructuredQueryStatus.SUPPORTED
+    semantic_gate_trace: tuple[SemanticGateTrace, ...] = ()
 
 
 class StructuredQueryExecutor:
     def __init__(
         self,
-        compiler: StructuredQueryCompiler,
+        compiler: StructuredQueryPlanner,
         backend: AsyncQueryBackend,
     ) -> None:
         self._compiler = compiler
         self._backend = backend
+
+    @property
+    def planner(self) -> StructuredQueryPlanner:
+        """Expose the immutable planning dependency for wiring inspection."""
+
+        return self._compiler
 
     async def execute(
         self, query: StructuredQueryContract
@@ -89,6 +110,12 @@ class StructuredQueryExecutor:
             columns=columns,
             evidence=evidence,
             compiled_query=compiled,
+            status=(
+                compiled.planning_status
+                if compiled.is_count or candidates
+                else StructuredQueryStatus.NO_MATCH
+            ),
+            semantic_gate_trace=compiled.semantic_gate_trace,
         )
 
 
@@ -144,6 +171,7 @@ __all__ = [
     "AsyncQueryBackend",
     "PsycopgQueryBackend",
     "StructuredExecutionResult",
+    "StructuredQueryPlanner",
     "StructuredQueryExecutor",
     "structured_query_fingerprint",
 ]

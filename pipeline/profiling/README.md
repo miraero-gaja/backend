@@ -43,7 +43,10 @@ nanosecond timestamp, and SHA-256 before writing reports. Distinct counts use
 typed SHA-256 digests in a deleted-on-exit SQLite temporary database, so source
 rows and arbitrary value samples are not copied to generated reports or
 retained as a staging dataset. Reports include only requested bounded evidence,
-such as numeric/date extrema and observed boolean-code representations.
+such as numeric/date extrema, finite numeric-like-string extrema, observed
+boolean-code representations, and complete value counts for low-cardinality
+code candidates (at most 100 distinct source tokens). Code meanings are never
+inferred from those counts.
 
 ## Interpretation limits
 

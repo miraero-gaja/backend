@@ -26,6 +26,7 @@ _BOOLEAN_CODE_SETS = (
     frozenset({"T", "F"}),
     frozenset({"0", "1"}),
 )
+_BOUNDED_CODE_VALUE_LIMIT = 100
 _TYPE_ORDER = {
     "boolean": 0,
     "integer": 1,
@@ -256,11 +257,15 @@ class ColumnAccumulator:
         self.string_length_max: int | None = None
         self.numeric_like_string_count = 0
         self.numeric_like_scales: set[int] = set()
+        self.numeric_like_min: Decimal | None = None
+        self.numeric_like_max: Decimal | None = None
         self.date_like_string_count = 0
         self.integer_value_count = 0
         self.date_like_integer_count = 0
         self.date_format_counts: Counter[str] = Counter()
         self.code_like_string_count = 0
+        self._bounded_code_value_counts: Counter[str] = Counter()
+        self._bounded_code_values_overflow = False
         self.percent_literal_count = 0
         self._bounded_tokens: set[str] = set()
         self._bounded_tokens_overflow = False
@@ -315,12 +320,30 @@ class ColumnAccumulator:
         if numeric is not None:
             self.numeric_like_string_count += 1
             self.numeric_like_scales.add(_decimal_scale(numeric))
+            self.numeric_like_min = (
+                numeric
+                if self.numeric_like_min is None
+                else min(self.numeric_like_min, numeric)
+            )
+            self.numeric_like_max = (
+                numeric
+                if self.numeric_like_max is None
+                else max(self.numeric_like_max, numeric)
+            )
         date_format = _date_format(stripped)
         if date_format is not None:
             self.date_like_string_count += 1
             self.date_format_counts[date_format] += 1
         if len(stripped) <= 64 and _CODE_TEXT.fullmatch(stripped) is not None:
             self.code_like_string_count += 1
+            if not self._bounded_code_values_overflow:
+                self._bounded_code_value_counts[stripped] += 1
+                if (
+                    len(self._bounded_code_value_counts)
+                    > _BOUNDED_CODE_VALUE_LIMIT
+                ):
+                    self._bounded_code_value_counts.clear()
+                    self._bounded_code_values_overflow = True
         if stripped.endswith("%") and _PERCENT_TEXT.fullmatch(stripped) is not None:
             self.percent_literal_count += 1
 
@@ -412,6 +435,22 @@ class ColumnAccumulator:
             and distinct_count <= 100
             and _safe_ratio(distinct_count, non_null_count) <= 0.05
         )
+        code_like_candidate = (
+            string_nonblank_count > 0
+            and self.code_like_string_count == string_nonblank_count
+        )
+        bounded_code_values_included = (
+            enum_candidate
+            and code_like_candidate
+            and not self._bounded_code_values_overflow
+        )
+        exact_decimal_ordering_candidate = (
+            string_nonblank_count > 0
+            and self.numeric_like_string_count == string_nonblank_count
+            and set(ordered_types) == {"string"}
+            and self.excel_error_count == 0
+            and self.formula_count == 0
+        )
 
         return {
             "row_count": row_count,
@@ -450,7 +489,28 @@ class ColumnAccumulator:
                 and self.numeric_like_string_count == string_nonblank_count,
                 "match_count": self.numeric_like_string_count,
                 "string_value_count": string_nonblank_count,
+                "invalid_count": (
+                    string_nonblank_count - self.numeric_like_string_count
+                ),
                 "decimal_scales": sorted(self.numeric_like_scales),
+                "numeric_min": (
+                    str(self.numeric_like_min)
+                    if self.numeric_like_min is not None
+                    else None
+                ),
+                "numeric_max": (
+                    str(self.numeric_like_max)
+                    if self.numeric_like_max is not None
+                    else None
+                ),
+                "exact_decimal_ordering_candidate": (
+                    exact_decimal_ordering_candidate
+                ),
+                "nulls_require_explicit_ordering": null_count > 0,
+                "interpretation": (
+                    "source-native finite Decimal parsing only; no unit or "
+                    "financial meaning is inferred"
+                ),
             },
             "date_like_string": {
                 "candidate": string_nonblank_count > 0
@@ -469,12 +529,30 @@ class ColumnAccumulator:
                 "interpretation": "lexical/value-shape candidate only",
             },
             "code_like_string": {
-                "candidate": string_nonblank_count > 0
-                and self.code_like_string_count == string_nonblank_count,
+                "candidate": code_like_candidate,
                 "match_count": self.code_like_string_count,
                 "string_value_count": string_nonblank_count,
             },
             "enum_code_candidate": enum_candidate,
+            "bounded_code_value_counts": {
+                "included": bounded_code_values_included,
+                "complete": bounded_code_values_included,
+                "max_distinct_values": _BOUNDED_CODE_VALUE_LIMIT,
+                "values": (
+                    [
+                        {"value": value, "count": count}
+                        for value, count in sorted(
+                            self._bounded_code_value_counts.items()
+                        )
+                    ]
+                    if bounded_code_values_included
+                    else []
+                ),
+                "interpretation": (
+                    "observed source tokens and counts only; code meanings "
+                    "are not inferred"
+                ),
+            },
             "boolean_code_candidate": bool(boolean_tokens),
             "boolean_code_representation": boolean_tokens,
             "percent_literal_count": self.percent_literal_count,

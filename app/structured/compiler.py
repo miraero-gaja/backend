@@ -11,7 +11,13 @@ from typing import Any
 
 from pipeline.normalize.models import TargetType
 
-from .contracts import AggregateFunction, FilterOperator, StructuredQueryContract
+from .contracts import (
+    AggregateFunction,
+    FilterOperator,
+    SemanticGateTrace,
+    StructuredQueryContract,
+    StructuredQueryStatus,
+)
 from .errors import StructuredQueryValidationError
 from .registry import TrustedField, TrustedQueryRegistry, TrustedTable
 
@@ -146,6 +152,8 @@ class CompiledStructuredQuery:
     projected_fields: tuple[SelectedField, ...]
     evidence_fields: tuple[SelectedField, ...]
     aggregate: AggregateFunction | None
+    planning_status: StructuredQueryStatus = StructuredQueryStatus.SUPPORTED
+    semantic_gate_trace: tuple[SemanticGateTrace, ...] = ()
 
     @property
     def is_count(self) -> bool:

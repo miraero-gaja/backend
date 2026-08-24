@@ -1,0 +1,4632 @@
+{
+  "profile_format_version": "1.0",
+  "generated_at_utc": "2026-08-24T08:16:51.132562Z",
+  "comparison_semantics": "exact column name plus duplicate occurrence",
+  "tables": [
+    {
+      "logical_table_id": "PRBD01N001",
+      "schema_physical_filename": "PRBD01N001_국내채권마스터_schema.xlsx",
+      "data_physical_filename": "PRBD01N001_국내채권마스터_20260711_datarows.xlsx",
+      "schema_column_count": 40,
+      "data_column_count": 40,
+      "schema_columns": [
+        {
+          "position": 1,
+          "column_name": "PD_NO",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "PD_EXG_MKT",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "PD_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "PD_ABRV_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "PD_ENG_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "PD_ABRV_ENG_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "PD_CTRY_CD",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "PD_PBCM",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "STD_PD_MCLS_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "STD_PD_SCLS_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "BD_KND",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "CURR_CD",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "ISU_BAL_AMT",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "ISU_DT",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "MAT_DT",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "SRFC_IRT",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "PD_EVCO_CRD_GRD",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "PD_RISK_GCD",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "PD_STD_INFO_UPDATE",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "BUY_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "CORP_PRETAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "CORP_AFTER_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "AFTER_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "PREF_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "AVG_ANNUAL_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "DEPO_EQUIV_YIELD_154",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "BUYABLE_QUANTITY",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "REMAINING_DAYS",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "DUR",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "COV",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "NDY_DUR",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "NDY_COV",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "EVAL_PRICE",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "APPLIED_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "DIRTY",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "NDY_EVAL_PRICE",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "NDY_APPLIED_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "NDY_DIRTY",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "CRD_GRD",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "CRD_GRD_DT",
+          "occurrence": 1
+        }
+      ],
+      "data_columns": [
+        {
+          "position": 1,
+          "column_name": "PD_NO",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "PD_EXG_MKT",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "PD_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "PD_ABRV_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "PD_ENG_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "PD_ABRV_ENG_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "PD_CTRY_CD",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "PD_PBCM",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "STD_PD_MCLS_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "STD_PD_SCLS_NM",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "BD_KND",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "CURR_CD",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "ISU_BAL_AMT",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "ISU_DT",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "MAT_DT",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "SRFC_IRT",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "PD_EVCO_CRD_GRD",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "PD_RISK_GCD",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "PD_STD_INFO_UPDATE",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "BUY_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "CORP_PRETAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "CORP_AFTER_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "AFTER_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "PREF_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "AVG_ANNUAL_TAX_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "DEPO_EQUIV_YIELD_154",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "BUYABLE_QUANTITY",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "REMAINING_DAYS",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "DUR",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "COV",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "NDY_DUR",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "NDY_COV",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "EVAL_PRICE",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "APPLIED_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "DIRTY",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "NDY_EVAL_PRICE",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "NDY_APPLIED_YIELD",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "NDY_DIRTY",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "CRD_GRD",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "CRD_GRD_DT",
+          "occurrence": 1
+        }
+      ],
+      "missing_in_data": [],
+      "missing_in_schema": [],
+      "exact_column_order_match": true,
+      "order_differences": [],
+      "declared_vs_observed_types": [
+        {
+          "qualified_name": "PD_NO#1",
+          "column_name": "PD_NO",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_EXG_MKT#1",
+          "column_name": "PD_EXG_MKT",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_NM#1",
+          "column_name": "PD_NM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_ABRV_NM#1",
+          "column_name": "PD_ABRV_NM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_ENG_NM#1",
+          "column_name": "PD_ENG_NM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_ABRV_ENG_NM#1",
+          "column_name": "PD_ABRV_ENG_NM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_CTRY_CD#1",
+          "column_name": "PD_CTRY_CD",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_PBCM#1",
+          "column_name": "PD_PBCM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "STD_PD_MCLS_NM#1",
+          "column_name": "STD_PD_MCLS_NM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "STD_PD_SCLS_NM#1",
+          "column_name": "STD_PD_SCLS_NM",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "BD_KND#1",
+          "column_name": "BD_KND",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "CURR_CD#1",
+          "column_name": "CURR_CD",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ISU_BAL_AMT#1",
+          "column_name": "ISU_BAL_AMT",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ISU_DT#1",
+          "column_name": "ISU_DT",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "MAT_DT#1",
+          "column_name": "MAT_DT",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "SRFC_IRT#1",
+          "column_name": "SRFC_IRT",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_EVCO_CRD_GRD#1",
+          "column_name": "PD_EVCO_CRD_GRD",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_RISK_GCD#1",
+          "column_name": "PD_RISK_GCD",
+          "declared_type": "bigint",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PD_STD_INFO_UPDATE#1",
+          "column_name": "PD_STD_INFO_UPDATE",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "BUY_YIELD#1",
+          "column_name": "BUY_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "CORP_PRETAX_YIELD#1",
+          "column_name": "CORP_PRETAX_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "CORP_AFTER_TAX_YIELD#1",
+          "column_name": "CORP_AFTER_TAX_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "AFTER_TAX_YIELD#1",
+          "column_name": "AFTER_TAX_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "PREF_TAX_YIELD#1",
+          "column_name": "PREF_TAX_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "AVG_ANNUAL_TAX_YIELD#1",
+          "column_name": "AVG_ANNUAL_TAX_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "DEPO_EQUIV_YIELD_154#1",
+          "column_name": "DEPO_EQUIV_YIELD_154",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "BUYABLE_QUANTITY#1",
+          "column_name": "BUYABLE_QUANTITY",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "REMAINING_DAYS#1",
+          "column_name": "REMAINING_DAYS",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "DUR#1",
+          "column_name": "DUR",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "COV#1",
+          "column_name": "COV",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "NDY_DUR#1",
+          "column_name": "NDY_DUR",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "NDY_COV#1",
+          "column_name": "NDY_COV",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "EVAL_PRICE#1",
+          "column_name": "EVAL_PRICE",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "APPLIED_YIELD#1",
+          "column_name": "APPLIED_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "DIRTY#1",
+          "column_name": "DIRTY",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "NDY_EVAL_PRICE#1",
+          "column_name": "NDY_EVAL_PRICE",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "NDY_APPLIED_YIELD#1",
+          "column_name": "NDY_APPLIED_YIELD",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "NDY_DIRTY#1",
+          "column_name": "NDY_DIRTY",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer",
+            "number"
+          ],
+          "representative_value_type": "number",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "CRD_GRD#1",
+          "column_name": "CRD_GRD",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "CRD_GRD_DT#1",
+          "column_name": "CRD_GRD_DT",
+          "declared_type": "double precision",
+          "observed_types": [
+            "integer"
+          ],
+          "representative_value_type": "integer",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        }
+      ],
+      "status": "MATCH"
+    },
+    {
+      "logical_table_id": "PREF01N001",
+      "schema_physical_filename": "PREF01N001_국내ETF마스터_schema.xlsx",
+      "data_physical_filename": "PREF01N001_국내ETF마스터_20260711_datarows.xlsx",
+      "schema_column_count": 73,
+      "data_column_count": 73,
+      "schema_columns": [
+        {
+          "position": 1,
+          "column_name": "cu_base_index",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "cu_charge_etc_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "cu_charge_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "cu_fund_mgmt_co",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "cu_lev_fector",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "cu_strtegy",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "cu_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "du_bpr",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "du_chas_errt",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "du_clpr",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "du_diff_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "du_er_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "du_er_1m",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "du_er_1y",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "du_er_3m",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "du_er_6m",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "du_er_ytd",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "du_hpr",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "du_last_aum",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "du_last_nav",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "du_lpr",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "du_nav_rnf_amt",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "du_nav_yday",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "du_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "du_val_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "du_val_1m",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "du_val_5d",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "du_vol_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "du_vol_avg_1m",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "du_vol_avg_5d",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "nru_mkt_diff_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "nru_mkt_inav",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "pd_abrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "pd_circ_net_tamt",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "pd_circ_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "pd_curr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "pd_curr_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "pd_divd_amt_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "pd_dvid_cycl",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "pd_dvid_yield",
+          "occurrence": 1
+        },
+        {
+          "position": 41,
+          "column_name": "pd_exg_mkt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 42,
+          "column_name": "pd_exg_mkt_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 43,
+          "column_name": "pd_grp_no",
+          "occurrence": 1
+        },
+        {
+          "position": 44,
+          "column_name": "pd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 45,
+          "column_name": "pd_itm_no_ma",
+          "occurrence": 1
+        },
+        {
+          "position": 46,
+          "column_name": "pd_lst_price",
+          "occurrence": 1
+        },
+        {
+          "position": 47,
+          "column_name": "pd_lst_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 48,
+          "column_name": "pd_lste_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 49,
+          "column_name": "pd_lstg_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 50,
+          "column_name": "pd_mkt_id",
+          "occurrence": 1
+        },
+        {
+          "position": 51,
+          "column_name": "pd_mkt_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 52,
+          "column_name": "pd_nav_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 53,
+          "column_name": "pd_net_ast_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 54,
+          "column_name": "pd_net_prft_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 55,
+          "column_name": "pd_net_rt_ast_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 56,
+          "column_name": "pd_net_tamt",
+          "occurrence": 1
+        },
+        {
+          "position": 57,
+          "column_name": "pd_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 58,
+          "column_name": "pd_pen_risk_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 59,
+          "column_name": "pd_pen_tr_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 60,
+          "column_name": "pd_risk_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 61,
+          "column_name": "pd_risk_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 62,
+          "column_name": "pd_sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 63,
+          "column_name": "pd_sect_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 64,
+          "column_name": "pd_sect_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 65,
+          "column_name": "pd_spac_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 66,
+          "column_name": "pd_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 67,
+          "column_name": "pd_tr_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 68,
+          "column_name": "ru_mkt_price",
+          "occurrence": 1
+        },
+        {
+          "position": 69,
+          "column_name": "ru_mkt_volume",
+          "occurrence": 1
+        },
+        {
+          "position": 70,
+          "column_name": "wu_core_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 71,
+          "column_name": "wu_inv_ast_type",
+          "occurrence": 1
+        },
+        {
+          "position": 72,
+          "column_name": "wu_inv_rgn",
+          "occurrence": 1
+        },
+        {
+          "position": 73,
+          "column_name": "wu_upt_dt",
+          "occurrence": 1
+        }
+      ],
+      "data_columns": [
+        {
+          "position": 1,
+          "column_name": "cu_base_index",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "cu_charge_etc_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "cu_charge_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "cu_fund_mgmt_co",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "cu_lev_fector",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "cu_strtegy",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "cu_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "du_bpr",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "du_chas_errt",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "du_clpr",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "du_diff_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "du_er_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "du_er_1m",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "du_er_1y",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "du_er_3m",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "du_er_6m",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "du_er_ytd",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "du_hpr",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "du_last_aum",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "du_last_nav",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "du_lpr",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "du_nav_rnf_amt",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "du_nav_yday",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "du_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "du_val_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "du_val_1m",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "du_val_5d",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "du_vol_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "du_vol_avg_1m",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "du_vol_avg_5d",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "nru_mkt_diff_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "nru_mkt_inav",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "pd_abrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "pd_circ_net_tamt",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "pd_circ_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "pd_curr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "pd_curr_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "pd_divd_amt_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "pd_dvid_cycl",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "pd_dvid_yield",
+          "occurrence": 1
+        },
+        {
+          "position": 41,
+          "column_name": "pd_exg_mkt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 42,
+          "column_name": "pd_exg_mkt_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 43,
+          "column_name": "pd_grp_no",
+          "occurrence": 1
+        },
+        {
+          "position": 44,
+          "column_name": "pd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 45,
+          "column_name": "pd_itm_no_ma",
+          "occurrence": 1
+        },
+        {
+          "position": 46,
+          "column_name": "pd_lst_price",
+          "occurrence": 1
+        },
+        {
+          "position": 47,
+          "column_name": "pd_lst_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 48,
+          "column_name": "pd_lste_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 49,
+          "column_name": "pd_lstg_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 50,
+          "column_name": "pd_mkt_id",
+          "occurrence": 1
+        },
+        {
+          "position": 51,
+          "column_name": "pd_mkt_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 52,
+          "column_name": "pd_nav_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 53,
+          "column_name": "pd_net_ast_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 54,
+          "column_name": "pd_net_prft_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 55,
+          "column_name": "pd_net_rt_ast_pshr",
+          "occurrence": 1
+        },
+        {
+          "position": 56,
+          "column_name": "pd_net_tamt",
+          "occurrence": 1
+        },
+        {
+          "position": 57,
+          "column_name": "pd_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 58,
+          "column_name": "pd_pen_risk_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 59,
+          "column_name": "pd_pen_tr_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 60,
+          "column_name": "pd_risk_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 61,
+          "column_name": "pd_risk_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 62,
+          "column_name": "pd_sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 63,
+          "column_name": "pd_sect_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 64,
+          "column_name": "pd_sect_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 65,
+          "column_name": "pd_spac_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 66,
+          "column_name": "pd_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 67,
+          "column_name": "pd_tr_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 68,
+          "column_name": "ru_mkt_price",
+          "occurrence": 1
+        },
+        {
+          "position": 69,
+          "column_name": "ru_mkt_volume",
+          "occurrence": 1
+        },
+        {
+          "position": 70,
+          "column_name": "wu_core_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 71,
+          "column_name": "wu_inv_ast_type",
+          "occurrence": 1
+        },
+        {
+          "position": 72,
+          "column_name": "wu_inv_rgn",
+          "occurrence": 1
+        },
+        {
+          "position": 73,
+          "column_name": "wu_upt_dt",
+          "occurrence": 1
+        }
+      ],
+      "missing_in_data": [],
+      "missing_in_schema": [],
+      "exact_column_order_match": true,
+      "order_differences": [],
+      "declared_vs_observed_types": [
+        {
+          "qualified_name": "cu_base_index#1",
+          "column_name": "cu_base_index",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_charge_etc_rt#1",
+          "column_name": "cu_charge_etc_rt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_charge_rt#1",
+          "column_name": "cu_charge_rt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_fund_mgmt_co#1",
+          "column_name": "cu_fund_mgmt_co",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_lev_fector#1",
+          "column_name": "cu_lev_fector",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_strtegy#1",
+          "column_name": "cu_strtegy",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_upt_dt#1",
+          "column_name": "cu_upt_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_bpr#1",
+          "column_name": "du_bpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_chas_errt#1",
+          "column_name": "du_chas_errt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_clpr#1",
+          "column_name": "du_clpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_diff_rt#1",
+          "column_name": "du_diff_rt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_1d#1",
+          "column_name": "du_er_1d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_1m#1",
+          "column_name": "du_er_1m",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_1y#1",
+          "column_name": "du_er_1y",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_3m#1",
+          "column_name": "du_er_3m",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_6m#1",
+          "column_name": "du_er_6m",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_ytd#1",
+          "column_name": "du_er_ytd",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_hpr#1",
+          "column_name": "du_hpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_last_aum#1",
+          "column_name": "du_last_aum",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_last_nav#1",
+          "column_name": "du_last_nav",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_lpr#1",
+          "column_name": "du_lpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_nav_rnf_amt#1",
+          "column_name": "du_nav_rnf_amt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_nav_yday#1",
+          "column_name": "du_nav_yday",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_upt_dt#1",
+          "column_name": "du_upt_dt",
+          "declared_type": "timestamp without time zone",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_val_1d#1",
+          "column_name": "du_val_1d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_val_1m#1",
+          "column_name": "du_val_1m",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_val_5d#1",
+          "column_name": "du_val_5d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_vol_1d#1",
+          "column_name": "du_vol_1d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_vol_avg_1m#1",
+          "column_name": "du_vol_avg_1m",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_vol_avg_5d#1",
+          "column_name": "du_vol_avg_5d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "nru_mkt_diff_rt#1",
+          "column_name": "nru_mkt_diff_rt",
+          "declared_type": "numeric",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "nru_mkt_inav#1",
+          "column_name": "nru_mkt_inav",
+          "declared_type": "numeric",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_abrv_nm#1",
+          "column_name": "pd_abrv_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_circ_net_tamt#1",
+          "column_name": "pd_circ_net_tamt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_circ_stk_cnt#1",
+          "column_name": "pd_circ_stk_cnt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_curr_cd#1",
+          "column_name": "pd_curr_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_curr_nm#1",
+          "column_name": "pd_curr_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_divd_amt_pshr#1",
+          "column_name": "pd_divd_amt_pshr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_dvid_cycl#1",
+          "column_name": "pd_dvid_cycl",
+          "declared_type": "text",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_dvid_yield#1",
+          "column_name": "pd_dvid_yield",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_exg_mkt_cd#1",
+          "column_name": "pd_exg_mkt_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_exg_mkt_nm#1",
+          "column_name": "pd_exg_mkt_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_grp_no#1",
+          "column_name": "pd_grp_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_itm_no#1",
+          "column_name": "pd_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_itm_no_ma#1",
+          "column_name": "pd_itm_no_ma",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lst_price#1",
+          "column_name": "pd_lst_price",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lst_stk_cnt#1",
+          "column_name": "pd_lst_stk_cnt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lste_dt#1",
+          "column_name": "pd_lste_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lstg_dt#1",
+          "column_name": "pd_lstg_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_mkt_id#1",
+          "column_name": "pd_mkt_id",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_mkt_nm#1",
+          "column_name": "pd_mkt_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_nav_pshr#1",
+          "column_name": "pd_nav_pshr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_net_ast_pshr#1",
+          "column_name": "pd_net_ast_pshr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_net_prft_pshr#1",
+          "column_name": "pd_net_prft_pshr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_net_rt_ast_pshr#1",
+          "column_name": "pd_net_rt_ast_pshr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_net_tamt#1",
+          "column_name": "pd_net_tamt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_nm#1",
+          "column_name": "pd_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_pen_risk_nm#1",
+          "column_name": "pd_pen_risk_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_pen_tr_yn#1",
+          "column_name": "pd_pen_tr_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_risk_cd#1",
+          "column_name": "pd_risk_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_risk_nm#1",
+          "column_name": "pd_risk_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_sale_yn#1",
+          "column_name": "pd_sale_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_sect_cd#1",
+          "column_name": "pd_sect_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_sect_nm#1",
+          "column_name": "pd_sect_nm",
+          "declared_type": "text",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_spac_yn#1",
+          "column_name": "pd_spac_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_stk_cnt#1",
+          "column_name": "pd_stk_cnt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_tr_yn#1",
+          "column_name": "pd_tr_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ru_mkt_price#1",
+          "column_name": "ru_mkt_price",
+          "declared_type": "numeric",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ru_mkt_volume#1",
+          "column_name": "ru_mkt_volume",
+          "declared_type": "numeric",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_core_yn#1",
+          "column_name": "wu_core_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_inv_ast_type#1",
+          "column_name": "wu_inv_ast_type",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_inv_rgn#1",
+          "column_name": "wu_inv_rgn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_upt_dt#1",
+          "column_name": "wu_upt_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        }
+      ],
+      "status": "MATCH"
+    },
+    {
+      "logical_table_id": "PREF02N001",
+      "schema_physical_filename": "PREF02N001_해외ETF마스터_schema.xlsx",
+      "data_physical_filename": "PREF02N001_해외ETF마스터_20260711_datarows.xlsx",
+      "schema_column_count": 49,
+      "data_column_count": 49,
+      "schema_columns": [
+        {
+          "position": 1,
+          "column_name": "cu_base_index",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "cu_charge_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "cu_etn_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "cu_fund_mgmt_co",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "cu_index_repl_mthd",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "cu_index_tracking_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "cu_inverse_short_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "cu_lev_fector",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "cu_strtegy",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "cu_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "du_base_dt_match_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "du_bpr",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "du_clpr",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "du_clpr_base_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "du_clpr_src",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "du_diff_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "du_er_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "du_hpr",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "du_last_aum",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "du_last_nav",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "du_lpr",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "du_nav_base_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "du_opr",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "du_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "du_val_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "du_vol_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "pd_abrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "pd_curr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "pd_exg_mkt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "pd_grp_no",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "pd_isin_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "pd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "pd_itm_no_ma",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "pd_lipper_id",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "pd_lstg_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "pd_lst_price",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "pd_lst_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "pd_mkt_id",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "pd_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "pd_sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 41,
+          "column_name": "pd_trd_ccy",
+          "occurrence": 1
+        },
+        {
+          "position": 42,
+          "column_name": "pd_tr_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 43,
+          "column_name": "pd_us_cik",
+          "occurrence": 1
+        },
+        {
+          "position": 44,
+          "column_name": "ru_mkt_price",
+          "occurrence": 1
+        },
+        {
+          "position": 45,
+          "column_name": "ru_mkt_volume",
+          "occurrence": 1
+        },
+        {
+          "position": 46,
+          "column_name": "wu_core_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 47,
+          "column_name": "wu_inv_ast_type",
+          "occurrence": 1
+        },
+        {
+          "position": 48,
+          "column_name": "wu_inv_rgn",
+          "occurrence": 1
+        },
+        {
+          "position": 49,
+          "column_name": "wu_upt_dt",
+          "occurrence": 1
+        }
+      ],
+      "data_columns": [
+        {
+          "position": 1,
+          "column_name": "cu_base_index",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "cu_charge_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "cu_etn_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "cu_fund_mgmt_co",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "cu_index_repl_mthd",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "cu_index_tracking_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "cu_inverse_short_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "cu_lev_fector",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "cu_strtegy",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "cu_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "du_base_dt_match_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "du_bpr",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "du_clpr",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "du_clpr_base_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "du_clpr_src",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "du_diff_rt",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "du_er_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "du_hpr",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "du_last_aum",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "du_last_nav",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "du_lpr",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "du_nav_base_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "du_opr",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "du_upt_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "du_val_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "du_vol_1d",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "pd_abrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "pd_curr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "pd_exg_mkt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "pd_grp_no",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "pd_isin_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "pd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "pd_itm_no_ma",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "pd_lipper_id",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "pd_lstg_dt",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "pd_lst_price",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "pd_lst_stk_cnt",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "pd_mkt_id",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "pd_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "pd_sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 41,
+          "column_name": "pd_trd_ccy",
+          "occurrence": 1
+        },
+        {
+          "position": 42,
+          "column_name": "pd_tr_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 43,
+          "column_name": "pd_us_cik",
+          "occurrence": 1
+        },
+        {
+          "position": 44,
+          "column_name": "ru_mkt_price",
+          "occurrence": 1
+        },
+        {
+          "position": 45,
+          "column_name": "ru_mkt_volume",
+          "occurrence": 1
+        },
+        {
+          "position": 46,
+          "column_name": "wu_core_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 47,
+          "column_name": "wu_inv_ast_type",
+          "occurrence": 1
+        },
+        {
+          "position": 48,
+          "column_name": "wu_inv_rgn",
+          "occurrence": 1
+        },
+        {
+          "position": 49,
+          "column_name": "wu_upt_dt",
+          "occurrence": 1
+        }
+      ],
+      "missing_in_data": [],
+      "missing_in_schema": [],
+      "exact_column_order_match": true,
+      "order_differences": [],
+      "declared_vs_observed_types": [
+        {
+          "qualified_name": "cu_base_index#1",
+          "column_name": "cu_base_index",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_charge_rt#1",
+          "column_name": "cu_charge_rt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_etn_yn#1",
+          "column_name": "cu_etn_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_fund_mgmt_co#1",
+          "column_name": "cu_fund_mgmt_co",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_index_repl_mthd#1",
+          "column_name": "cu_index_repl_mthd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_index_tracking_yn#1",
+          "column_name": "cu_index_tracking_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_inverse_short_yn#1",
+          "column_name": "cu_inverse_short_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_lev_fector#1",
+          "column_name": "cu_lev_fector",
+          "declared_type": "numeric",
+          "observed_types": [],
+          "representative_value_type": null,
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_strtegy#1",
+          "column_name": "cu_strtegy",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "cu_upt_dt#1",
+          "column_name": "cu_upt_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_base_dt_match_yn#1",
+          "column_name": "du_base_dt_match_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_bpr#1",
+          "column_name": "du_bpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_clpr#1",
+          "column_name": "du_clpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_clpr_base_dt#1",
+          "column_name": "du_clpr_base_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_clpr_src#1",
+          "column_name": "du_clpr_src",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_diff_rt#1",
+          "column_name": "du_diff_rt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_er_1d#1",
+          "column_name": "du_er_1d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_hpr#1",
+          "column_name": "du_hpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_last_aum#1",
+          "column_name": "du_last_aum",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_last_nav#1",
+          "column_name": "du_last_nav",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_lpr#1",
+          "column_name": "du_lpr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_nav_base_dt#1",
+          "column_name": "du_nav_base_dt",
+          "declared_type": "timestamp without time zone",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_opr#1",
+          "column_name": "du_opr",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_upt_dt#1",
+          "column_name": "du_upt_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_val_1d#1",
+          "column_name": "du_val_1d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "du_vol_1d#1",
+          "column_name": "du_vol_1d",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_abrv_nm#1",
+          "column_name": "pd_abrv_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_curr_cd#1",
+          "column_name": "pd_curr_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_exg_mkt_cd#1",
+          "column_name": "pd_exg_mkt_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_grp_no#1",
+          "column_name": "pd_grp_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_isin_cd#1",
+          "column_name": "pd_isin_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_itm_no#1",
+          "column_name": "pd_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_itm_no_ma#1",
+          "column_name": "pd_itm_no_ma",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lipper_id#1",
+          "column_name": "pd_lipper_id",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lstg_dt#1",
+          "column_name": "pd_lstg_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lst_price#1",
+          "column_name": "pd_lst_price",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_lst_stk_cnt#1",
+          "column_name": "pd_lst_stk_cnt",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_mkt_id#1",
+          "column_name": "pd_mkt_id",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_nm#1",
+          "column_name": "pd_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_sale_yn#1",
+          "column_name": "pd_sale_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_trd_ccy#1",
+          "column_name": "pd_trd_ccy",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_tr_yn#1",
+          "column_name": "pd_tr_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pd_us_cik#1",
+          "column_name": "pd_us_cik",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ru_mkt_price#1",
+          "column_name": "ru_mkt_price",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ru_mkt_volume#1",
+          "column_name": "ru_mkt_volume",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_core_yn#1",
+          "column_name": "wu_core_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_inv_ast_type#1",
+          "column_name": "wu_inv_ast_type",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_inv_rgn#1",
+          "column_name": "wu_inv_rgn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "wu_upt_dt#1",
+          "column_name": "wu_upt_dt",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        }
+      ],
+      "status": "MATCH"
+    },
+    {
+      "logical_table_id": "PRFD01N001",
+      "schema_physical_filename": "PRFD01N001_공모펀드마스터_schema.xlsx",
+      "data_physical_filename": "PRFD01N001_공모펀드마스터_20260711_datarows.xlsx",
+      "schema_column_count": 45,
+      "data_column_count": 45,
+      "schema_columns": [
+        {
+          "position": 1,
+          "column_name": "bmrk_eng_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "bmrk_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "curr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "exchdg_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "fd_estb_ctry_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "fd_ivst_rgn_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "fd_mm18_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "fd_mm1_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "fd_mm3_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "fd_mm6_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "fd_nast_suma",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "fd_set_pcd",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "fd_wk1_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "fd_yr1_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "fd_yr2_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "fd_yr3_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "fd_yr5_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "frc_bpr_itm_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "fss_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "hdge_fd_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "int_dvd_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "itm_abrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "itm_eabrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "itm_eng_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "itm_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "kofia_fd_ccd",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "ksd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "mtco_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "ofsfd_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "or_attr_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "or_co_xtn_itt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "ovrs_fd_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "pers_corp_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "pfiv_sale_cntl_tcd",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "prfd_attr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "prvo_fd_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "prvo_pbff_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "rptt_ksd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 41,
+          "column_name": "std_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 42,
+          "column_name": "thco_sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 43,
+          "column_name": "trusc_xtn_itt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 44,
+          "column_name": "zrin_fd_ivst_risk_gcd",
+          "occurrence": 1
+        },
+        {
+          "position": 45,
+          "column_name": "zrin_fd_ivst_risk_grd_nm",
+          "occurrence": 1
+        }
+      ],
+      "data_columns": [
+        {
+          "position": 1,
+          "column_name": "bmrk_eng_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 2,
+          "column_name": "bmrk_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 3,
+          "column_name": "curr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 4,
+          "column_name": "exchdg_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 5,
+          "column_name": "fd_estb_ctry_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 6,
+          "column_name": "fd_ivst_rgn_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 7,
+          "column_name": "fd_mm18_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 8,
+          "column_name": "fd_mm1_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 9,
+          "column_name": "fd_mm3_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 10,
+          "column_name": "fd_mm6_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 11,
+          "column_name": "fd_nast_suma",
+          "occurrence": 1
+        },
+        {
+          "position": 12,
+          "column_name": "fd_set_pcd",
+          "occurrence": 1
+        },
+        {
+          "position": 13,
+          "column_name": "fd_wk1_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 14,
+          "column_name": "fd_yr1_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 15,
+          "column_name": "fd_yr2_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 16,
+          "column_name": "fd_yr3_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 17,
+          "column_name": "fd_yr5_ern_r",
+          "occurrence": 1
+        },
+        {
+          "position": 18,
+          "column_name": "frc_bpr_itm_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 19,
+          "column_name": "fss_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 20,
+          "column_name": "hdge_fd_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 21,
+          "column_name": "int_dvd_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 22,
+          "column_name": "itm_abrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 23,
+          "column_name": "itm_eabrv_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 24,
+          "column_name": "itm_eng_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 25,
+          "column_name": "itm_nm",
+          "occurrence": 1
+        },
+        {
+          "position": 26,
+          "column_name": "itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 27,
+          "column_name": "kofia_fd_ccd",
+          "occurrence": 1
+        },
+        {
+          "position": 28,
+          "column_name": "ksd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 29,
+          "column_name": "mtco_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 30,
+          "column_name": "ofsfd_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 31,
+          "column_name": "or_attr_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 32,
+          "column_name": "or_co_xtn_itt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 33,
+          "column_name": "ovrs_fd_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 34,
+          "column_name": "pers_corp_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 35,
+          "column_name": "pfiv_sale_cntl_tcd",
+          "occurrence": 1
+        },
+        {
+          "position": 36,
+          "column_name": "prfd_attr_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 37,
+          "column_name": "prvo_fd_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 38,
+          "column_name": "prvo_pbff_desc",
+          "occurrence": 1
+        },
+        {
+          "position": 39,
+          "column_name": "rptt_ksd_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 40,
+          "column_name": "sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 41,
+          "column_name": "std_itm_no",
+          "occurrence": 1
+        },
+        {
+          "position": 42,
+          "column_name": "thco_sale_yn",
+          "occurrence": 1
+        },
+        {
+          "position": 43,
+          "column_name": "trusc_xtn_itt_cd",
+          "occurrence": 1
+        },
+        {
+          "position": 44,
+          "column_name": "zrin_fd_ivst_risk_gcd",
+          "occurrence": 1
+        },
+        {
+          "position": 45,
+          "column_name": "zrin_fd_ivst_risk_grd_nm",
+          "occurrence": 1
+        }
+      ],
+      "missing_in_data": [],
+      "missing_in_schema": [],
+      "exact_column_order_match": true,
+      "order_differences": [],
+      "declared_vs_observed_types": [
+        {
+          "qualified_name": "bmrk_eng_nm#1",
+          "column_name": "bmrk_eng_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "bmrk_nm#1",
+          "column_name": "bmrk_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "curr_cd#1",
+          "column_name": "curr_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "exchdg_yn#1",
+          "column_name": "exchdg_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_estb_ctry_cd#1",
+          "column_name": "fd_estb_ctry_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_ivst_rgn_desc#1",
+          "column_name": "fd_ivst_rgn_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_mm18_ern_r#1",
+          "column_name": "fd_mm18_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_mm1_ern_r#1",
+          "column_name": "fd_mm1_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_mm3_ern_r#1",
+          "column_name": "fd_mm3_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_mm6_ern_r#1",
+          "column_name": "fd_mm6_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_nast_suma#1",
+          "column_name": "fd_nast_suma",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_set_pcd#1",
+          "column_name": "fd_set_pcd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_wk1_ern_r#1",
+          "column_name": "fd_wk1_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_yr1_ern_r#1",
+          "column_name": "fd_yr1_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_yr2_ern_r#1",
+          "column_name": "fd_yr2_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_yr3_ern_r#1",
+          "column_name": "fd_yr3_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fd_yr5_ern_r#1",
+          "column_name": "fd_yr5_ern_r",
+          "declared_type": "numeric",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "frc_bpr_itm_yn#1",
+          "column_name": "frc_bpr_itm_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "fss_itm_no#1",
+          "column_name": "fss_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "hdge_fd_yn#1",
+          "column_name": "hdge_fd_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "int_dvd_desc#1",
+          "column_name": "int_dvd_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "itm_abrv_nm#1",
+          "column_name": "itm_abrv_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "itm_eabrv_nm#1",
+          "column_name": "itm_eabrv_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "itm_eng_nm#1",
+          "column_name": "itm_eng_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "itm_nm#1",
+          "column_name": "itm_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "itm_no#1",
+          "column_name": "itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "kofia_fd_ccd#1",
+          "column_name": "kofia_fd_ccd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ksd_itm_no#1",
+          "column_name": "ksd_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "mtco_itm_no#1",
+          "column_name": "mtco_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ofsfd_yn#1",
+          "column_name": "ofsfd_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "or_attr_desc#1",
+          "column_name": "or_attr_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "or_co_xtn_itt_cd#1",
+          "column_name": "or_co_xtn_itt_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "ovrs_fd_desc#1",
+          "column_name": "ovrs_fd_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pers_corp_desc#1",
+          "column_name": "pers_corp_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "pfiv_sale_cntl_tcd#1",
+          "column_name": "pfiv_sale_cntl_tcd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "prfd_attr_cd#1",
+          "column_name": "prfd_attr_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "prvo_fd_desc#1",
+          "column_name": "prvo_fd_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "prvo_pbff_desc#1",
+          "column_name": "prvo_pbff_desc",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "rptt_ksd_itm_no#1",
+          "column_name": "rptt_ksd_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "sale_yn#1",
+          "column_name": "sale_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "std_itm_no#1",
+          "column_name": "std_itm_no",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "thco_sale_yn#1",
+          "column_name": "thco_sale_yn",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "trusc_xtn_itt_cd#1",
+          "column_name": "trusc_xtn_itt_cd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "zrin_fd_ivst_risk_gcd#1",
+          "column_name": "zrin_fd_ivst_risk_gcd",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": false,
+          "compatibility_status": "NOT_INFERRED"
+        },
+        {
+          "qualified_name": "zrin_fd_ivst_risk_grd_nm#1",
+          "column_name": "zrin_fd_ivst_risk_grd_nm",
+          "declared_type": "text",
+          "observed_types": [
+            "string"
+          ],
+          "representative_value_type": "string",
+          "declared_nullable": null,
+          "observed_nullable": true,
+          "compatibility_status": "NOT_INFERRED"
+        }
+      ],
+      "status": "MATCH"
+    }
+  ]
+}
