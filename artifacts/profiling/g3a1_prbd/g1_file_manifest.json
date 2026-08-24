@@ -1,0 +1,327 @@
+{
+  "profile_format_version": "1.0",
+  "generated_at_utc": "2026-08-24T08:16:51.132562Z",
+  "expected_total_rows": 145393,
+  "observed_total_rows": 145393,
+  "total_row_match_status": "MATCH",
+  "sources_immutable": true,
+  "g1_data_status": "PASS",
+  "files": [
+    {
+      "source_kind": "datarows",
+      "physical_filename": "PRBD01N001_국내채권마스터_20260711_datarows.xlsx",
+      "logical_table_id": "PRBD01N001",
+      "extension": ".xlsx",
+      "size_bytes": 6836772,
+      "sha256": "728f44a567a986d21cf843d711c6c4dfa1a24d05b39c7da0541b981b57ecccf8",
+      "modified_at_utc": "2026-08-11T10:25:49.032153Z",
+      "sheet_names": [
+        "datarows"
+      ],
+      "sheets": [
+        {
+          "name": "datarows",
+          "dimension_ref": null,
+          "dimension_max_row": null,
+          "dimension_max_column": null,
+          "xml_row_element_count": 42395,
+          "xml_last_row": 42395,
+          "xml_last_nonempty_row": 42395,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "datarows",
+      "header_row": 1,
+      "column_count": 40,
+      "expected_rows": 42394,
+      "observed_rows": 42394,
+      "match_status": "MATCH",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "schema",
+      "physical_filename": "PRBD01N001_국내채권마스터_schema.xlsx",
+      "logical_table_id": "PRBD01N001",
+      "extension": ".xlsx",
+      "size_bytes": 18021,
+      "sha256": "f0647ce274f94e0474960b98832b98d87838d812b4772f15bdeda2dceff3676b",
+      "modified_at_utc": "2026-08-11T10:25:48.894174Z",
+      "sheet_names": [
+        "Sheet1_Schema",
+        "Sheet2_Sample"
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1_Schema",
+          "dimension_ref": "A1:E42",
+          "dimension_max_row": 42,
+          "dimension_max_column": 5,
+          "xml_row_element_count": 42,
+          "xml_last_row": 42,
+          "xml_last_nonempty_row": 42,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        },
+        {
+          "name": "Sheet2_Sample",
+          "dimension_ref": "A1:T103",
+          "dimension_max_row": 103,
+          "dimension_max_column": 20,
+          "xml_row_element_count": 102,
+          "xml_last_row": 103,
+          "xml_last_nonempty_row": 103,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "Sheet1_Schema",
+      "header_row": 2,
+      "column_count": 40,
+      "expected_rows": null,
+      "observed_rows": null,
+      "match_status": "NOT_APPLICABLE",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "datarows",
+      "physical_filename": "PREF01N001_국내ETF마스터_20260711_datarows.xlsx",
+      "logical_table_id": "PREF01N001",
+      "extension": ".xlsx",
+      "size_bytes": 706081,
+      "sha256": "0f5706d45f93284bcaac2fa8eaed04db920a7043abaa859e455f06e246d54723",
+      "modified_at_utc": "2026-08-11T10:25:49.001788Z",
+      "sheet_names": [
+        "datarows"
+      ],
+      "sheets": [
+        {
+          "name": "datarows",
+          "dimension_ref": null,
+          "dimension_max_row": null,
+          "dimension_max_column": null,
+          "xml_row_element_count": 1735,
+          "xml_last_row": 1735,
+          "xml_last_nonempty_row": 1735,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "datarows",
+      "header_row": 1,
+      "column_count": 73,
+      "expected_rows": 1734,
+      "observed_rows": 1734,
+      "match_status": "MATCH",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "schema",
+      "physical_filename": "PREF01N001_국내ETF마스터_schema.xlsx",
+      "logical_table_id": "PREF01N001",
+      "extension": ".xlsx",
+      "size_bytes": 18970,
+      "sha256": "17ae6befa4f0f5b60481882ff24de1f7729386cef9d9b56f32187e41f1cb00e6",
+      "modified_at_utc": "2026-08-11T10:25:49.006359Z",
+      "sheet_names": [
+        "Sheet1_Schema",
+        "Sheet2_Sample"
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1_Schema",
+          "dimension_ref": "A1:E75",
+          "dimension_max_row": 75,
+          "dimension_max_column": 5,
+          "xml_row_element_count": 75,
+          "xml_last_row": 75,
+          "xml_last_nonempty_row": 75,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        },
+        {
+          "name": "Sheet2_Sample",
+          "dimension_ref": "A1:M103",
+          "dimension_max_row": 103,
+          "dimension_max_column": 13,
+          "xml_row_element_count": 102,
+          "xml_last_row": 103,
+          "xml_last_nonempty_row": 103,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "Sheet1_Schema",
+      "header_row": 2,
+      "column_count": 73,
+      "expected_rows": null,
+      "observed_rows": null,
+      "match_status": "NOT_APPLICABLE",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "datarows",
+      "physical_filename": "PREF02N001_해외ETF마스터_20260711_datarows.xlsx",
+      "logical_table_id": "PREF02N001",
+      "extension": ".xlsx",
+      "size_bytes": 2114967,
+      "sha256": "3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b",
+      "modified_at_utc": "2026-08-11T10:25:49.080637Z",
+      "sheet_names": [
+        "datarows"
+      ],
+      "sheets": [
+        {
+          "name": "datarows",
+          "dimension_ref": null,
+          "dimension_max_row": null,
+          "dimension_max_column": null,
+          "xml_row_element_count": 5647,
+          "xml_last_row": 5647,
+          "xml_last_nonempty_row": 5647,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "datarows",
+      "header_row": 1,
+      "column_count": 49,
+      "expected_rows": 5646,
+      "observed_rows": 5646,
+      "match_status": "MATCH",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "schema",
+      "physical_filename": "PREF02N001_해외ETF마스터_schema.xlsx",
+      "logical_table_id": "PREF02N001",
+      "extension": ".xlsx",
+      "size_bytes": 40216,
+      "sha256": "c6a022dd8a349363c405e7bf47b44f8cc099a92bfafb276b985a5c89d1881162",
+      "modified_at_utc": "2026-08-11T10:25:49.086727Z",
+      "sheet_names": [
+        "Sheet1_Schema",
+        "Sheet2_Sample"
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1_Schema",
+          "dimension_ref": "A1:E51",
+          "dimension_max_row": 51,
+          "dimension_max_column": 5,
+          "xml_row_element_count": 51,
+          "xml_last_row": 51,
+          "xml_last_nonempty_row": 51,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        },
+        {
+          "name": "Sheet2_Sample",
+          "dimension_ref": "A1:AW103",
+          "dimension_max_row": 103,
+          "dimension_max_column": 49,
+          "xml_row_element_count": 102,
+          "xml_last_row": 103,
+          "xml_last_nonempty_row": 103,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "Sheet1_Schema",
+      "header_row": 2,
+      "column_count": 49,
+      "expected_rows": null,
+      "observed_rows": null,
+      "match_status": "NOT_APPLICABLE",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "datarows",
+      "physical_filename": "PRFD01N001_공모펀드마스터_20260711_datarows.xlsx",
+      "logical_table_id": "PRFD01N001",
+      "extension": ".xlsx",
+      "size_bytes": 30709892,
+      "sha256": "140d1ef0cec918d0b3f7c52c107cb123395594eb089b0cd70bb305709b0f44eb",
+      "modified_at_utc": "2026-08-11T10:25:50.306295Z",
+      "sheet_names": [
+        "datarows"
+      ],
+      "sheets": [
+        {
+          "name": "datarows",
+          "dimension_ref": null,
+          "dimension_max_row": null,
+          "dimension_max_column": null,
+          "xml_row_element_count": 95620,
+          "xml_last_row": 95620,
+          "xml_last_nonempty_row": 95620,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "datarows",
+      "header_row": 1,
+      "column_count": 45,
+      "expected_rows": 95619,
+      "observed_rows": 95619,
+      "match_status": "MATCH",
+      "source_immutable": true
+    },
+    {
+      "source_kind": "schema",
+      "physical_filename": "PRFD01N001_공모펀드마스터_schema.xlsx",
+      "logical_table_id": "PRFD01N001",
+      "extension": ".xlsx",
+      "size_bytes": 15596,
+      "sha256": "eedb7e517312234b2825a6752adb2b5f11053f0f4fb93b70e83e87b56ee134e9",
+      "modified_at_utc": "2026-08-11T10:25:49.037776Z",
+      "sheet_names": [
+        "Sheet1_Schema",
+        "Sheet2_Sample"
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1_Schema",
+          "dimension_ref": "A1:E47",
+          "dimension_max_row": 47,
+          "dimension_max_column": 5,
+          "xml_row_element_count": 47,
+          "xml_last_row": 47,
+          "xml_last_nonempty_row": 47,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        },
+        {
+          "name": "Sheet2_Sample",
+          "dimension_ref": "A1:K103",
+          "dimension_max_row": 103,
+          "dimension_max_column": 11,
+          "xml_row_element_count": 102,
+          "xml_last_row": 103,
+          "xml_last_nonempty_row": 103,
+          "blank_trailing_rows": 0,
+          "merged_cell_count": 0,
+          "formula_cell_count": 0
+        }
+      ],
+      "selected_sheet": "Sheet1_Schema",
+      "header_row": 2,
+      "column_count": 45,
+      "expected_rows": null,
+      "observed_rows": null,
+      "match_status": "NOT_APPLICABLE",
+      "source_immutable": true
+    }
+  ]
+}

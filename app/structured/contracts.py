@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
@@ -25,6 +26,27 @@ class SortDirection(StrEnum):
 
 class AggregateFunction(StrEnum):
     COUNT = "COUNT"
+
+
+class StructuredQueryStatus(StrEnum):
+    """Planning/execution outcome without conflating policy and row absence."""
+
+    SUPPORTED = "SUPPORTED"
+    NO_MATCH = "NO_MATCH"
+    UNSUPPORTED = "UNSUPPORTED"
+    RESOLVED_WITH_ASSUMPTION = "RESOLVED_WITH_ASSUMPTION"
+
+
+@dataclass(frozen=True, slots=True)
+class SemanticGateTrace:
+    """Concise, non-reasoning audit event emitted by the semantic gate."""
+
+    gate: str
+    logical_table_id: str
+    semantic_key: str | None
+    operation: str | None
+    status: StructuredQueryStatus
+    summary: str
 
 
 QueryScalar = str | int | float | bool | Decimal | date | datetime
@@ -109,8 +131,10 @@ __all__ = [
     "AggregateFunction",
     "FilterOperator",
     "QueryScalar",
+    "SemanticGateTrace",
     "SortDirection",
     "StructuredFilter",
     "StructuredQueryContract",
+    "StructuredQueryStatus",
     "StructuredSort",
 ]

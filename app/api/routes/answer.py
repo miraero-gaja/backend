@@ -10,6 +10,7 @@ from app.agent.grounder import OntologyGrounder
 from app.agent.parser import QueryParser
 from app.agent.router import QueryRouter
 from app.api.schemas import AnswerResponse, Utf8JSONResponse
+from app.composition import get_tool_executor
 from app.core.config import Settings, get_settings
 from app.core.constants import UNSUPPORTED_TRACE, missing_input_trace
 from app.core.deadline import Deadline, DeadlineExceeded
@@ -26,7 +27,6 @@ logger = get_logger(__name__)
 parser = QueryParser()
 grounder = OntologyGrounder()
 query_router = QueryRouter()
-executor = ToolExecutor()
 evidence_validator = EvidenceValidator()
 answer_guard = AnswerGuard()
 
@@ -37,6 +37,7 @@ async def answer(
     question_id: Annotated[str, Query(description="Evaluation question identifier")],
     question: Annotated[str, Query(description="Question text echoed unchanged")],
     settings: Annotated[Settings, Depends(get_settings)],
+    tool_executor: Annotated[ToolExecutor, Depends(get_tool_executor)],
 ) -> AnswerResponse:
     """Fail closed until dataset retrieval and HCX generation are connected."""
 
@@ -50,7 +51,7 @@ async def answer(
     )
     grounded_query = grounder.ground(query)
     route = query_router.route(grounded_query)
-    tool_results = await executor.execute(grounded_query, route, deadline)
+    tool_results = await tool_executor.execute(grounded_query, route, deadline)
     evidence = tuple(item for result in tool_results for item in result.evidence)
     decision = evidence_validator.validate(grounded_query, tool_results, evidence)
     retrieved_context = serialize_evidence(decision)

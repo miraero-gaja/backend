@@ -175,7 +175,8 @@ def build_summary_markdown(
             "- An eight-digit valid calendar value is a lexical/value-shape date candidate, not a confirmed date datatype.",
             "- A numeric magnitude is never reinterpreted as a percentage, currency, or unit.",
             "- Distinct counts use typed SHA-256 digests in an ephemeral SQLite store; source rows and arbitrary value samples are not written to reports.",
-            "- Requested bounded evidence such as numeric/date extrema and boolean-code representations is included when observed.",
+            "- Requested bounded evidence such as numeric/date extrema, numeric-like-string extrema, boolean-code representations, and low-cardinality code counts is included when observed.",
+            "- Bounded code counts preserve source tokens and frequencies only; code meanings are never inferred.",
             "- Schema example values are intentionally omitted from generated reports.",
             "",
         ]
