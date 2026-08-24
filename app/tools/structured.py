@@ -1,4 +1,4 @@
-"""Structured tool adapter with an unavailable-by-default public runtime path."""
+"""Structured tool adapter with deterministic result evidence validation."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from time import monotonic
 from app.agent.contracts import QueryContract, ToolResult
 from app.core.deadline import Deadline
 from app.evidence.models import ReasonCode
+from app.evidence.validator import StructuredEvidenceValidator
 from app.structured import (
     StructuredExecutionResult,
     StructuredQueryContract,
@@ -16,19 +17,17 @@ from app.tools import UnavailableToolAdapter
 
 
 class StructuredToolAdapter(UnavailableToolAdapter):
-    """Bridge an explicitly approved structured plan into the generic tool API.
-
-    Construction without an executor, or execution without an explicit typed
-    plan, deliberately retains the public endpoint's fail-closed behavior.
-    """
+    """Bridge approved plans through retrieval and evidence validation."""
 
     tool_name = "structured"
 
     def __init__(
         self,
         executor: StructuredQueryExecutor | None = None,
+        evidence_validator: StructuredEvidenceValidator | None = None,
     ) -> None:
         self._executor = executor
+        self._evidence_validator = evidence_validator or StructuredEvidenceValidator()
 
     async def execute_structured(
         self,
@@ -49,12 +48,17 @@ class StructuredToolAdapter(UnavailableToolAdapter):
 
         started_at = monotonic()
         result = await self.execute_structured(structured_query, deadline)
+        validation_trace = self._evidence_validator.validate(
+            structured_query,
+            result,
+        )
         if not result.candidates:
             return ToolResult(
                 tool_name=self.tool_name,
                 query_fingerprint=result.query_fingerprint,
                 elapsed_ms=(monotonic() - started_at) * 1000,
                 error_code=ReasonCode.NO_MATCH,
+                validation_trace=validation_trace,
             )
         return ToolResult(
             tool_name=self.tool_name,
@@ -63,6 +67,7 @@ class StructuredToolAdapter(UnavailableToolAdapter):
             columns=result.columns,
             elapsed_ms=(monotonic() - started_at) * 1000,
             evidence=result.evidence,
+            validation_trace=validation_trace,
         )
 
 

@@ -45,6 +45,7 @@ def test_tool_result_exposes_required_runtime_fields() -> None:
         "warnings",
         "error_code",
         "evidence",
+        "validation_trace",
     }
 
     assert set(ToolResult.model_fields) == expected_fields
