@@ -223,18 +223,11 @@ class SemanticGatedQueryPlanner:
             compiler_operations[query.sort.field].add("SORT")
 
         for semantic_key in query.projections:
-            if not compiler_operations[semantic_key]:
-                self._blocked(
-                    trace=trace,
-                    table=query.product_scope,
-                    semantic_key=semantic_key,
-                    operation="PROJECT",
-                    summary="projection_has_no_open_runtime_operation",
-                    message=(
-                        "projection requires an OPEN runtime operation in the "
-                        f"same query: {query.product_scope}.{semantic_key}"
-                    ),
-                )
+            self._require_open_operation(
+                approval=approvals[semantic_key],
+                operation="PROJECT",
+                trace=trace,
+            )
 
         if query.sort is not None and query.limit is not None:
             trace.append(

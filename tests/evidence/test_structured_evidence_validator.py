@@ -38,10 +38,18 @@ def _aum_row(index: int, value: str, *, source_id: bool = True):
     row = {
         "__logical_table_id": "PREF02N001",
         "__raw_record": {
-            "du_last_aum#1": {"type": "DECIMAL", "value": value}
+            "pd_itm_no#1": {"type": "STRING", "value": f"ETF{index:03d}"},
+            "pd_nm#1": {"type": "STRING", "value": f"해외 ETF {index}"},
+            "du_last_aum#1": {"type": "DECIMAL", "value": value},
         },
-        "__parse_statuses": {"du_last_aum#1": "OK"},
-        "__value_000": Decimal(value),
+        "__parse_statuses": {
+            "pd_itm_no#1": "OK",
+            "pd_nm#1": "OK",
+            "du_last_aum#1": "OK",
+        },
+        "__value_000": f"ETF{index:03d}",
+        "__value_001": f"해외 ETF {index}",
+        "__value_002": Decimal(value),
     }
     if source_id:
         row["__source_row_id"] = f"srid:v1:aum-{index:03d}"
@@ -103,15 +111,23 @@ def test_aum_desc_top_three_creates_supported_evidence() -> None:
     assert len(backend.calls) == 1
     assert decision.status is SupportStatus.SUPPORTED
     assert decision.reason_codes == ()
-    assert len(decision.evidence) == 3
-    assert tuple(item.normalized_value for item in decision.evidence) == (
-        "30",
-        "20",
-        "10",
-    )
-    assert all(item.product_key == item.source_row_id for item in decision.evidence)
+    assert len(decision.evidence) == 9
+    assert tuple(
+        item.normalized_value
+        for item in decision.evidence
+        if item.source_field == "du_last_aum#1"
+    ) == ("30", "20", "10")
+    assert {item.product_key for item in decision.evidence} == {
+        "ETF001",
+        "ETF002",
+        "ETF003",
+    }
     assert all(item.source_table == "PREF02N001" for item in decision.evidence)
-    assert all(item.source_field == "du_last_aum#1" for item in decision.evidence)
+    assert {item.source_field for item in decision.evidence} == {
+        "pd_itm_no#1",
+        "pd_nm#1",
+        "du_last_aum#1",
+    }
     assert all(item.unit is None for item in decision.evidence)
     assert all(item.snapshot is None for item in decision.evidence)
     assert results[0].validation_trace[-3:] == (
@@ -223,6 +239,21 @@ def test_sort_or_limit_violation_cannot_be_supported(rows) -> None:
 
 def test_missing_source_identity_cannot_be_supported() -> None:
     backend = RecordingBackend((_aum_row(1, "30", source_id=False),))
+
+    _query, results, decision = _execute(
+        "해외 ETF 중 AUM이 큰 상품 3개",
+        backend,
+    )
+
+    assert results[0].error_code is ReasonCode.TOOL_FAILURE
+    assert decision.status is SupportStatus.UNSUPPORTED
+    assert decision.evidence == ()
+
+
+def test_missing_projected_product_name_provenance_cannot_be_supported() -> None:
+    row = _aum_row(1, "30")
+    del row["__raw_record"]["pd_nm#1"]
+    backend = RecordingBackend((row,))
 
     _query, results, decision = _execute(
         "해외 ETF 중 AUM이 큰 상품 3개",

@@ -91,6 +91,7 @@ def test_application_wired_pref02_aum_desc_top_n_is_supported() -> None:
         "product_scope_selected",
         "concept_confirmed",
         "operation_open",
+        "operation_open",
         "top_3_ready",
     )
 

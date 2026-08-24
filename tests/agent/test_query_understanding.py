@@ -41,6 +41,11 @@ def test_overseas_etf_aum_desc_top_n_is_supported() -> None:
     assert grounded.structured_query is not None
     assert grounded.structured_query.sort is not None
     assert grounded.structured_query.sort.direction is SortDirection.DESC
+    assert grounded.structured_query.projections == (
+        "pref02.product_identifier",
+        "pref02.product_name",
+        "pref02.aum_latest",
+    )
     assert grounded.structured_query.limit == 3
     assert grounded.understanding.execution_trace[-2:] == (
         "연산 승인: SORT_DESC",

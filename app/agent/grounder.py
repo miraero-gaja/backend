@@ -14,7 +14,11 @@ from app.structured.contracts import (
     StructuredSort,
 )
 from mappings.core import CoreUnitStatus, get_confirmed_field_map
-from mappings.semantic import ClaimStatus, get_semantic_field_approval
+from mappings.semantic import (
+    ClaimStatus,
+    get_default_projection_keys,
+    get_semantic_field_approval,
+)
 
 
 def _unsupported(query: QueryContract, reason: str, trace: list[str]) -> QueryContract:
@@ -191,10 +195,15 @@ class OntologyGrounder:
 
         if understanding.limit is not None:
             trace.append(f"Top-N 승인: {understanding.limit}")
+        projections = (
+            get_default_projection_keys(table, semantic_key)
+            if g3_approval is not None
+            else (semantic_key,)
+        )
         plan = StructuredQueryContract(
             product_scope=table,
             filters=tuple(filters),
-            projections=(semantic_key,),
+            projections=projections,
             sort=sort,
             limit=understanding.limit,
         )
@@ -207,7 +216,7 @@ class OntologyGrounder:
         return query.model_copy(
             update={
                 "filters": {item.field: item.value for item in filters},
-                "projections": (semantic_key,),
+                "projections": projections,
                 "sort": (
                     (f"{semantic_key}:{sort.direction.value}",)
                     if sort is not None

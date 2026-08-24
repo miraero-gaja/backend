@@ -12,6 +12,8 @@ from .models import (
 )
 from .registry import (
     SEMANTIC_FIELD_APPROVALS,
+    get_default_projection_keys,
+    get_product_identifier_key,
     get_semantic_field_approval,
     get_table_semantic_approvals,
     validate_semantic_registry,
@@ -28,6 +30,8 @@ __all__ = [
     "SemanticClaim",
     "SemanticFieldApproval",
     "get_semantic_field_approval",
+    "get_default_projection_keys",
+    "get_product_identifier_key",
     "get_table_semantic_approvals",
     "validate_semantic_registry",
 ]

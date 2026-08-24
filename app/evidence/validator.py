@@ -24,7 +24,10 @@ from app.structured.executor import (
     StructuredExecutionResult,
     structured_query_fingerprint,
 )
-from mappings.semantic import get_semantic_field_approval
+from mappings.semantic import (
+    get_product_identifier_key,
+    get_semantic_field_approval,
+)
 from pipeline.normalize.models import TargetType
 
 
@@ -163,6 +166,7 @@ class StructuredEvidenceValidator:
                         "semantic key approval trace is missing"
                     )
             required_operations = (
+                *((semantic_key, "PROJECT") for semantic_key in query.projections),
                 *(
                     (clause.field, clause.operator.value)
                     for clause in query.filters
@@ -223,10 +227,6 @@ class StructuredEvidenceValidator:
                 raise StructuredEvidenceValidationError(
                     "source row identity is missing"
                 )
-            if item.product_key != item.source_row_id:
-                raise StructuredEvidenceValidationError(
-                    "technical product provenance conflicts with source row identity"
-                )
             if item.source_table != query.product_scope:
                 raise StructuredEvidenceValidationError(
                     "evidence logical table mismatch"
@@ -251,6 +251,39 @@ class StructuredEvidenceValidator:
                     "row evidence fields are incomplete"
                 )
 
+        identifier_key = get_product_identifier_key(query.product_scope)
+        identifier_selection = next(
+            (
+                selection
+                for selection in compiled.projected_fields
+                if selection.field.semantic_key == identifier_key
+            ),
+            None,
+        )
+        for row_id, row_fields in by_row.items():
+            expected_product_key = row_id
+            if identifier_selection is not None:
+                identifier_item = row_fields[
+                    identifier_selection.field.qualified_name
+                ]
+                identifier_value = identifier_item.normalized_value
+                if (
+                    identifier_item.decision is not SupportStatus.SUPPORTED
+                    or not isinstance(identifier_value, str)
+                    or not identifier_value.strip()
+                ):
+                    raise StructuredEvidenceValidationError(
+                        "approved product identifier evidence is missing"
+                    )
+                expected_product_key = identifier_value
+            if any(
+                item.product_key != expected_product_key
+                for item in row_fields.values()
+            ):
+                raise StructuredEvidenceValidationError(
+                    "product identifier provenance conflicts within the row"
+                )
+
         selections = {
             selection.field.semantic_key: selection
             for selection in compiled.evidence_fields
@@ -271,6 +304,13 @@ class StructuredEvidenceValidator:
                 if candidate[semantic_key] != item.normalized_value:
                     raise StructuredEvidenceValidationError(
                         "candidate and evidence values differ"
+                    )
+                if (
+                    selection.field.target_type is TargetType.TEXT
+                    and item.raw_value != item.normalized_value
+                ):
+                    raise StructuredEvidenceValidationError(
+                        "projected text differs from its raw source value"
                     )
 
         for filter_index, clause in enumerate(query.filters, start=1):
