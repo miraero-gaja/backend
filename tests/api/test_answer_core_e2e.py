@@ -40,10 +40,18 @@ def _aum_rows():
             "__source_row_id": f"srid:v1:answer-{index:03d}",
             "__logical_table_id": "PREF02N001",
             "__raw_record": {
-                "du_last_aum#1": {"type": "DECIMAL", "value": value}
+                "pd_itm_no#1": {"type": "STRING", "value": f"ETF{index:03d}"},
+                "pd_nm#1": {"type": "STRING", "value": f"해외 ETF {index}"},
+                "du_last_aum#1": {"type": "DECIMAL", "value": value},
             },
-            "__parse_statuses": {"du_last_aum#1": "OK"},
-            "__value_000": Decimal(value),
+            "__parse_statuses": {
+                "pd_itm_no#1": "OK",
+                "pd_nm#1": "OK",
+                "du_last_aum#1": "OK",
+            },
+            "__value_000": f"ETF{index:03d}",
+            "__value_001": f"해외 ETF {index}",
+            "__value_002": Decimal(value),
         }
         for index, value in enumerate(("30", "20", "10"), start=1)
     )
@@ -83,15 +91,22 @@ def test_answer_supported_aum_top_three_core_e2e() -> None:
     assert payload["question"] == question
     context = json.loads(payload["retrieved_context"])
     assert context["status"] == "SUPPORTED"
-    assert context["evidence_count"] == 3
-    assert tuple(
-        item["normalized_value"] for item in context["evidence"]
-    ) == ("30", "20", "10")
+    assert context["evidence_count"] == 9
+    assert {item["source_field"] for item in context["evidence"]} == {
+        "pd_itm_no#1",
+        "pd_nm#1",
+        "du_last_aum#1",
+    }
+    assert {item["product_key"] for item in context["evidence"]} == {
+        "ETF001",
+        "ETF002",
+        "ETF003",
+    }
     assert "SUPPORTED" in payload["think_trace"]
     assert "SORT_DESC" in payload["think_trace"]
     assert question not in payload["think_trace"]
     assert "3건" in payload["answer"]
-    assert "30, 20, 10" in payload["answer"]
+    assert "해외 ETF 1 (ETF001) | AUM source-native 값: 30" in payload["answer"]
     assert len(backend.calls) == 1
 
 

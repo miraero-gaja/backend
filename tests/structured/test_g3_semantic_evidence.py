@@ -50,7 +50,7 @@ def test_retained_aum_profile_supports_source_native_descending_order() -> None:
 
     approval = get_semantic_field_approval("PREF02N001", "pref02.aum_latest")
     assert approval is not None
-    assert approval.open_operations == ("SORT_DESC",)
+    assert approval.open_operations == ("PROJECT", "SORT_DESC")
 
 
 def test_parseable_expense_values_do_not_open_numeric_operations() -> None:

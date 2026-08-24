@@ -44,6 +44,10 @@ _PRBD_SOURCE_SHA256 = (
     "fa1a24d05b39c7da0541b981b57ecccf8"
 )
 
+_PREF02_PROFILE_ARTIFACT = (
+    "artifacts/profiling/g3a1_pref02/g1_data_profile.json"
+)
+
 
 def _profile_provenance(
     *,
@@ -176,6 +180,30 @@ SEMANTIC_FIELD_APPROVALS: tuple[SemanticFieldApproval, ...] = (
         ),
         operations=(
             OperationApproval(
+                operation="PROJECT",
+                status=OperationStatus.OPEN,
+                reason=(
+                    "The source-native metric may be returned with its raw "
+                    "lineage; projection does not authorize a unit conversion."
+                ),
+                evidence=(
+                    "The retained PREF02 profile reproduces Decimal parsing "
+                    "and null handling for du_last_aum#1."
+                ),
+                provenance=(
+                    _profile_provenance(
+                        artifact_relative_path=_PREF02_PROFILE_ARTIFACT,
+                        logical_table_id="PREF02N001",
+                        source_column="du_last_aum",
+                        source_identity=_PREF02_SOURCE_SHA256,
+                        rationale=(
+                            "Supports returning the unconverted source-native "
+                            "AUM value with raw source lineage."
+                        ),
+                    ),
+                ),
+            ),
+            OperationApproval(
                 operation="SORT_DESC",
                 status=OperationStatus.OPEN,
                 reason=(
@@ -215,6 +243,143 @@ SEMANTIC_FIELD_APPROVALS: tuple[SemanticFieldApproval, ...] = (
             "SORT_DESC is OPEN from reproducible source-native profiling; "
             "absolute thresholds remain closed until unit approval."
         ),
+    ),
+    SemanticFieldApproval(
+        logical_table_id="PREF02N001",
+        source_column="pd_itm_no",
+        semantic_key="pref02.product_identifier",
+        concept=SemanticClaim(
+            status=ClaimStatus.CONFIRMED,
+            evidence_tier=EvidenceTier.T3_TEAM_TRIANGULATED_EVIDENCE,
+            evidence=(
+                "The official PREF02 schema declares pd_itm_no#1 as its PK; "
+                "the official PREF01 sibling schema identifies the same source "
+                "field as the product number, and the retained PREF02 profile "
+                "observes 5,646 non-null, distinct values."
+            ),
+        ),
+        unit=SemanticClaim(
+            status=ClaimStatus.CONFIRMED,
+            evidence_tier=EvidenceTier.T3_TEAM_TRIANGULATED_EVIDENCE,
+            evidence="An opaque product identifier is not a measured value.",
+        ),
+        value_domain=SemanticClaim(
+            status=ClaimStatus.CONFIRMED,
+            evidence_tier=EvidenceTier.T4_INTERNAL_REPRODUCIBLE_VALIDATION,
+            evidence=(
+                "The retained PREF02 profile records 5,646/5,646 non-null and "
+                "distinct source-native identifier strings."
+            ),
+            provenance=(
+                _profile_provenance(
+                    artifact_relative_path=_PREF02_PROFILE_ARTIFACT,
+                    logical_table_id="PREF02N001",
+                    source_column="pd_itm_no",
+                    source_identity=_PREF02_SOURCE_SHA256,
+                    rationale=(
+                        "Reproduces completeness and uniqueness of the official "
+                        "PREF02 primary-key column without interpreting its code."
+                    ),
+                ),
+            ),
+        ),
+        operations=(
+            OperationApproval(
+                operation="PROJECT",
+                status=OperationStatus.OPEN,
+                reason=(
+                    "The official primary-key value may identify a returned row; "
+                    "no filter or sort permission is implied."
+                ),
+                evidence=(
+                    "Official PREF02 PK declaration plus the retained 5,646-row "
+                    "profile establish a stable source-native identifier."
+                ),
+                provenance=(
+                    _profile_provenance(
+                        artifact_relative_path=_PREF02_PROFILE_ARTIFACT,
+                        logical_table_id="PREF02N001",
+                        source_column="pd_itm_no",
+                        source_identity=_PREF02_SOURCE_SHA256,
+                        rationale=(
+                            "Supports projection and row identification only."
+                        ),
+                    ),
+                ),
+            ),
+            *_closed_operations(
+                ("EQ", "NE", "LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"),
+                reason="Only projection is approved for this G3 field.",
+            ),
+        ),
+        notes="Projection-only approval; code meaning is not inferred.",
+    ),
+    SemanticFieldApproval(
+        logical_table_id="PREF02N001",
+        source_column="pd_nm",
+        semantic_key="pref02.product_name",
+        concept=SemanticClaim(
+            status=ClaimStatus.CONFIRMED,
+            evidence_tier=EvidenceTier.T2_OFFICIAL_SIBLING_SCHEMA,
+            evidence=(
+                "The official PREF01 sibling schema identifies the same source "
+                "field pd_nm as the product name; the transfer is limited to "
+                "the display concept."
+            ),
+        ),
+        unit=SemanticClaim(
+            status=ClaimStatus.CONFIRMED,
+            evidence_tier=EvidenceTier.T2_OFFICIAL_SIBLING_SCHEMA,
+            evidence="A product display name is not a measured value.",
+        ),
+        value_domain=SemanticClaim(
+            status=ClaimStatus.CONFIRMED,
+            evidence_tier=EvidenceTier.T4_INTERNAL_REPRODUCIBLE_VALIDATION,
+            evidence=(
+                "The retained PREF02 profile records 5,646/5,646 non-null "
+                "source-native text values and 5,630 distinct names."
+            ),
+            provenance=(
+                _profile_provenance(
+                    artifact_relative_path=_PREF02_PROFILE_ARTIFACT,
+                    logical_table_id="PREF02N001",
+                    source_column="pd_nm",
+                    source_identity=_PREF02_SOURCE_SHA256,
+                    rationale=(
+                        "Reproduces display-text completeness without asserting "
+                        "that names are unique identifiers."
+                    ),
+                ),
+            ),
+        ),
+        operations=(
+            OperationApproval(
+                operation="PROJECT",
+                status=OperationStatus.OPEN,
+                reason=(
+                    "The source-native name may be displayed with row lineage; "
+                    "no filter or sort permission is implied."
+                ),
+                evidence=(
+                    "Official sibling-schema meaning and retained PREF02 text "
+                    "profile support display-only projection."
+                ),
+                provenance=(
+                    _profile_provenance(
+                        artifact_relative_path=_PREF02_PROFILE_ARTIFACT,
+                        logical_table_id="PREF02N001",
+                        source_column="pd_nm",
+                        source_identity=_PREF02_SOURCE_SHA256,
+                        rationale="Supports source-native display projection only.",
+                    ),
+                ),
+            ),
+            *_closed_operations(
+                ("EQ", "NE", "LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"),
+                reason="Only projection is approved for this G3 field.",
+            ),
+        ),
+        notes="Projection-only approval; names are not treated as unique.",
     ),
     *(
         SemanticFieldApproval(
@@ -328,6 +493,20 @@ def _build_lookup(
 
 _APPROVALS_BY_TABLE_AND_KEY = _build_lookup(SEMANTIC_FIELD_APPROVALS)
 
+_DEFAULT_PROJECTIONS = MappingProxyType(
+    {
+        ("PREF02N001", "pref02.aum_latest"): (
+            "pref02.product_identifier",
+            "pref02.product_name",
+            "pref02.aum_latest",
+        ),
+    }
+)
+
+_PRODUCT_IDENTIFIER_KEYS = MappingProxyType(
+    {"PREF02N001": "pref02.product_identifier"}
+)
+
 
 def get_semantic_field_approval(
     logical_table_id: str,
@@ -350,9 +529,29 @@ def get_table_semantic_approvals(
     )
 
 
+def get_default_projection_keys(
+    logical_table_id: str,
+    requested_semantic_key: str,
+) -> tuple[str, ...]:
+    """Return explicitly approved display projections for one query metric."""
+
+    return _DEFAULT_PROJECTIONS.get(
+        (logical_table_id, requested_semantic_key),
+        (requested_semantic_key,),
+    )
+
+
+def get_product_identifier_key(logical_table_id: str) -> str | None:
+    """Return an explicitly approved row-level business identifier key."""
+
+    return _PRODUCT_IDENTIFIER_KEYS.get(logical_table_id)
+
+
 __all__ = [
     "SEMANTIC_FIELD_APPROVALS",
     "get_semantic_field_approval",
+    "get_default_projection_keys",
+    "get_product_identifier_key",
     "get_table_semantic_approvals",
     "validate_semantic_registry",
 ]

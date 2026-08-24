@@ -12,6 +12,7 @@ from app.core.constants import (
 )
 from app.evidence.models import ReasonCode, SupportDecision, SupportStatus
 from app.evidence.serializer import serialize_evidence
+from mappings.semantic import get_semantic_field_approval
 
 
 MAX_THINK_TRACE_CHARS = 200
@@ -146,14 +147,60 @@ def _supported_answer(query: QueryContract, decision: SupportDecision) -> str:
         else "요청 field"
     )
     row_count = len({item.source_row_id for item in decision.evidence})
-    values = [
-        _display_value(item.normalized_value)
-        for item in decision.evidence[:MAX_ANSWER_VALUES]
-    ]
-    suffix = "" if len(decision.evidence) <= MAX_ANSWER_VALUES else ", ..."
+    structured_query = query.structured_query
+    semantic_keys = (
+        understanding.semantic_keys
+        if understanding is not None
+        else ()
+    )
+    requested_key = semantic_keys[0] if len(semantic_keys) == 1 else None
+    table = structured_query.product_scope if structured_query is not None else None
+    approvals = {
+        key: get_semantic_field_approval(table, key)
+        for key in (
+            "pref02.product_identifier",
+            "pref02.product_name",
+            requested_key,
+        )
+        if table is not None and key is not None
+    }
+    fields = {
+        key: approval.qualified_name
+        for key, approval in approvals.items()
+        if approval is not None
+    }
+    by_row: dict[str, dict[str, object]] = {}
+    for item in decision.evidence:
+        by_row.setdefault(item.source_row_id, {})[item.source_field] = (
+            item.normalized_value
+        )
+
+    values: list[str] = []
+    metric_field = fields.get(requested_key) if requested_key is not None else None
+    for row in tuple(by_row.values())[:MAX_ANSWER_VALUES]:
+        metric = row.get(metric_field) if metric_field is not None else None
+        identifier = row.get(fields.get("pref02.product_identifier", ""))
+        name = row.get(fields.get("pref02.product_name", ""))
+        label_parts = []
+        if isinstance(name, str) and name.strip():
+            label_parts.append(name)
+        if isinstance(identifier, str) and identifier.strip():
+            label_parts.append(f"({identifier})" if label_parts else identifier)
+        if label_parts and metric_field is not None:
+            values.append(
+                f"{' '.join(label_parts)} | {field} source-native 값: "
+                f"{_display_value(metric)}"
+            )
+
+    if not values:
+        values = [
+            _display_value(item.normalized_value)
+            for item in decision.evidence[:MAX_ANSWER_VALUES]
+        ]
+    suffix = "" if len(by_row) <= MAX_ANSWER_VALUES else ", ..."
     rendered = (
         f"{product}에서 검증된 {field} 결과 {row_count}건을 확인했습니다. "
-        f"source-native 값(단위 변환 없음): {', '.join(values)}{suffix}."
+        f"source-native 값(단위 변환 없음): {'; '.join(values)}{suffix}."
     )
     return rendered[:MAX_ANSWER_CHARS]
 

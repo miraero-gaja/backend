@@ -61,8 +61,9 @@ def test_aum_has_valid_t4_provenance_and_only_source_native_sort_open() -> None:
         "ad78f4295d1ae59192740a78feb2253b"
     )
     assert provenance.is_reproducible_artifact is True
-    assert approval.open_operations == ("SORT_DESC",)
+    assert approval.open_operations == ("PROJECT", "SORT_DESC")
     assert _operation_statuses("PREF02N001", "pref02.aum_latest") == {
+        "PROJECT": OperationStatus.OPEN,
         "SORT_DESC": OperationStatus.OPEN,
         "LT": OperationStatus.CLOSED,
         "LE": OperationStatus.CLOSED,
@@ -78,6 +79,8 @@ def test_lookup_is_table_scoped() -> None:
     assert tuple(approval.source_column for approval in pref02) == (
         "cu_charge_rt",
         "du_last_aum",
+        "pd_itm_no",
+        "pd_nm",
     )
     assert tuple(approval.source_column for approval in prbd) == (
         "PD_RISK_GCD",
@@ -91,6 +94,41 @@ def test_lookup_is_table_scoped() -> None:
 
 def test_unknown_semantic_key_fails_closed() -> None:
     assert get_semantic_field_approval("PREF02N001", "pref02.unknown") is None
+
+
+@pytest.mark.parametrize(
+    ("semantic_key", "source_column", "tier"),
+    (
+        (
+            "pref02.product_identifier",
+            "pd_itm_no",
+            EvidenceTier.T3_TEAM_TRIANGULATED_EVIDENCE,
+        ),
+        (
+            "pref02.product_name",
+            "pd_nm",
+            EvidenceTier.T2_OFFICIAL_SIBLING_SCHEMA,
+        ),
+    ),
+)
+def test_pref02_display_fields_are_projection_only(
+    semantic_key: str,
+    source_column: str,
+    tier: EvidenceTier,
+) -> None:
+    approval = get_semantic_field_approval("PREF02N001", semantic_key)
+
+    assert approval is not None
+    assert approval.source_column == source_column
+    assert approval.concept.status is ClaimStatus.CONFIRMED
+    assert approval.concept.evidence_tier is tier
+    assert approval.open_operations == ("PROJECT",)
+    assert approval.value_domain.provenance[0].is_reproducible_artifact is True
+    assert all(
+        operation.status is OperationStatus.CLOSED
+        for operation in approval.operations
+        if operation.operation != "PROJECT"
+    )
 
 
 def test_duplicate_source_identity_within_table_is_rejected() -> None:

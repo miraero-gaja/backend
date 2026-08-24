@@ -9,6 +9,7 @@ from decimal import Decimal
 from typing import Any
 
 from app.evidence.models import EvidenceItem, ScalarValue, SupportStatus
+from mappings.semantic import get_product_identifier_key
 from pipeline.normalize.models import ParseStatus
 
 from .compiler import CompiledStructuredQuery
@@ -114,6 +115,25 @@ def row_to_evidence(
     raw_record = _raw_mapping(row.get("__raw_record"))
     parse_statuses = _parse_status_mapping(row.get("__parse_statuses"))
 
+    product_key = source_row_id
+    identifier_key = get_product_identifier_key(source_table)
+    if identifier_key is not None:
+        identifier_selection = next(
+            (
+                selection
+                for selection in compiled.projected_fields
+                if selection.field.semantic_key == identifier_key
+            ),
+            None,
+        )
+        if identifier_selection is not None:
+            identifier = json_safe_scalar(row.get(identifier_selection.value_alias))
+            if not isinstance(identifier, str) or not identifier.strip():
+                raise StructuredQueryValidationError(
+                    "approved product identifier projection is blank"
+                )
+            product_key = identifier
+
     evidence: list[EvidenceItem] = []
     for selection in compiled.evidence_fields:
         qualified_name = selection.field.qualified_name
@@ -138,9 +158,7 @@ def row_to_evidence(
             ) from exc
         evidence.append(
             EvidenceItem(
-                # No inferred business key: the immutable technical lineage key
-                # is used until a product identifier is explicitly approved.
-                product_key=source_row_id,
+                product_key=product_key,
                 source_table=source_table,
                 source_row_id=source_row_id,
                 source_field=selection.field.qualified_name,
