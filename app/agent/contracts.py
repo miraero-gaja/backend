@@ -92,3 +92,4 @@ class ToolResult(BaseModel):
     warnings: tuple[str, ...] = ()
     error_code: ReasonCode | None = None
     evidence: tuple[EvidenceItem, ...] = ()
+    validation_trace: tuple[str, ...] = ()
