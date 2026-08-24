@@ -17,7 +17,10 @@ from app.core.config import Settings
 from app.main import create_app
 
 
-LIVE_DATABASE_URL = os.getenv("G2B_TEST_DATABASE_URL") or os.getenv("DATABASE_URL")
+# Prefer the already-loaded application staging database when both URLs exist.
+# G2B_TEST_DATABASE_URL is normally a separate disposable database used by the
+# session-local temporary-table integration test.
+LIVE_DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("G2B_TEST_DATABASE_URL")
 
 
 @pytest.mark.skipif(
