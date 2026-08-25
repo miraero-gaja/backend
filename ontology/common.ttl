@@ -1,0 +1,72 @@
+@prefix ma: <urn:miraeasset:financial-agent:ontology:2026:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ma:FinancialProduct a rdfs:Class .
+ma:DomesticBond a rdfs:Class ; rdfs:subClassOf ma:FinancialProduct .
+ma:ETF a rdfs:Class ; rdfs:subClassOf ma:FinancialProduct .
+ma:DomesticETF a rdfs:Class ; rdfs:subClassOf ma:ETF .
+ma:GlobalETF a rdfs:Class ; rdfs:subClassOf ma:ETF .
+ma:PublicFund a rdfs:Class ; rdfs:subClassOf ma:FinancialProduct .
+
+ma:DomainOntology a rdfs:Class .
+ma:SemanticField a rdfs:Class .
+ma:UnresolvedSourceField a rdfs:Class .
+ma:ApprovalStatus a rdfs:Class .
+ma:Operation a rdfs:Class .
+ma:EvidenceTier a rdfs:Class .
+ma:EvidenceType a rdfs:Class .
+ma:SourceSnapshot a rdfs:Class .
+
+ma:logicalTableId a rdf:Property .
+ma:sourceColumn a rdf:Property .
+ma:semanticKey a rdf:Property .
+ma:conceptStatus a rdf:Property .
+ma:unitStatus a rdf:Property .
+ma:valueDomainStatus a rdf:Property .
+ma:operationStatus a rdf:Property .
+ma:allowedOperation a rdf:Property .
+ma:closedOperation a rdf:Property .
+ma:evidenceTier a rdf:Property .
+ma:evidenceType a rdf:Property .
+ma:provenance a rdf:Property .
+ma:sourceIdentity a rdf:Property .
+ma:sourceSnapshot a rdf:Property .
+ma:snapshotDate a rdf:Property .
+ma:alias a rdf:Property .
+ma:needsReview a rdf:Property .
+ma:describesClass a rdf:Property .
+ma:rationale a rdf:Property .
+
+ma:CONFIRMED a ma:ApprovalStatus .
+ma:NEED_REVIEW a ma:ApprovalStatus .
+ma:UNKNOWN a ma:ApprovalStatus .
+ma:UNMAPPED a ma:ApprovalStatus .
+ma:NOT_APPLICABLE a ma:ApprovalStatus .
+ma:OPEN a ma:ApprovalStatus .
+ma:CLOSED a ma:ApprovalStatus .
+
+ma:PROJECT a ma:Operation .
+ma:EQ a ma:Operation .
+ma:NE a ma:Operation .
+ma:LT a ma:Operation .
+ma:LE a ma:Operation .
+ma:GT a ma:Operation .
+ma:GE a ma:Operation .
+ma:SORT a ma:Operation .
+ma:SORT_ASC a ma:Operation .
+ma:SORT_DESC a ma:Operation .
+
+ma:T1_OFFICIAL_SCHEMA a ma:EvidenceTier .
+ma:T2_OFFICIAL_SIBLING_SCHEMA a ma:EvidenceTier .
+ma:T3_TEAM_TRIANGULATED_EVIDENCE a ma:EvidenceTier .
+ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION a ma:EvidenceTier .
+
+ma:OFFICIAL_SCHEMA a ma:EvidenceType .
+ma:SIBLING_SCHEMA a ma:EvidenceType .
+ma:PROFILE_ARTIFACT a ma:EvidenceType .
+ma:INTERNAL_VALIDATION a ma:EvidenceType .
+
+ma:Snapshot20260711 a ma:SourceSnapshot ;
+    ma:snapshotDate "2026-07-11" ;
+    ma:provenance "official 2026-07-11 source snapshot" .
