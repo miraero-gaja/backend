@@ -1,7 +1,8 @@
 """Read-only PREF02 answer validation against an already loaded staging DB.
 
-Set ``G2B_TEST_DATABASE_URL`` or ``DATABASE_URL`` to opt in.  This test never
-creates, changes, or removes database objects.
+Set ``DATABASE_URL`` to the ``mirae_agent`` staging database to opt in. This test
+never creates, changes, or removes database objects. ``G2B_TEST_DATABASE_URL`` is
+reserved for the separate disposable integration database.
 """
 
 from __future__ import annotations
@@ -17,19 +18,20 @@ from app.core.config import Settings
 from app.main import create_app
 
 
-# Prefer the already-loaded application staging database when both URLs exist.
-# G2B_TEST_DATABASE_URL is normally a separate disposable database used by the
-# session-local temporary-table integration test.
-LIVE_DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("G2B_TEST_DATABASE_URL")
+LIVE_DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 @pytest.mark.skipif(
     not LIVE_DATABASE_URL,
-    reason="G2B_TEST_DATABASE_URL/DATABASE_URL is not configured",
+    reason="DATABASE_URL is not configured for the application staging database",
 )
 def test_pref02_aum_top_n_answer_uses_live_multi_projection() -> None:
     application = create_app(
-        settings=Settings(_env_file=None, database_url=LIVE_DATABASE_URL),
+        settings=Settings(
+            _env_file=None,
+            database_url=LIVE_DATABASE_URL,
+            hcx_enabled=False,
+        ),
     )
 
     with TestClient(application, raise_server_exceptions=False) as client:
