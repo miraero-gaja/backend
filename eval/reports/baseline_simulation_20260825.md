@@ -1,4 +1,4 @@
-﻿# Team Golden Query baseline — 2026-07-11
+﻿# Team Golden Query baseline — 2026-08-24
 
 > Team evaluation benchmark only. This is not official evaluation ground truth.
 
@@ -16,7 +16,7 @@
 - Evidence validity: 100.0%
 - Answer schema validity: 100.0%
 - Fail-closed violations: 0
-- Latency p50/p95: 2.258/6.028 ms
+- Latency p50/p95: 2.448/2.989 ms
 
 ## Product-family pass rate
 

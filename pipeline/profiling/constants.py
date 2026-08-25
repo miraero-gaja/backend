@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from pipeline.dataset_contract import TABLE_CONTRACTS, TOTAL_ROWS
+
 
 @dataclass(frozen=True, slots=True)
 class TableSpec:
@@ -20,18 +22,16 @@ class TableSpec:
 
 
 TABLE_SPECS: dict[str, TableSpec] = {
-    "PRBD01N001": TableSpec("PRBD01N001", "국내채권", 42_394),
-    "PREF01N001": TableSpec("PREF01N001", "국내ETF", 1_734),
-    "PREF02N001": TableSpec("PREF02N001", "해외ETF", 5_646),
-    "PRFD01N001": TableSpec(
-        "PRFD01N001",
-        "공모펀드",
-        95_619,
-        physical_id_aliases=("PRFDN001",),
-    ),
+    table_id: TableSpec(
+        logical_table_id=contract.logical_table_id,
+        product_group=contract.product_group,
+        expected_rows=contract.expected_rows,
+        physical_id_aliases=contract.physical_id_aliases,
+    )
+    for table_id, contract in TABLE_CONTRACTS.items()
 }
 
-EXPECTED_TOTAL_ROWS = sum(spec.expected_rows for spec in TABLE_SPECS.values())
+EXPECTED_TOTAL_ROWS = TOTAL_ROWS
 
 REPORT_FILENAMES = (
     "g1_file_manifest.json",
@@ -42,4 +42,3 @@ REPORT_FILENAMES = (
 )
 
 PROFILE_FORMAT_VERSION = "1.0"
-

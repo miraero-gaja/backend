@@ -12,12 +12,11 @@ from collections import Counter
 from collections.abc import Mapping
 from typing import Any
 
+from pipeline.dataset_contract import OFFICIAL_TABLE_IDS, TOTAL_COLUMNS
 
 CONCEPT_STATUSES = frozenset({"CANDIDATE", "UNMAPPED"})
-_OFFICIAL_TABLE_IDS = frozenset(
-    {"PRBD01N001", "PREF01N001", "PREF02N001", "PRFD01N001"}
-)
-_OFFICIAL_COLUMN_COUNT = 207
+_OFFICIAL_TABLE_IDS = OFFICIAL_TABLE_IDS
+_OFFICIAL_COLUMN_COUNT = TOTAL_COLUMNS
 
 
 class ConceptRegistryError(ValueError):

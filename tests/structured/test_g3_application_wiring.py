@@ -85,7 +85,12 @@ def test_application_wired_pref02_aum_desc_top_n_is_supported() -> None:
     assert result.status is StructuredQueryStatus.SUPPORTED
     assert len(backend.calls) == 1
     sql, parameters = backend.calls[0]
-    assert 'ORDER BY "c019_du_last_aum" DESC NULLS LAST' in sql
+    aum_column = (
+        runtime.staging_schema.table_for("PREF02N001")
+        .column_for("du_last_aum#1")
+        .db_column_name
+    )
+    assert f'ORDER BY "{aum_column}" DESC NULLS LAST' in sql
     assert parameters == (3,)
     assert tuple(item.summary for item in result.semantic_gate_trace) == (
         "product_scope_selected",

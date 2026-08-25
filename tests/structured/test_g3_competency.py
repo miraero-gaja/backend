@@ -32,23 +32,23 @@ def _planner() -> SemanticGatedQueryPlanner:
         ),
         build_typed_rule(
             logical_table_id="PRBD01N001",
-            source_column="PD_RISK_GCD",
-            declared_type="bigint",
+            source_column="pd_risk_gcd",
+            declared_type="text",
         ),
         build_typed_rule(
             logical_table_id="PRBD01N001",
-            source_column="DUR",
-            declared_type="numeric",
+            source_column="dur",
+            declared_type="double precision",
         ),
         build_typed_rule(
             logical_table_id="PRBD01N001",
-            source_column="NDY_DUR",
-            declared_type="numeric",
+            source_column="ndy_dur",
+            declared_type="double precision",
         ),
         build_typed_rule(
             logical_table_id="PRBD01N001",
-            source_column="COV",
-            declared_type="numeric",
+            source_column="cov",
+            declared_type="double precision",
         ),
     )
     schema = build_staging_schema(
@@ -167,6 +167,12 @@ def test_pref02_expense_ratio_threshold_is_unsupported() -> None:
 
 
 def test_prbd_risk_code_semantic_query_is_unsupported() -> None:
+    """The PRBD risk-grade concept is now T1-confirmed from the official
+    schema, but its EQ operation stays CLOSED until code-value meaning is
+    approved, so the query is blocked at the operation gate rather than the
+    concept gate.
+    """
+
     error = _assert_runtime_unsupported(
         StructuredQueryContract(
             product_scope="PRBD01N001",
@@ -181,7 +187,8 @@ def test_prbd_risk_code_semantic_query_is_unsupported() -> None:
         )
     )
 
-    assert error.semantic_gate_trace[-1].summary == "concept_not_confirmed"
+    assert error.semantic_gate_trace[-1].operation == "EQ"
+    assert error.semantic_gate_trace[-1].summary == "operation_not_open"
 
 
 @pytest.mark.parametrize(
@@ -195,6 +202,11 @@ def test_prbd_risk_code_semantic_query_is_unsupported() -> None:
 def test_prbd_duration_semantic_queries_are_unsupported(
     semantic_key: str,
 ) -> None:
+    """PRBD duration-like concepts are T1-confirmed, but SORT_DESC stays
+    CLOSED until unit/scale is approved, so the query is blocked at the
+    operation gate rather than the concept gate.
+    """
+
     error = _assert_runtime_unsupported(
         StructuredQueryContract(
             product_scope="PRBD01N001",
@@ -204,7 +216,8 @@ def test_prbd_duration_semantic_queries_are_unsupported(
         )
     )
 
-    assert error.semantic_gate_trace[-1].summary == "concept_not_confirmed"
+    assert error.semantic_gate_trace[-1].operation == "SORT_DESC"
+    assert error.semantic_gate_trace[-1].summary == "operation_not_open"
 
 
 def test_supported_query_with_zero_rows_is_no_match_not_unsupported() -> None:

@@ -2,7 +2,7 @@
   "dataset_name": "team_golden_queries_v1",
   "dataset_kind": "evaluation_simulation",
   "official_ground_truth": false,
-  "source_snapshot": "2026-07-11",
+  "source_snapshot": "2026-08-24",
   "benchmark_mode": "simulation",
   "live_data_used": false,
   "generation_mode": "deterministic",
@@ -56,8 +56,8 @@
     "hallucination_fail_closed_violation_count": 0,
     "generation_validation_fallback_count": 0,
     "latency_ms": {
-      "p50": 2.258,
-      "p95": 6.028
+      "p50": 2.448,
+      "p95": 2.989
     }
   },
   "category_pass_rates": {
@@ -84,8 +84,8 @@
   },
   "query_type_pass_rates": {
     "AMBIGUOUS_FIELD": {
-      "passed": 2,
-      "evaluated": 2,
+      "passed": 1,
+      "evaluated": 1,
       "rate": 1.0
     },
     "AMBIGUOUS_SCOPE": {
@@ -149,8 +149,8 @@
       "rate": 1.0
     },
     "UNSUPPORTED_UNIT": {
-      "passed": 3,
-      "evaluated": 3,
+      "passed": 4,
+      "evaluated": 4,
       "rate": 1.0
     }
   },
@@ -204,7 +204,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 9.924,
+      "latency_ms": 6.648,
       "rationale": "명시적 상품군의 무필터 COUNT는 planner가 승인한다.",
       "evidence_basis": "G2 staging table identity and deterministic simulation fixture count."
     },
@@ -254,9 +254,9 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.124,
-      "rationale": "PD_RISK_GCD code meaning and direction are unresolved.",
-      "evidence_basis": "G3 semantic registry UNKNOWN concept and CLOSED operations."
+      "latency_ms": 2.682,
+      "rationale": "pd_risk_gcd의 선언명·타입은 T1_OFFICIAL_SCHEMA로 CONFIRMED되었으나, 코드값 의미와 위험 방향은 여전히 미승인이라 비교 연산(LE)은 CLOSED다.",
+      "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), valueDomain NEED_REVIEW, EQ/NE/LT/LE/GT/GE/SORT_ASC/SORT_DESC 전부 CLOSED."
     },
     {
       "case_id": "bond-03",
@@ -304,37 +304,25 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.321,
-      "rationale": "Numeric code order must not be interpreted as risk direction.",
-      "evidence_basis": "G3 semantic registry UNKNOWN concept and CLOSED operations."
+      "latency_ms": 2.441,
+      "rationale": "코드값의 숫자 순서를 위험 방향으로 해석하지 않으므로, concept이 CONFIRMED여도 비교 연산(GE)은 CLOSED 상태를 유지한다.",
+      "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), 코드 순서/방향 미승인으로 comparison operation 전부 CLOSED."
     },
     {
       "case_id": "bond-04",
       "product_family": "국내채권",
       "query_type": "AMBIGUOUS_FIELD",
-      "question": "국내채권 듀레이션 3 이하",
+      "question": "국내채권 듀레이션과 익일 듀레이션 비교",
       "dataset_expected_status": "UNSUPPORTED",
       "expected_status": "UNSUPPORTED",
       "expected_status_source": "DATASET_METADATA",
       "actual_status": "UNSUPPORTED",
       "expected_product_scope": "PRBD01N001",
       "actual_product_scope": "PRBD01N001",
-      "expected_semantic_keys": [
-        "prbd.dur_unresolved",
-        "prbd.ndy_dur_unresolved",
-        "prbd.cov_unresolved"
-      ],
-      "actual_semantic_keys": [
-        "prbd.dur_unresolved",
-        "prbd.ndy_dur_unresolved",
-        "prbd.cov_unresolved"
-      ],
-      "expected_operation": [
-        "LE"
-      ],
-      "actual_operation": [
-        "LE"
-      ],
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
       "expected_result_count": null,
       "actual_result_count": null,
       "result_validation": {
@@ -358,14 +346,14 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 1.734,
-      "rationale": "DUR, NDY_DUR, COV distinction is unresolved.",
-      "evidence_basis": "G3 registry has three UNKNOWN concepts for the alias."
+      "latency_ms": 2.164,
+      "rationale": "듀레이션과 익일 듀레이션이 각각 독립적인 occurrence로 명시되어 서로 다른 두 semantic field(prbd.dur_unresolved, prbd.ndy_dur_unresolved)가 동시에 매치된다. Span-aware alias longest-match는 두 occurrence가 서로 nested되어 있지 않으므로 어느 한 쪽만 임의로 선택하지 않고, parser가 multiple_semantic_fields ambiguity로 fail-closed한다.",
+      "evidence_basis": "mappings/aliases/registry.py의 span-aware _select_longest_matches와 app/agent/parser.py의 다중 필드 ambiguity 정책(len(fields) > 1 → multiple_semantic_fields)."
     },
     {
       "case_id": "bond-05",
       "product_family": "국내채권",
-      "query_type": "AMBIGUOUS_FIELD",
+      "query_type": "UNSUPPORTED_UNIT",
       "question": "국내채권 duration 높은 순 3개",
       "dataset_expected_status": "UNSUPPORTED",
       "expected_status": "UNSUPPORTED",
@@ -374,14 +362,10 @@
       "expected_product_scope": "PRBD01N001",
       "actual_product_scope": "PRBD01N001",
       "expected_semantic_keys": [
-        "prbd.dur_unresolved",
-        "prbd.ndy_dur_unresolved",
-        "prbd.cov_unresolved"
+        "prbd.dur_unresolved"
       ],
       "actual_semantic_keys": [
-        "prbd.dur_unresolved",
-        "prbd.ndy_dur_unresolved",
-        "prbd.cov_unresolved"
+        "prbd.dur_unresolved"
       ],
       "expected_operation": [
         "SORT_DESC"
@@ -412,9 +396,9 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.399,
-      "rationale": "No duration field may be selected by assumption.",
-      "evidence_basis": "Alias registry maps duration to three unresolved semantic keys."
+      "latency_ms": 2.261,
+      "rationale": "'duration' alias는 이제 prbd.dur_unresolved 하나로만 unambiguous하게 resolve된다. 다만 unit/scale이 NEED_REVIEW 상태로 남아 있어 SORT_DESC를 포함한 모든 numeric operation이 CLOSED이므로 여전히 UNSUPPORTED다.",
+      "evidence_basis": "G3 semantic registry: prbd.dur_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), unit NEED_REVIEW, 8개 runtime operation 전부 CLOSED."
     },
     {
       "case_id": "bond-06",
@@ -454,7 +438,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.141,
+      "latency_ms": 2.448,
       "rationale": "No approved alias or semantic field exists.",
       "evidence_basis": "Core and semantic registries contain no approved PRBD yield concept."
     },
@@ -500,9 +484,9 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.134,
-      "rationale": "Concept is unresolved and no executable operation is explicit.",
-      "evidence_basis": "G3 registry and deterministic parser contract."
+      "latency_ms": 2.166,
+      "rationale": "pd_risk_gcd 개념은 T1으로 CONFIRMED되었으나, 질의에 실행 가능한 filter/sort 표현이 없어 operation을 인식하지 못한다.",
+      "evidence_basis": "G3 registry T1_OFFICIAL_SCHEMA CONFIRMED concept + deterministic parser contract (인식 가능한 operation 키워드 없음)."
     },
     {
       "case_id": "bond-08",
@@ -550,9 +534,9 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.072,
-      "rationale": "Risk direction is not approved.",
-      "evidence_basis": "PRBD semantic operations are CLOSED."
+      "latency_ms": 2.088,
+      "rationale": "코드값 순서를 위험 방향으로 해석하지 않으므로 concept이 CONFIRMED여도 SORT_DESC는 CLOSED 상태를 유지한다.",
+      "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), SORT_ASC/SORT_DESC 포함 전 operation CLOSED."
     },
     {
       "case_id": "bond-09",
@@ -592,7 +576,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.002,
+      "latency_ms": 2.077,
       "rationale": "No approved coupon-rate alias exists.",
       "evidence_basis": "Current alias and semantic registries."
     },
@@ -634,7 +618,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 4.755,
+      "latency_ms": 2.051,
       "rationale": "Two explicit product scopes must not be guessed.",
       "evidence_basis": "Deterministic product alias policy."
     },
@@ -684,7 +668,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.264,
+      "latency_ms": 2.749,
       "rationale": "Official product code supports exact EQ.",
       "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live status/count are resolved by an independent structured oracle."
     },
@@ -734,7 +718,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.258,
+      "latency_ms": 2.532,
       "rationale": "Supported EQ with zero fixture rows is NO_MATCH.",
       "evidence_basis": "G2 mapping plus deterministic fixture absence; live status/count are resolved by an independent structured oracle."
     },
@@ -784,7 +768,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.099,
+      "latency_ms": 2.535,
       "rationale": "Product-name EQ is approved by G2 and should be understood.",
       "evidence_basis": "G2 CONFIRMED pref01.product_name EQ permission; live status/count are oracle-resolved."
     },
@@ -834,7 +818,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.162,
+      "latency_ms": 2.654,
       "rationale": "Source-native numeric comparison is G2-approved.",
       "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live results use the structured oracle."
     },
@@ -886,7 +870,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 5.985,
+      "latency_ms": 2.588,
       "rationale": "Approved filter, sort and limit combination.",
       "evidence_basis": "G2 allowed operations and deterministic fixture; live results use the structured oracle."
     },
@@ -936,7 +920,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.249,
+      "latency_ms": 2.518,
       "rationale": "Source-native AUM ordering is approved.",
       "evidence_basis": "G2 SORT-only approval; no unit conversion; live results use the structured oracle."
     },
@@ -986,7 +970,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.936,
+      "latency_ms": 2.462,
       "rationale": "G2 SORT permission supports source-native ascending order.",
       "evidence_basis": "G2 SORT-only approval; no unit conversion; live results use the structured oracle."
     },
@@ -1032,7 +1016,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.258,
+      "latency_ms": 2.672,
       "rationale": "Unfiltered table COUNT is planner-approved.",
       "evidence_basis": "Structured COUNT contract and deterministic fixture count."
     },
@@ -1082,7 +1066,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 6.028,
+      "latency_ms": 2.989,
       "rationale": "Rate scale and numeric type are not approved.",
       "evidence_basis": "G2 NEED_REVIEW field with no operations."
     },
@@ -1124,7 +1108,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.125,
+      "latency_ms": 3.822,
       "rationale": "Volatility is not an approved alias/field.",
       "evidence_basis": "Current alias and core registries."
     },
@@ -1174,7 +1158,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.582,
+      "latency_ms": 2.887,
       "rationale": "Approved source-native AUM descending Top-3.",
       "evidence_basis": "G3 PROJECT/SORT_DESC approval and simulation fixture; live identities/order use the structured oracle."
     },
@@ -1224,7 +1208,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.527,
+      "latency_ms": 2.73,
       "rationale": "Explicit Top-N implies approved descending ranking.",
       "evidence_basis": "G3 SORT_DESC and default multi-projection; live identities/order use the structured oracle."
     },
@@ -1274,7 +1258,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.118,
+      "latency_ms": 2.108,
       "rationale": "Only SORT_DESC is OPEN.",
       "evidence_basis": "G3 semantic operation approval."
     },
@@ -1324,7 +1308,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 5.537,
+      "latency_ms": 2.516,
       "rationale": "AUM unit and scale are unresolved.",
       "evidence_basis": "G3 unit NEED_REVIEW and threshold CLOSED."
     },
@@ -1374,7 +1358,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.166,
+      "latency_ms": 2.008,
       "rationale": "Absolute threshold remains CLOSED even without an explicit unit token.",
       "evidence_basis": "G3 GE CLOSED."
     },
@@ -1424,7 +1408,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.016,
+      "latency_ms": 1.995,
       "rationale": "Expense unit, scale and zero meaning are unresolved.",
       "evidence_basis": "G3 concept-only approval with numeric operations CLOSED."
     },
@@ -1474,7 +1458,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.105,
+      "latency_ms": 2.324,
       "rationale": "Profiling does not approve numeric comparison.",
       "evidence_basis": "G3 LE CLOSED."
     },
@@ -1520,7 +1504,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.217,
+      "latency_ms": 2.219,
       "rationale": "Unfiltered table COUNT is planner-approved.",
       "evidence_basis": "Structured COUNT contract and deterministic fixture count."
     },
@@ -1570,7 +1554,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 6.141,
+      "latency_ms": 2.506,
       "rationale": "Simulation injects zero rows; live status is resolved from the actual staging result instead of reusing the fixture expectation.",
       "evidence_basis": "Explicit zero-row simulation fixture plus live structured oracle."
     },
@@ -1612,7 +1596,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.092,
+      "latency_ms": 2.282,
       "rationale": "No approved volatility field exists.",
       "evidence_basis": "Current alias and semantic registries."
     },
@@ -1662,7 +1646,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.229,
+      "latency_ms": 2.37,
       "rationale": "Official fund product code supports EQ.",
       "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live status/count are oracle-resolved."
     },
@@ -1712,7 +1696,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.235,
+      "latency_ms": 2.465,
       "rationale": "Supported EQ with no matching fixture row.",
       "evidence_basis": "G2 mapping plus deterministic fixture absence; live status/count are oracle-resolved."
     },
@@ -1762,7 +1746,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.438,
+      "latency_ms": 2.408,
       "rationale": "Product-name EQ is approved by G2 and should be understood.",
       "evidence_basis": "G2 CONFIRMED prfd.product_name EQ permission; live status/count are oracle-resolved."
     },
@@ -1812,7 +1796,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.775,
+      "latency_ms": 2.666,
       "rationale": "Source-native net-assets ordering is approved.",
       "evidence_basis": "G2 SORT-only approval; live identities/order use the structured oracle."
     },
@@ -1862,7 +1846,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 4.587,
+      "latency_ms": 2.49,
       "rationale": "Source-native ascending ordering is approved.",
       "evidence_basis": "G2 SORT-only approval; live identities/order use the structured oracle."
     },
@@ -1912,7 +1896,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.736,
+      "latency_ms": 2.164,
       "rationale": "Net-assets absolute threshold is not approved.",
       "evidence_basis": "G2 prfd.net_assets allows SORT only and unit is UNMAPPED."
     },
@@ -1958,7 +1942,7 @@
       "failure_types": [],
       "backend_call_count": 1,
       "generation_fallback": false,
-      "latency_ms": 2.384,
+      "latency_ms": 2.2,
       "rationale": "Unfiltered table COUNT is planner-approved.",
       "evidence_basis": "Structured COUNT contract and deterministic fixture count."
     },
@@ -2010,7 +1994,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.192,
+      "latency_ms": 2.14,
       "rationale": "Filtered aggregation is intentionally fail-closed.",
       "evidence_basis": "Grounder filtered_aggregation_not_supported policy."
     },
@@ -2052,7 +2036,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 4.564,
+      "latency_ms": 2.145,
       "rationale": "No approved public-fund fee alias exists.",
       "evidence_basis": "Current alias and core registries."
     },
@@ -2102,7 +2086,7 @@
       "failure_types": [],
       "backend_call_count": 0,
       "generation_fallback": false,
-      "latency_ms": 2.508,
+      "latency_ms": 2.515,
       "rationale": "Product name has EQ/NE permission, not SORT.",
       "evidence_basis": "G2 allowed operations."
     }

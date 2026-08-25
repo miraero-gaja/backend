@@ -14,7 +14,7 @@
 - 환경변수 기반 설정, 구조화된 운영 로그 필드, deadline 기반 실행 경계
 - 비활성 HCX interface와 no-evidence fallback
 - G1 4종 workbook profiling과 원본 불변성 검증
-- G2-A 전체 207개 컬럼 typed rule, raw-preserving lineage와 coverage mapping
+- G2-A 전체 280개 컬럼 typed rule, raw-preserving lineage와 coverage mapping
 - G2-B 4개 PostgreSQL staging table 계약, streaming loader와 적재 검증
 - 공식 설명으로 확인한 Priority-A 34개 필드 allowlist와 parameterized Structured Query compiler
 - EQ/NE/LT/LE/GT/GE, 다중 filter, ASC/DESC, Top-N, COUNT의 결정론적 실행 계약
@@ -23,7 +23,7 @@
 
 ## 아직 구현하지 않은 범위
 
-- 인증된 PostgreSQL에 대한 공식 145,393행 live 적재 완료 증거
+- 2026-08-24 공식 53,375행 기준 G1/G2-A 재생성 및 PostgreSQL 재적재 검증
 - 자연어를 검증된 Structured Query Contract로 만드는 parser/grounding
 - entity resolution과 자유 NL2SQL (자유 NL2SQL은 계획하지 않음)
 - 실제 금융 Ontology class/property와 TTL 산출물

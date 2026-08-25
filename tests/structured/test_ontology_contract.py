@@ -272,7 +272,7 @@ def test_namespace_and_domain_logical_tables_are_consistent() -> None:
         contracts = graph.subjects(RDF_TYPE, MA + "DomainOntology")
         assert len(contracts) == 1
         assert one_literal(graph, contracts[0], "logicalTableId") == table
-        assert graph.objects(contracts[0], MA + "sourceSnapshot") == (MA + "Snapshot20260711",)
+        assert graph.objects(contracts[0], MA + "sourceSnapshot") == (MA + "Snapshot20260824",)
 
 
 def test_g2_and_g3_registry_coverage_and_operations_do_not_drift() -> None:
@@ -323,6 +323,7 @@ def test_pref02_aum_and_expense_ratio_remain_fail_closed() -> None:
     indexed = fields({"etf_gl.ttl": graph})
     aum = indexed["pref02.aum_latest"][1]
     assert local_set(graph, aum, "allowedOperation") == {"PROJECT", "SORT_DESC"}
+    assert local_set(graph, aum, "closedOperation") == {"LT", "LE", "GT", "GE"}
     assert one_resource(graph, aum, "unitStatus") == MA + "NEED_REVIEW"
     assert not graph.objects(aum, MA + "unit")
     expense = indexed["pref02.expense_ratio"][1]
@@ -332,7 +333,40 @@ def test_pref02_aum_and_expense_ratio_remain_fail_closed() -> None:
     }
 
 
-def test_prbd_four_unresolved_fields_remain_unknown_and_closed() -> None:
+def test_pref02_four_concepts_are_t1_official_schema_confirmed() -> None:
+    """All four PREF02 G3 fields are concept-CONFIRMED directly from the
+    20260824 official schema (T1), matching the current semantic registry.
+    """
+
+    graph = domain_graphs()["etf_gl.ttl"]
+    indexed = fields({"etf_gl.ttl": graph})
+    for semantic_key in (
+        "pref02.expense_ratio",
+        "pref02.aum_latest",
+        "pref02.product_identifier",
+        "pref02.product_name",
+    ):
+        subject = indexed[semantic_key][1]
+        assert one_resource(graph, subject, "conceptStatus") == MA + "CONFIRMED"
+        assert "T1_OFFICIAL_SCHEMA" in local_set(graph, subject, "evidenceTier")
+
+
+def test_pref02_product_identifier_has_no_official_pk_claim() -> None:
+    graph = domain_graphs()["etf_gl.ttl"]
+    subject = fields({"etf_gl.ttl": graph})["pref02.product_identifier"][1]
+    rationale = one_literal(graph, subject, "rationale").lower()
+    assert "official primary key" not in rationale or (
+        "not a declared official primary key" in rationale
+    )
+    assert "statistical unique candidate" in rationale
+
+
+def test_prbd_four_fields_are_t1_confirmed_with_operations_still_closed() -> None:
+    """PRBD concept is now T1-confirmed from the official 20260824 schema,
+    but unit, scale, and code-value meaning remain unapproved, so no
+    operation is OPEN.
+    """
+
     graph = domain_graphs()["bond_kr.ttl"]
     indexed = fields({"bond_kr.ttl": graph})
     assert set(indexed) == {
@@ -340,10 +374,55 @@ def test_prbd_four_unresolved_fields_remain_unknown_and_closed() -> None:
         "prbd.ndy_dur_unresolved", "prbd.cov_unresolved",
     }
     for _, subject in indexed.values():
-        assert one_resource(graph, subject, "conceptStatus") == MA + "UNKNOWN"
-        assert one_resource(graph, subject, "unitStatus") == MA + "UNKNOWN"
+        assert one_resource(graph, subject, "conceptStatus") == MA + "CONFIRMED"
+        assert "T1_OFFICIAL_SCHEMA" in local_set(graph, subject, "evidenceTier")
+        assert one_resource(graph, subject, "unitStatus") == MA + "NEED_REVIEW"
         assert one_resource(graph, subject, "valueDomainStatus") == MA + "NEED_REVIEW"
         assert not graph.objects(subject, MA + "allowedOperation")
+        assert local_set(graph, subject, "closedOperation") == {
+            "EQ", "NE", "LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"
+        }
+
+
+def test_prbd_source_columns_use_lowercase_current_physical_identity() -> None:
+    graph = domain_graphs()["bond_kr.ttl"]
+    indexed = fields({"bond_kr.ttl": graph})
+    observed = {
+        key: one_literal(field_graph, subject, "sourceColumn")
+        for key, (field_graph, subject) in indexed.items()
+    }
+    assert observed == {
+        "prbd.pd_risk_gcd_unresolved": "pd_risk_gcd",
+        "prbd.dur_unresolved": "dur",
+        "prbd.ndy_dur_unresolved": "ndy_dur",
+        "prbd.cov_unresolved": "cov",
+    }
+    for value in observed.values():
+        assert value == value.lower()
+
+
+def test_prbd_pd_risk_gcd_carries_no_code_meaning_or_ordinal_direction() -> None:
+    """The ontology may record that pd_risk_gcd is T1-confirmed as a coded
+    text field, but it must not encode what any raw code value means, its
+    ordering, or its risk direction anywhere in the triples or vocabulary.
+    """
+
+    graph = domain_graphs()["bond_kr.ttl"]
+    subject = fields({"bond_kr.ttl": graph})["prbd.pd_risk_gcd_unresolved"][1]
+
+    forbidden_predicate_terms = (
+        "codemeaning", "ordinal", "direction", "riskorder", "coderank", "codevalue",
+    )
+    predicates = {p for s, p, o in graph.triples if s == subject}
+    for predicate in predicates:
+        local_name = predicate.removeprefix(MA).lower()
+        assert not any(term in local_name for term in forbidden_predicate_terms)
+
+    rationale = one_literal(graph, subject, "rationale").lower()
+    forbidden_meaning_terms = (
+        "high risk", "low risk", "safest", "riskiest", "ascending", "descending",
+    )
+    assert not any(term in rationale for term in forbidden_meaning_terms)
 
 
 def test_pref02_exchange_codes_have_no_invented_semantic_key() -> None:
@@ -356,9 +435,25 @@ def test_pref02_exchange_codes_have_no_invented_semantic_key() -> None:
     assert one_resource(graph, exchange[0], "conceptStatus") == MA + "UNKNOWN"
 
 
-def test_every_domain_uses_2026_07_11_provenance() -> None:
-    snapshot = MA + "Snapshot20260711"
-    assert parse("common.ttl").objects(snapshot, MA + "snapshotDate") == (Literal("2026-07-11"),)
-    for graph in domain_graphs().values():
+def test_all_five_domains_use_20260824_snapshot_and_provenance() -> None:
+    snapshot = MA + "Snapshot20260824"
+    assert parse("common.ttl").objects(snapshot, MA + "snapshotDate") == (
+        Literal("2026-08-24"),
+    )
+    for name in FILES:
+        graph = parse(name)
+        for contract in graph.subjects(RDF_TYPE, MA + "DomainOntology"):
+            assert graph.objects(contract, MA + "sourceSnapshot") == (snapshot,)
         subjects = graph.subjects(RDF_TYPE, MA + "SemanticField")
-        assert subjects and all(graph.objects(s, MA + "sourceSnapshot") == (snapshot,) for s in subjects)
+        if subjects:
+            assert all(
+                graph.objects(s, MA + "sourceSnapshot") == (snapshot,) for s in subjects
+            )
+
+
+def test_no_stale_20260711_or_g3a1_provenance_remains_in_ontology() -> None:
+    stale_markers = ("Snapshot20260711", "2026-07-11", "g3a1_pref02", "g3a1_prbd")
+    for name in FILES:
+        text = (ONTOLOGY / name).read_text(encoding="utf-8")
+        for marker in stale_markers:
+            assert marker not in text, f"{marker!r} still present in {name}"

@@ -10,22 +10,42 @@ from __future__ import annotations
 import json
 import os
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
+import app.composition as composition
 from app.core.config import Settings
 from app.main import create_app
 
 
 LIVE_DATABASE_URL = os.getenv("DATABASE_URL")
 
+LIVE_G2B_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "outputs"
+    / "reports"
+    / "g2b"
+    / "g2b_structured_schema.json"
+)
+
 
 @pytest.mark.skipif(
     not LIVE_DATABASE_URL,
     reason="DATABASE_URL is not configured for the application staging database",
 )
-def test_pref02_aum_top_n_answer_uses_live_multi_projection() -> None:
+def test_pref02_aum_top_n_answer_uses_live_multi_projection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert LIVE_G2B_SCHEMA_PATH.is_file()
+
+    monkeypatch.setattr(
+        composition,
+        "_DEFAULT_G2B_STRUCTURED_SCHEMA_PATH",
+        LIVE_G2B_SCHEMA_PATH,
+    )
+
     application = create_app(
         settings=Settings(
             _env_file=None,
@@ -51,13 +71,18 @@ def test_pref02_aum_top_n_answer_uses_live_multi_projection() -> None:
         )
 
     assert first.status_code == second.status_code == 200
+
     first_payload = first.json()
     second_payload = second.json()
+
     first_context = json.loads(first_payload["retrieved_context"])
     second_context = json.loads(second_payload["retrieved_context"])
+
     assert first_context == second_context
     assert first_context["status"] == "SUPPORTED"
+
     evidence = first_context["evidence"]
+
     assert len(evidence) == first_context["evidence_count"] == 9
     assert {item["source_table"] for item in evidence} == {"PREF02N001"}
     assert {item["source_field"] for item in evidence} == {
@@ -67,16 +92,32 @@ def test_pref02_aum_top_n_answer_uses_live_multi_projection() -> None:
     }
 
     rows: dict[str, dict[str, object]] = {}
+
     for item in evidence:
-        rows.setdefault(item["source_row_id"], {})[item["source_field"]] = item
+        rows.setdefault(
+            item["source_row_id"],
+            {},
+        )[item["source_field"]] = item
+
     assert len(rows) == 3
+
     aum_values: list[Decimal] = []
+
     for row in rows.values():
         identifier = row["pd_itm_no#1"]["normalized_value"]
         assert isinstance(identifier, str) and identifier
-        assert {item["product_key"] for item in row.values()} == {identifier}
+
+        assert {
+            item["product_key"]
+            for item in row.values()
+        } == {identifier}
+
         name = row["pd_nm#1"]["normalized_value"]
         assert isinstance(name, str) and name
-        aum_values.append(Decimal(row["du_last_aum#1"]["normalized_value"]))
+
+        aum_values.append(
+            Decimal(row["du_last_aum#1"]["normalized_value"])
+        )
+
     assert aum_values == sorted(aum_values, reverse=True)
     assert "source-native 값" in first_payload["answer"]
