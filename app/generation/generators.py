@@ -59,7 +59,7 @@ class HyperClovaAnswerGenerator:
     ) -> GenerationResult:
         return GenerationResult(
             answer=generation_input.deterministic_fallback_answer,
-            provider="hyperclova-x",
+            provider="hyperclova_x",
             used_fallback=True,
             validation_status=status,
             elapsed_ms=max(0.0, (monotonic() - started_at) * 1000),
@@ -84,7 +84,7 @@ class HyperClovaAnswerGenerator:
             return self._fallback(generation_input, validation.status, started_at)
         return GenerationResult(
             answer=validation.answer,
-            provider="hyperclova-x",
+            provider="hyperclova_x",
             used_fallback=False,
             validation_status=validation.status,
             elapsed_ms=max(0.0, (monotonic() - started_at) * 1000),
