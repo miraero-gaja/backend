@@ -45,6 +45,7 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
     FieldAlias("상품코드", "PREF01N001", ("pref01.product_code",)),
     FieldAlias("상품명", "PREF01N001", ("pref01.product_name",)),
     FieldAlias("AUM", "PREF01N001", ("pref01.aum_latest",)),
+    FieldAlias("총보수", "PREF01N001", ("pref01.total_fee_rate",)),
     FieldAlias(
         "상장주식수",
         "PREF01N001",

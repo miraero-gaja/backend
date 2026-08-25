@@ -17,6 +17,7 @@ from app.structured.contracts import (
     SortDirection,
 )
 from mappings.aliases import field_alias_matches, product_alias_matches
+from mappings.core import SemanticStatus, get_confirmed_field_map
 
 
 _COMPARATORS = {
@@ -45,6 +46,8 @@ def _spaced_alias_pattern(alias: str) -> str:
 def _parse_filter(
     question: str,
     field_alias: str,
+    *,
+    eq_approved: bool,
 ) -> ParsedFilterCondition | None:
     alias_pattern = _spaced_alias_pattern(field_alias)
     threshold = re.search(
@@ -75,6 +78,23 @@ def _parse_filter(
                 operator=FilterOperator.EQ,
                 value=equality.group(1),
             )
+    if eq_approved:
+        for suffix in (
+            r"(?:과|와)\s*(?:같은|동일한)\s*(?:상품|것)",
+            r"인\s*(?:상품|것)",
+        ):
+            equality = re.search(
+                rf"{alias_pattern}\s*(?:이|가|은|는)?\s*"
+                rf"(.+?)\s*{suffix}",
+                question,
+                re.IGNORECASE,
+            )
+            if equality is not None and equality.group(1).strip():
+                return ParsedFilterCondition(
+                    field_alias=field_alias,
+                    operator=FilterOperator.EQ,
+                    value=equality.group(1).strip(),
+                )
     return None
 
 
@@ -184,7 +204,21 @@ class QueryParser:
         if field_alias is not None:
             trace.append(f"필드 표현: {field_alias}")
         condition = (
-            _parse_filter(question, field_alias)
+            _parse_filter(
+                question,
+                field_alias,
+                eq_approved=any(
+                    mapping.semantic_status is SemanticStatus.CONFIRMED
+                    and "EQ" in mapping.allowed_operations
+                    for semantic_key in fields[0].semantic_keys
+                    for mapping in (
+                        get_confirmed_field_map(product.logical_table_id).get(
+                            semantic_key
+                        ),
+                    )
+                    if mapping is not None
+                ),
+            )
             if field_alias is not None
             else None
         )
@@ -250,25 +284,6 @@ class QueryParser:
                 question_id=question_id,
                 product_scopes=(product.logical_table_id,),
                 ambiguity=tuple(ambiguity),
-                route_hint=RouteHint.UNSUPPORTED,
-                understanding=understanding,
-            )
-
-        if condition is None and sort_direction is None and aggregate is None:
-            trace.append("연산 파싱: 인식 실패")
-            understanding = QueryUnderstandingResult(
-                product_candidate=product.display_name,
-                logical_table_id=product.logical_table_id,
-                requested_field_alias=field_alias,
-                status=QueryUnderstandingStatus.UNSUPPORTED,
-                unsupported_reason="query_operation_not_recognized",
-                execution_trace=tuple(trace),
-            )
-            return QueryContract(
-                request_id=request_id,
-                question_id=question_id,
-                product_scopes=(product.logical_table_id,),
-                ambiguity=(),
                 route_hint=RouteHint.UNSUPPORTED,
                 understanding=understanding,
             )

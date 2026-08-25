@@ -155,6 +155,33 @@ def test_answer_supported_query_zero_rows_is_no_match() -> None:
     assert len(backend.calls) == 1
 
 
+def test_answer_whole_product_count_serializes_aggregate_evidence() -> None:
+    backend = StubBackend(({"__count": 7},))
+
+    with _client(backend) as client:
+        response = client.get(
+            "/answer",
+            params={"question_id": "count", "question": "국내 ETF 개수"},
+        )
+
+    payload = response.json()
+    _assert_contract(payload)
+    assert response.status_code == 200
+    context = json.loads(payload["retrieved_context"])
+    assert context["status"] == "SUPPORTED"
+    assert context["evidence"] == []
+    assert context["aggregate_evidence"] == [
+        {
+            "condition_ids": [],
+            "decision": "SUPPORTED",
+            "operation": "COUNT",
+            "source_table": "PREF01N001",
+            "value": 7,
+        }
+    ]
+    assert "7개" in payload["answer"]
+
+
 def test_answer_backend_exception_is_tool_failure_with_http_200() -> None:
     backend = StubBackend(error=RuntimeError("database unavailable"))
 

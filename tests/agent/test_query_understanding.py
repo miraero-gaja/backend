@@ -110,6 +110,58 @@ def test_confirmed_g2_field_filter_builds_deterministic_contract() -> None:
     assert condition.value == "069500"
 
 
+@pytest.mark.parametrize(
+    ("question", "semantic_key", "value"),
+    (
+        (
+            "국내 ETF 상품명 KODEX 200과 같은 상품",
+            "pref01.product_name",
+            "KODEX 200",
+        ),
+        (
+            "공모펀드 상품명 글로벌성장펀드와 같은 상품",
+            "prfd.product_name",
+            "글로벌성장펀드",
+        ),
+    ),
+)
+def test_approved_text_eq_aliases_parse_without_value_hardcoding(
+    question: str,
+    semantic_key: str,
+    value: str,
+) -> None:
+    grounded = _ground(question)
+
+    assert grounded.route_hint is RouteHint.STRUCTURED
+    assert grounded.structured_query is not None
+    assert grounded.structured_query.filters[0].field == semantic_key
+    assert grounded.structured_query.filters[0].operator is FilterOperator.EQ
+    assert grounded.structured_query.filters[0].value == value
+
+
+def test_unapproved_domestic_etf_fee_preserves_semantic_and_unit_reason() -> None:
+    grounded = _ground("국내 ETF 총보수 0.5% 이하")
+
+    assert grounded.route_hint is RouteHint.UNSUPPORTED
+    assert grounded.understanding is not None
+    assert grounded.understanding.semantic_keys == ("pref01.total_fee_rate",)
+    assert grounded.understanding.filter_conditions[0].operator is FilterOperator.LE
+    assert grounded.understanding.unsupported_reason == "unit_conversion_not_approved"
+
+
+def test_unresolved_bond_risk_concept_is_preserved_without_an_operation() -> None:
+    grounded = _ground("국내채권 위험등급 알려줘")
+
+    assert grounded.route_hint is RouteHint.UNSUPPORTED
+    assert grounded.understanding is not None
+    assert grounded.understanding.semantic_keys == (
+        "prbd.pd_risk_gcd_unresolved",
+    )
+    assert grounded.understanding.unsupported_reason == (
+        "semantic_concept_not_confirmed"
+    )
+
+
 def test_confirmed_g2_source_native_range_builds_contract() -> None:
     grounded = _ground("국내 ETF 상장주식수 100 이상")
 

@@ -6,7 +6,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.evidence.models import EvidenceItem, ReasonCode, SupportStatus
+from app.evidence.models import AggregateEvidence, EvidenceItem, ReasonCode, SupportStatus
 
 
 class GenerationValidationStatus(StrEnum):
@@ -31,6 +31,7 @@ class GenerationInput(BaseModel):
     support_status: SupportStatus
     reason_codes: tuple[ReasonCode, ...] = ()
     evidence: tuple[EvidenceItem, ...] = ()
+    aggregate_evidence: tuple[AggregateEvidence, ...] = ()
     execution_trace: str = Field(max_length=200)
     deterministic_fallback_answer: str = Field(min_length=1, max_length=1000)
 
@@ -38,6 +39,11 @@ class GenerationInput(BaseModel):
     def evidence_must_already_be_validated(self) -> "GenerationInput":
         if any(item.decision is not SupportStatus.SUPPORTED for item in self.evidence):
             raise ValueError("generation input accepts only supported evidence")
+        if any(
+            item.decision is not SupportStatus.SUPPORTED
+            for item in self.aggregate_evidence
+        ):
+            raise ValueError("generation input accepts only supported aggregate evidence")
         return self
 
     @classmethod
@@ -48,6 +54,7 @@ class GenerationInput(BaseModel):
         decision_status: SupportStatus,
         reason_codes: tuple[ReasonCode, ...],
         evidence: tuple[EvidenceItem, ...],
+        aggregate_evidence: tuple[AggregateEvidence, ...] = (),
         execution_trace: str,
         deterministic_fallback_answer: str,
     ) -> "GenerationInput":
@@ -58,6 +65,11 @@ class GenerationInput(BaseModel):
             evidence=tuple(
                 item
                 for item in evidence
+                if item.decision is SupportStatus.SUPPORTED
+            ),
+            aggregate_evidence=tuple(
+                item
+                for item in aggregate_evidence
                 if item.decision is SupportStatus.SUPPORTED
             ),
             execution_trace=execution_trace,
