@@ -200,12 +200,41 @@ class StructuredEvidenceValidator:
             return tuple(trace)
 
         if compiled.is_count:
-            if len(result.candidates) != 1 or result.evidence:
+            if (
+                len(result.candidates) != 1
+                or result.evidence
+                or len(result.aggregate_evidence) != 1
+            ):
                 raise StructuredEvidenceValidationError(
                     "COUNT result shape or evidence is invalid"
                 )
+            candidate = result.candidates[0]
+            aggregate = result.aggregate_evidence[0]
+            expected_conditions = tuple(
+                selection.condition_id
+                for selection in compiled.evidence_fields
+                if selection.condition_id is not None
+            )
+            if (
+                set(candidate) != {"count"}
+                or candidate["count"] != aggregate.value
+                or aggregate.source_table != query.product_scope
+                or aggregate.operation != "COUNT"
+                or aggregate.query_fingerprint != result.query_fingerprint
+                or aggregate.condition_ids != expected_conditions
+                or aggregate.decision is not SupportStatus.SUPPORTED
+            ):
+                raise StructuredEvidenceValidationError(
+                    "COUNT aggregate provenance is invalid"
+                )
             trace.append("COUNT 결과 형식 확인")
+            trace.append("Aggregate Evidence 확정")
             return tuple(trace)
+
+        if result.aggregate_evidence:
+            raise StructuredEvidenceValidationError(
+                "row result contains aggregate evidence"
+            )
 
         if not result.candidates:
             raise StructuredEvidenceValidationError(
@@ -407,6 +436,9 @@ class EvidenceValidator:
         results = tuple(tool_results)
         supplied_items = tuple(evidence)
         result_items = tuple(item for result in results for item in result.evidence)
+        aggregate_items = tuple(
+            item for result in results for item in result.aggregate_evidence
+        )
         items = result_items or supplied_items
 
         if query.required_inputs:
@@ -459,11 +491,11 @@ class EvidenceValidator:
                 reason_codes=(ReasonCode.NO_MATCH,),
                 summary=_trace_summary(results, "정상 실행 → 0건 반환 → NO_MATCH"),
             )
-        if not items:
+        if not items and not aggregate_items:
             return SupportDecision(
                 status=SupportStatus.UNSUPPORTED,
                 reason_codes=(ReasonCode.TOOL_FAILURE,),
-                summary="검증 가능한 row evidence 없음 → UNSUPPORTED",
+                summary="검증 가능한 evidence 없음 → UNSUPPORTED",
             )
         if query.route_hint is RouteHint.STRUCTURED and any(
             result.tool_name == "structured" and not result.validation_trace
@@ -475,11 +507,12 @@ class EvidenceValidator:
                 summary="structured validation trace 누락 → UNSUPPORTED",
             )
 
-        statuses = {item.decision for item in items}
+        statuses = {item.decision for item in (*items, *aggregate_items)}
         if statuses == {SupportStatus.SUPPORTED}:
             return SupportDecision(
                 status=SupportStatus.SUPPORTED,
                 evidence=items,
+                aggregate_evidence=aggregate_items,
                 summary=_trace_summary(results, "Evidence 확정 → SUPPORTED"),
             )
         if SupportStatus.SUPPORTED in statuses or SupportStatus.PARTIAL in statuses:
@@ -487,12 +520,14 @@ class EvidenceValidator:
                 status=SupportStatus.PARTIAL,
                 reason_codes=(ReasonCode.FIELD_NOT_AVAILABLE,),
                 evidence=items,
+                aggregate_evidence=aggregate_items,
                 summary=_trace_summary(results, "일부 evidence 검증 → PARTIAL"),
             )
         return SupportDecision(
             status=SupportStatus.UNSUPPORTED,
             reason_codes=(ReasonCode.FIELD_NOT_AVAILABLE,),
             evidence=items,
+            aggregate_evidence=aggregate_items,
             summary="요청 evidence 검증 실패 → UNSUPPORTED",
         )
 

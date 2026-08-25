@@ -134,7 +134,10 @@ class PostGenerationValidator:
 
         if (
             generation_input.support_status.value in {"SUPPORTED", "PARTIAL"}
-            and generation_input.evidence
+            and (
+                generation_input.evidence
+                or generation_input.aggregate_evidence
+            )
             and not used_tokens
         ):
             return PostGenerationValidation(GenerationValidationStatus.REJECTED_FORMAT)

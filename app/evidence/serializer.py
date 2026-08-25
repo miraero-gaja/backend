@@ -47,8 +47,20 @@ def _evidence_payload(decision: SupportDecision) -> str:
         if item.decision is SupportStatus.SUPPORTED
     )
     payload: dict[str, Any] = {
+        "aggregate_evidence": [
+            {
+                "condition_ids": list(item.condition_ids),
+                "decision": item.decision.value,
+                "operation": item.operation,
+                "source_table": item.source_table,
+                "value": item.value,
+            }
+            for item in decision.aggregate_evidence
+            if item.decision is SupportStatus.SUPPORTED
+        ],
         "evidence": [],
         "evidence_count": len(approved),
+        "row_count": len({item.source_row_id for item in approved}),
         "status": decision.status.value,
     }
     for item in approved[:MAX_PUBLIC_EVIDENCE_ITEMS]:

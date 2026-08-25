@@ -57,6 +57,7 @@ async def answer(
         decision_status=decision.status,
         reason_codes=decision.reason_codes,
         evidence=decision.evidence,
+        aggregate_evidence=decision.aggregate_evidence,
         execution_trace=rendered.think_trace,
         deterministic_fallback_answer=rendered.answer,
     )
