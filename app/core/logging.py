@@ -19,6 +19,10 @@ class LogFields:
     elapsed_ms: float | None = None
     support_status: str | None = None
     error_code: str | None = None
+    generation_provider: str | None = None
+    generation_used_fallback: bool | None = None
+    generation_validation_status: str | None = None
+    generation_elapsed_ms: float | None = None
 
     def as_extra(self) -> dict[str, Any]:
         return asdict(self)
