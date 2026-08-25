@@ -13,6 +13,7 @@ from fastapi import Request
 from app.agent.contracts import RouteHint
 from app.agent.executor import ToolExecutor
 from app.core.config import Settings
+from app.generation import AnswerGenerator, DeterministicAnswerGenerator
 from app.structured import (
     AsyncQueryBackend,
     LayeredStructuredQueryPlanner,
@@ -225,6 +226,7 @@ class ApplicationRuntime:
     structured_planner: LayeredStructuredQueryPlanner
     structured_executor: StructuredQueryExecutor
     tool_executor: ToolExecutor
+    answer_generator: AnswerGenerator
 
 
 def build_application_runtime(
@@ -232,6 +234,7 @@ def build_application_runtime(
     *,
     structured_backend: AsyncQueryBackend | None = None,
     structured_schema_path: str | Path | None = None,
+    answer_generator: AnswerGenerator | None = None,
 ) -> ApplicationRuntime:
     """Compose G2-preserving and G3-gated structured runtime dependencies."""
 
@@ -273,6 +276,7 @@ def build_application_runtime(
         structured_planner=structured_planner,
         structured_executor=structured_executor,
         tool_executor=tool_executor,
+        answer_generator=answer_generator or DeterministicAnswerGenerator(),
     )
 
 
@@ -285,11 +289,21 @@ def get_tool_executor(request: Request) -> ToolExecutor:
     return runtime.tool_executor
 
 
+def get_answer_generator(request: Request) -> AnswerGenerator:
+    """FastAPI dependency for the injected evidence-only generation boundary."""
+
+    runtime = getattr(request.app.state, "runtime", None)
+    if not isinstance(runtime, ApplicationRuntime):
+        raise ApplicationCompositionError("application runtime is not initialized")
+    return runtime.answer_generator
+
+
 __all__ = [
     "ApplicationCompositionError",
     "ApplicationRuntime",
     "UnavailableStructuredBackend",
     "build_application_runtime",
+    "get_answer_generator",
     "get_tool_executor",
     "load_full_staging_schema",
 ]

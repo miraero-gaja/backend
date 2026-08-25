@@ -12,6 +12,7 @@ from app.api.schemas import Utf8JSONResponse
 from app.composition import build_application_runtime
 from app.core.config import Settings, get_settings
 from app.core.logging import configure_logging
+from app.generation import AnswerGenerator
 from app.structured import AsyncQueryBackend
 
 
@@ -20,6 +21,7 @@ def create_app(
     settings: Settings | None = None,
     structured_backend: AsyncQueryBackend | None = None,
     structured_schema_path: str | Path | None = None,
+    answer_generator: AnswerGenerator | None = None,
 ) -> FastAPI:
     resolved_settings = settings or get_settings()
     configure_logging(resolved_settings.log_level)
@@ -27,6 +29,7 @@ def create_app(
         resolved_settings,
         structured_backend=structured_backend,
         structured_schema_path=structured_schema_path,
+        answer_generator=answer_generator,
     )
     application = FastAPI(
         title="Mirae Asset Financial Product Agent",
