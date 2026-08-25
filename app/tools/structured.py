@@ -67,6 +67,7 @@ class StructuredToolAdapter(UnavailableToolAdapter):
             columns=result.columns,
             elapsed_ms=(monotonic() - started_at) * 1000,
             evidence=result.evidence,
+            aggregate_evidence=result.aggregate_evidence,
             validation_trace=validation_trace,
         )
 

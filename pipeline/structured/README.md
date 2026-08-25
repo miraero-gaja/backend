@@ -6,7 +6,7 @@ PostgreSQL staging, and the allowlisted Structured Tool.
 ## What it does
 
 - validates the exact G1 and G2-A report sets and their `PASS` status;
-- rebuilds all four typed staging tables and all 207 source-column contracts;
+- rebuilds all four typed staging tables and all 280 source-column contracts;
 - verifies the Priority A semantic mapping against official schema descriptions;
 - iterates every official data row without modifying the workbooks;
 - validates row counts, `source_row_id` uniqueness, parse states, and source
@@ -15,7 +15,7 @@ PostgreSQL staging, and the allowlisted Structured Tool.
 - optionally loads and validates PostgreSQL in one transaction; and
 - writes exactly four aggregate-only reports outside the repository.
 
-The database may contain all 207 typed fields, but only Priority A fields with
+The database may contain all 280 typed fields, but only Priority A fields with
 `CONFIRMED` semantic status are exposed through the trusted query registry.
 Identifiers are selected from that registry and values are bound parameters.
 Free-form SQL and NL2SQL are not accepted.
@@ -76,6 +76,6 @@ or connection strings are copied into these reports.
 ## Deliberate exclusions
 
 G2-B does not implement vector or graph retrieval, ontology TTL, embeddings,
-reranking, HCX, tax/cost logic, external APIs, or full 207-field semantic
+reranking, HCX, tax/cost logic, external APIs, or full 280-field semantic
 approval. COUNT is deterministic but does not fabricate row-level evidence;
 aggregate evidence policy remains a Gold Set follow-up.

@@ -67,6 +67,6 @@ ma:SIBLING_SCHEMA a ma:EvidenceType .
 ma:PROFILE_ARTIFACT a ma:EvidenceType .
 ma:INTERNAL_VALIDATION a ma:EvidenceType .
 
-ma:Snapshot20260711 a ma:SourceSnapshot ;
-    ma:snapshotDate "2026-07-11" ;
-    ma:provenance "official 2026-07-11 source snapshot" .
+ma:Snapshot20260824 a ma:SourceSnapshot ;
+    ma:snapshotDate "2026-08-24" ;
+    ma:provenance "official 2026-08-24 source snapshot" .

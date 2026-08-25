@@ -26,8 +26,22 @@ class WorkbookProfileError(ValueError):
 _SCHEMA_HEADER_ALIASES: dict[str, set[str]] = {
     "column_name": {"컬럼명", "column", "columnname", "field", "fieldname"},
     "key_declaration": {"pk/fk", "pkfk", "key", "keytype", "키"},
-    "declared_type": {"컬럼타입", "datatype", "columntype", "type", "자료형"},
-    "display_name": {"컬럼한글명", "한글명", "description", "displayname"},
+    "declared_type": {
+    "컬럼타입",
+    "datatype",
+    "columntype",
+    "type",
+    "자료형",
+    "데이터타입",
+},
+
+"display_name": {
+    "컬럼한글명",
+    "한글명",
+    "description",
+    "displayname",
+    "컬럼코멘트",
+},
     "declared_nullable": {"nullable", "null여부", "널허용", "필수여부"},
     "declared_unit": {"단위", "unit", "currency", "통화"},
     "example": {"컬럼값예시", "값예시", "example", "sample", "samplevalue"},

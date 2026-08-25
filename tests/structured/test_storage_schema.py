@@ -4,6 +4,7 @@ from itertools import cycle
 
 import pytest
 
+from pipeline.dataset_contract import TOTAL_COLUMNS
 from pipeline.normalize.type_rules import build_typed_rule
 from pipeline.structured.schema import (
     OFFICIAL_STAGING_COLUMN_COUNTS,
@@ -30,12 +31,14 @@ def _official_rules():
     return rules
 
 
-def test_official_schema_materializes_four_tables_and_all_207_columns() -> None:
+def test_official_schema_materializes_four_tables_and_all_columns() -> None:
     schema = build_staging_schema(_official_rules())
 
     assert len(schema.tables) == 4
-    assert schema.source_column_count == 207
-    assert [len(table.columns) for table in schema.tables] == [40, 73, 49, 45]
+    assert schema.source_column_count == TOTAL_COLUMNS
+    assert [len(table.columns) for table in schema.tables] == list(
+        OFFICIAL_STAGING_COLUMN_COUNTS.values()
+    )
     assert {table.db_table_name for table in schema.tables} == {
         "stg_prbd01n001",
         "stg_pref01n001",

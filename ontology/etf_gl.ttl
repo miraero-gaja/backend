@@ -4,7 +4,7 @@
 ma:EtfGlOntology a ma:DomainOntology ;
     ma:logicalTableId "PREF02N001" ;
     ma:describesClass ma:GlobalETF ;
-    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:alias "해외ETF" .
 
 ma:pref02_product_identifier a ma:SemanticField ;
@@ -16,13 +16,13 @@ ma:pref02_product_identifier a ma:SemanticField ;
     ma:valueDomainStatus ma:CONFIRMED ;
     ma:allowedOperation ma:PROJECT ;
     ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
-    ma:evidenceTier ma:T3_TEAM_TRIANGULATED_EVIDENCE, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
-    ma:evidenceType ma:OFFICIAL_SCHEMA, ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT ;
-    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
-    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
-    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/20260824/g1/g1_schema_profile.json", "artifacts/profiling/20260824/g1/g1_data_profile.json", "artifacts/profiling/20260824/g2a/g2a_typed_rules.json" ;
+    ma:sourceIdentity "sha256:32ac732f0501f4ab518682175fecc50756ee1eafde9296801f139d62559b5e64", "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:needsReview "false" ;
-    ma:rationale "Projection-only stable source identifier; code meaning is not inferred." .
+    ma:rationale "Projection-only; pd_itm_no is a statistical unique candidate observed in the 20260824 G1 profile (0 duplicates among 6,037 non-null values), not a declared official primary key. Code meaning is not inferred." .
 
 ma:pref02_product_name a ma:SemanticField ;
     ma:logicalTableId "PREF02N001" ;
@@ -33,11 +33,11 @@ ma:pref02_product_name a ma:SemanticField ;
     ma:valueDomainStatus ma:CONFIRMED ;
     ma:allowedOperation ma:PROJECT ;
     ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
-    ma:evidenceTier ma:T2_OFFICIAL_SIBLING_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
-    ma:evidenceType ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT ;
-    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
-    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
-    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/20260824/g1/g1_schema_profile.json", "artifacts/profiling/20260824/g1/g1_file_manifest.json", "artifacts/profiling/20260824/g2a/g2a_typed_rules.json" ;
+    ma:sourceIdentity "sha256:32ac732f0501f4ab518682175fecc50756ee1eafde9296801f139d62559b5e64", "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:needsReview "false" ;
     ma:rationale "Projection-only source-native display name; uniqueness is not inferred." .
 
@@ -50,14 +50,14 @@ ma:pref02_aum_latest a ma:SemanticField ;
     ma:valueDomainStatus ma:CONFIRMED ;
     ma:allowedOperation ma:PROJECT, ma:SORT_DESC ;
     ma:closedOperation ma:LT, ma:LE, ma:GT, ma:GE ;
-    ma:evidenceTier ma:T2_OFFICIAL_SIBLING_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
-    ma:evidenceType ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
-    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
-    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
-    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/20260824/g1/g1_schema_profile.json", "artifacts/profiling/20260824/g1/g1_file_manifest.json", "artifacts/profiling/20260824/g2a/g2a_typed_rules.json" ;
+    ma:sourceIdentity "sha256:32ac732f0501f4ab518682175fecc50756ee1eafde9296801f139d62559b5e64", "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:alias "AUM" ;
     ma:needsReview "true" ;
-    ma:rationale "PROJECT and source-native SORT_DESC are open; absolute thresholds remain closed until unit and scale approval." .
+    ma:rationale "PROJECT and source-native SORT_DESC are open; absolute thresholds remain closed until unit and scale approval. SORT_DESC is source-native Decimal ranking only and does not mean a unit conversion." .
 
 ma:pref02_expense_ratio a ma:SemanticField ;
     ma:logicalTableId "PREF02N001" ;
@@ -67,11 +67,11 @@ ma:pref02_expense_ratio a ma:SemanticField ;
     ma:unitStatus ma:NEED_REVIEW ;
     ma:valueDomainStatus ma:NEED_REVIEW ;
     ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
-    ma:evidenceTier ma:T2_OFFICIAL_SIBLING_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
-    ma:evidenceType ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT ;
-    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
-    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
-    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/20260824/g1/g1_schema_profile.json", "artifacts/profiling/20260824/g1/g1_file_manifest.json", "artifacts/profiling/20260824/g2a/g2a_typed_rules.json" ;
+    ma:sourceIdentity "sha256:32ac732f0501f4ab518682175fecc50756ee1eafde9296801f139d62559b5e64", "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:alias "총보수" ;
     ma:needsReview "true" ;
     ma:rationale "Concept only; unit, scale, and value zero meaning are not approved." .
@@ -84,8 +84,8 @@ ma:pref02_exchange_market_code_unresolved a ma:UnresolvedSourceField ;
     ma:valueDomainStatus ma:NEED_REVIEW ;
     ma:evidenceTier ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
     ma:evidenceType ma:PROFILE_ARTIFACT ;
-    ma:provenance "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
-    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
-    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:provenance "artifacts/profiling/20260824/g1/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:needsReview "true" ;
     ma:rationale "Observed source codes are not assigned exchange meanings." .

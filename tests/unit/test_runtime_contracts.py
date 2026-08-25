@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from app.agent.contracts import QueryContract, ToolResult
 from app.evidence.models import (
+    AggregateEvidence,
     EvidenceItem,
     ReasonCode,
     SupportDecision,
@@ -45,6 +46,7 @@ def test_tool_result_exposes_required_runtime_fields() -> None:
         "warnings",
         "error_code",
         "evidence",
+        "aggregate_evidence",
         "validation_trace",
     }
 
@@ -69,6 +71,17 @@ def test_evidence_item_stays_source_and_rule_traceable() -> None:
     assert set(EvidenceItem.model_fields) == expected_fields | {
         "snapshot",
         "effective_date",
+    }
+
+
+def test_aggregate_evidence_is_not_a_fake_source_row() -> None:
+    assert set(AggregateEvidence.model_fields) == {
+        "source_table",
+        "operation",
+        "value",
+        "query_fingerprint",
+        "condition_ids",
+        "decision",
     }
 
 
@@ -99,5 +112,6 @@ def test_support_decision_is_a_typed_model_with_status() -> None:
         "status",
         "reason_codes",
         "evidence",
+        "aggregate_evidence",
         "summary",
     }

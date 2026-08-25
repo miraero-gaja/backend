@@ -153,6 +153,22 @@ def test_normal_zero_rows_is_no_match_not_tool_failure() -> None:
     assert "NO_MATCH 확정" in decision.summary
 
 
+def test_whole_product_count_uses_aggregate_evidence_not_row_evidence() -> None:
+    backend = RecordingBackend(({"__count": 4},))
+
+    _query, results, decision = _execute("국내채권 개수", backend)
+
+    assert decision.status is SupportStatus.SUPPORTED
+    assert decision.evidence == ()
+    assert len(decision.aggregate_evidence) == 1
+    aggregate = decision.aggregate_evidence[0]
+    assert aggregate.source_table == "PRBD01N001"
+    assert aggregate.operation == "COUNT"
+    assert aggregate.value == 4
+    assert aggregate.condition_ids == ()
+    assert results[0].aggregate_evidence == decision.aggregate_evidence
+
+
 def test_g3_result_without_semantic_gate_trace_is_rejected() -> None:
     backend = RecordingBackend((_aum_row(1, "30"),))
     application = create_app(

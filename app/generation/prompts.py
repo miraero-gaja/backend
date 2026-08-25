@@ -78,6 +78,28 @@ def build_evidence_only_prompt(generation_input: GenerationInput) -> EvidenceOnl
             record["effective_date"] = item.effective_date.isoformat()
         records.append(record)
 
+    offset = len(placeholders)
+    for index, item in enumerate(
+        generation_input.aggregate_evidence,
+        start=offset + 1,
+    ):
+        placeholder = EvidencePlaceholder(
+            token=f"{{{{E{index:03d}}}}}",
+            value=str(item.value),
+            role="fact",
+        )
+        placeholders.append(placeholder)
+        records.append(
+            {
+                "placeholder": placeholder.token,
+                "role": "aggregate",
+                "source_table": item.source_table,
+                "operation": item.operation,
+                "condition_ids": list(item.condition_ids),
+                "value": str(item.value),
+            }
+        )
+
     evidence_json = json.dumps(
         records,
         ensure_ascii=False,

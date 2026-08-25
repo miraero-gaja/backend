@@ -1,9 +1,14 @@
 # Submission ontology contract
 
-이 디렉터리의 Turtle 파일은 2026-07-11 source snapshot을 기준으로 현재
+이 디렉터리의 Turtle 파일은 2026-08-24 source snapshot을 기준으로 현재
 structured runtime이 승인한 schema와 semantic metadata만 설명합니다. 상품
-145,393건을 RDF instance로 복제하지 않으며 GraphDB나 요청별 RDF reasoning을
-도입하지 않습니다.
+53,375건(PRBD01N001 21,882 + PREF01N001 1,780 + PREF02N001 6,037 +
+PRFD01N001 23,676, 2026-08-24 active dataset 기준)을 RDF instance로
+복제하지 않으며 GraphDB나 요청별 RDF reasoning을 도입하지 않습니다. 이전
+2026-07-11 기준 구 snapshot의 4개 상품군 전체 dataset 총계는 145,393건이었으며
+(예: `artifacts/profiling/g3a1_pref02`, `g3a1_prbd`의 historical g1
+profiling 기록), 이는 historical 수치로서 현재 active dataset을
+나타내지 않습니다.
 
 ## Files
 
@@ -39,9 +44,11 @@ Python registry가 runtime source of truth입니다. TTL은 runtime permission�
   operation은 미승인
 - `PREF02N001.pd_exg_mkt_cd`: 관측값의 의미를 부여하지 않은 unresolved
   source field
-- `PRBD01N001.PD_RISK_GCD`: 0~6 의미와 위험 방향 미승인
-- `PRBD01N001.DUR`, `NDY_DUR`, `COV`: 정확한 금융 의미, unit 및 상호 구분
+- `PRBD01N001.pd_risk_gcd`: 상품위험등급 원문 코드의 코드값 의미·순서·방향
   미승인
+- `PRBD01N001.dur`, `ndy_dur`, `cov`: 공식 schema 기준 개념 구분(dur=듀레이션,
+  ndy_dur=익일 듀레이션, cov=컨벡시티)은 CONFIRMED이나, 정확한 unit/scale,
+  추가 value-domain 의미 및 runtime numeric operation은 미승인
 
 미확정 항목은 `UNKNOWN`, `NEED_REVIEW`, `UNMAPPED`, `closedOperation` 또는
 operation 부재로 표현합니다. 확정 unit이나 code meaning을 생성하지 않습니다.

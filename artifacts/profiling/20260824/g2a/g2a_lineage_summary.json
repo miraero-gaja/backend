@@ -1,0 +1,138 @@
+{
+  "g2a_format_version": "1.0",
+  "generated_at_utc": "2026-08-25T06:46:02.872328Z",
+  "g2a_status": "PASS",
+  "sources_immutable": true,
+  "g1_reports_immutable": true,
+  "actual_schema_revalidated": true,
+  "source_row_id_contract": {
+    "version": "v1",
+    "algorithm": "SHA-256 over a domain/version prefix and unsigned 8-byte length-prefixed UTF-8 components",
+    "ordered_inputs": [
+      "logical_table_id",
+      "source_file_sha256",
+      "source_sheet",
+      "source_excel_row"
+    ],
+    "output_format": "srid:v1:<64 lowercase hex>",
+    "business_primary_key_dependency": false
+  },
+  "tables": [
+    {
+      "logical_table_id": "PRBD01N001",
+      "physical_filename": "PRBD01N001_국내채권마스터_20260824_datarows.xlsx",
+      "source_file_sha256": "574ae5d6c1d98704712c256ed5352cbaed065ea9c3a6eb7b2a52adb305fa9001",
+      "source_sheet": "data",
+      "header_excel_row": 1,
+      "first_data_excel_row": 2,
+      "last_data_excel_row": 21883,
+      "source_row_count": 21882,
+      "source_row_id_count": 21882,
+      "source_row_id_collision_count": 0,
+      "first_source_row_id": "srid:v1:cc768d8cd834c1589b60f8434fe74d0de629edda11614194857a5fb7f4173c8d",
+      "last_source_row_id": "srid:v1:44028daeb5c6ca21e4cabdc5f8408cd9bb4bde5ef7f1457b401e130e6188b523",
+      "source_row_id_version": "v1",
+      "business_primary_key_enforced": false
+    },
+    {
+      "logical_table_id": "PREF01N001",
+      "physical_filename": "PREF01N001_국내ETF마스터_20260824_datarows.xlsx",
+      "source_file_sha256": "18c4329d8fc8768d030316816f3e6e48226a3c217db3354245b766a2c6f6c592",
+      "source_sheet": "data",
+      "header_excel_row": 1,
+      "first_data_excel_row": 2,
+      "last_data_excel_row": 1781,
+      "source_row_count": 1780,
+      "source_row_id_count": 1780,
+      "source_row_id_collision_count": 0,
+      "first_source_row_id": "srid:v1:cccdb42f69adf6845c7886b655c99b97bc2606d76afc8f59475330da9e8639ed",
+      "last_source_row_id": "srid:v1:6092ed28ba38c4ee46a07799e8a5406d87ae689e5c5316f5b4de214a67976037",
+      "source_row_id_version": "v1",
+      "business_primary_key_enforced": false
+    },
+    {
+      "logical_table_id": "PREF02N001",
+      "physical_filename": "PREF02N001_해외ETF마스터_20260824_datarows.xlsx",
+      "source_file_sha256": "ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067",
+      "source_sheet": "data",
+      "header_excel_row": 1,
+      "first_data_excel_row": 2,
+      "last_data_excel_row": 6038,
+      "source_row_count": 6037,
+      "source_row_id_count": 6037,
+      "source_row_id_collision_count": 0,
+      "first_source_row_id": "srid:v1:be65dcd57bc30b0b278779b836efd8ac8c02fbf096d386f62d45d13e5aeaf6dc",
+      "last_source_row_id": "srid:v1:3e86f52a5520592c868bfa1eb81335c48fac2bab83d10e656fa73d2cf75beb5e",
+      "source_row_id_version": "v1",
+      "business_primary_key_enforced": false
+    },
+    {
+      "logical_table_id": "PRFD01N001",
+      "physical_filename": "PRFD01N001_공모펀드마스터_20260824_datarows.xlsx",
+      "source_file_sha256": "81b3ce3f1d5042b32fd52a76acff094fc5b8dd9fa36289af2fb54c195eb5d94c",
+      "source_sheet": "data",
+      "header_excel_row": 1,
+      "first_data_excel_row": 2,
+      "last_data_excel_row": 23677,
+      "source_row_count": 23676,
+      "source_row_id_count": 23676,
+      "source_row_id_collision_count": 0,
+      "first_source_row_id": "srid:v1:f838a1f2716f3507575c4d09c128b43226b473fae440802e30cf52fc627c418b",
+      "last_source_row_id": "srid:v1:aa74165015cd98f52169f31be3855197ab673fc6f0d06357cfcf5e49109555ad",
+      "source_row_id_version": "v1",
+      "business_primary_key_enforced": false
+    }
+  ],
+  "declared_key_trim_analyses": [
+    {
+      "logical_table_id": "PRBD01N001",
+      "declared_key_columns": [],
+      "status": "NOT_DECLARED_IN_SCHEMA",
+      "business_primary_key_enforced": false,
+      "identifier_uniqueness_changed": false,
+      "automatic_trim_applied": false
+    },
+    {
+      "logical_table_id": "PREF01N001",
+      "declared_key_columns": [],
+      "status": "NOT_DECLARED_IN_SCHEMA",
+      "business_primary_key_enforced": false,
+      "identifier_uniqueness_changed": false,
+      "automatic_trim_applied": false
+    },
+    {
+      "logical_table_id": "PREF02N001",
+      "declared_key_columns": [],
+      "status": "NOT_DECLARED_IN_SCHEMA",
+      "business_primary_key_enforced": false,
+      "identifier_uniqueness_changed": false,
+      "automatic_trim_applied": false
+    },
+    {
+      "logical_table_id": "PRFD01N001",
+      "declared_key_columns": [],
+      "status": "NOT_DECLARED_IN_SCHEMA",
+      "business_primary_key_enforced": false,
+      "identifier_uniqueness_changed": false,
+      "automatic_trim_applied": false
+    }
+  ],
+  "pref01_declared_key_blank_review": {
+    "logical_table_id": "PREF01N001",
+    "qualified_name": "pd_exg_mkt_cd#1",
+    "missing_count": 3,
+    "empty_count": 0,
+    "whitespace_only_count": 0,
+    "declared_key_rows_with_any_blank": 0,
+    "business_primary_key_enforced": false,
+    "review_status": "NOT_NULL_BUSINESS_KEY_BLOCKED"
+  },
+  "summary": {
+    "source_file_count": 8,
+    "source_row_count": 53375,
+    "source_row_id_count": 53375,
+    "source_row_id_collision_count": 0,
+    "identifier_uniqueness_change_count": 0,
+    "business_primary_keys_enforced": 0
+  }
+}

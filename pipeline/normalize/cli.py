@@ -6,13 +6,15 @@ import argparse
 import json
 from collections.abc import Sequence
 
+from .constants import EXPECTED_COVERAGE_COLUMN_COUNT
 from .runner import run_g2a
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Build deterministic typed-staging and 207-column coverage reports "
+            "Build deterministic typed-staging and "
+            f"{EXPECTED_COVERAGE_COLUMN_COUNT}-column coverage reports "
             "without modifying source workbooks."
         )
     )

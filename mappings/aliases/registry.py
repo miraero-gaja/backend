@@ -41,10 +41,15 @@ _PRODUCT_ALIASES: tuple[ProductAlias, ...] = (
 )
 
 
+# Declaration order is not semantically meaningful: field_alias_matches below
+# resolves overlapping aliases (e.g. "익일 듀레이션" containing "듀레이션")
+# by span-aware occurrence containment within the query text, not by tuple
+# position. Reordering this tuple must not change any resolution result.
 _FIELD_ALIASES: tuple[FieldAlias, ...] = (
     FieldAlias("상품코드", "PREF01N001", ("pref01.product_code",)),
     FieldAlias("상품명", "PREF01N001", ("pref01.product_name",)),
     FieldAlias("AUM", "PREF01N001", ("pref01.aum_latest",)),
+    FieldAlias("총보수", "PREF01N001", ("pref01.total_fee_rate",)),
     FieldAlias(
         "상장주식수",
         "PREF01N001",
@@ -58,22 +63,24 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
         ("prbd.pd_risk_gcd_unresolved",),
     ),
     FieldAlias(
+        "익일 듀레이션",
+        "PRBD01N001",
+        ("prbd.ndy_dur_unresolved",),
+    ),
+    FieldAlias(
         "듀레이션",
         "PRBD01N001",
-        (
-            "prbd.dur_unresolved",
-            "prbd.ndy_dur_unresolved",
-            "prbd.cov_unresolved",
-        ),
+        ("prbd.dur_unresolved",),
     ),
     FieldAlias(
         "duration",
         "PRBD01N001",
-        (
-            "prbd.dur_unresolved",
-            "prbd.ndy_dur_unresolved",
-            "prbd.cov_unresolved",
-        ),
+        ("prbd.dur_unresolved",),
+    ),
+    FieldAlias(
+        "컨벡시티",
+        "PRBD01N001",
+        ("prbd.cov_unresolved",),
     ),
     FieldAlias("상품코드", "PRFD01N001", ("prfd.product_code",)),
     FieldAlias("상품명", "PRFD01N001", ("prfd.product_name",)),
@@ -90,17 +97,94 @@ def product_alias_matches(text: str) -> tuple[ProductAlias, ...]:
     )
 
 
+def _find_occurrence_spans(needle: str, haystack: str) -> tuple[tuple[int, int], ...]:
+    """Every (possibly overlapping) start/end span where ``needle`` occurs
+    in ``haystack``."""
+
+    if not needle:
+        return ()
+    spans: list[tuple[int, int]] = []
+    start = 0
+    while True:
+        index = haystack.find(needle, start)
+        if index == -1:
+            break
+        spans.append((index, index + len(needle)))
+        start = index + 1
+    return tuple(spans)
+
+
+def _select_longest_matches(
+    candidates: tuple[FieldAlias, ...],
+    normalized_query: str,
+) -> tuple[FieldAlias, ...]:
+    """Keep a matched alias only if it has an occurrence in the query text
+    that is not fully nested inside a longer matched alias's occurrence.
+
+    This is span-aware, not purely textual: two aliases whose text happens
+    to be substring-related (e.g. "듀레이션" inside "익일 듀레이션") only
+    have the shorter one dropped at the specific place in the query where
+    it sits inside the longer alias's match. A standalone occurrence of the
+    shorter alias elsewhere in the same query -- e.g. "듀레이션과 익일
+    듀레이션 비교", where "듀레이션" also appears on its own, separate from
+    the "익일 듀레이션" occurrence -- is not covered by anything longer and
+    survives, so both fields are returned and the caller's existing
+    multi-field ambiguity / fail-closed policy still applies.
+
+    Two aliases that never textually overlap (including same-length aliases
+    naming genuinely different fields, e.g. "컨벡시티" and "듀레이션") are
+    unaffected by this function: neither can cover the other's occurrence,
+    so both are always kept.
+
+    The result depends only on each matched alias's text and where it
+    occurs in ``normalized_query`` -- never on the order candidates are
+    passed in -- so reordering ``_FIELD_ALIASES`` cannot change the
+    outcome.
+    """
+
+    occurrences = tuple(
+        (candidate, normalize_alias_text(candidate.alias))
+        for candidate in candidates
+    )
+    spans_by_index = tuple(
+        _find_occurrence_spans(text, normalized_query) for _, text in occurrences
+    )
+
+    kept: list[FieldAlias] = []
+    for index, (candidate, text) in enumerate(occurrences):
+        own_spans = spans_by_index[index]
+        has_uncovered_occurrence = False
+        for own_start, own_end in own_spans:
+            covered_by_a_longer_match = False
+            for other_index, (_, other_text) in enumerate(occurrences):
+                if other_index == index or len(other_text) <= len(text):
+                    continue
+                for other_start, other_end in spans_by_index[other_index]:
+                    if other_start <= own_start and own_end <= other_end:
+                        covered_by_a_longer_match = True
+                        break
+                if covered_by_a_longer_match:
+                    break
+            if not covered_by_a_longer_match:
+                has_uncovered_occurrence = True
+                break
+        if has_uncovered_occurrence:
+            kept.append(candidate)
+    return tuple(kept)
+
+
 def field_alias_matches(
     logical_table_id: str,
     text: str,
 ) -> tuple[FieldAlias, ...]:
     normalized = normalize_alias_text(text)
-    return tuple(
+    candidates = tuple(
         item
         for item in _FIELD_ALIASES
         if item.logical_table_id == logical_table_id
         and normalize_alias_text(item.alias) in normalized
     )
+    return _select_longest_matches(candidates, normalized)
 
 
 __all__ = [

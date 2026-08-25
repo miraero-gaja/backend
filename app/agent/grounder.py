@@ -13,7 +13,7 @@ from app.structured.contracts import (
     StructuredQueryContract,
     StructuredSort,
 )
-from mappings.core import CoreUnitStatus, get_confirmed_field_map
+from mappings.core import CORE_FIELD_MAPPINGS, CoreUnitStatus, get_confirmed_field_map
 from mappings.semantic import (
     ClaimStatus,
     get_default_projection_keys,
@@ -118,11 +118,45 @@ class OntologyGrounder:
         )
         g3_approval = get_semantic_field_approval(table, semantic_key)
         g2_mapping = get_confirmed_field_map(table).get(semantic_key)
-        if g3_approval is None and g2_mapping is None:
+        reviewed_g2_mapping = next(
+            (
+                mapping
+                for mapping in CORE_FIELD_MAPPINGS
+                if mapping.logical_table_id == table
+                and mapping.semantic_field_key == semantic_key
+            ),
+            None,
+        )
+        if (
+            g3_approval is None
+            and g2_mapping is None
+            and reviewed_g2_mapping is None
+        ):
             return _unsupported(
                 query,
                 "unknown_semantic_key",
                 [*trace, "semantic key 승인: 실패"],
+            )
+        if g3_approval is None and g2_mapping is None:
+            assert reviewed_g2_mapping is not None
+            unit_token = next(
+                (
+                    condition.unit_token
+                    for condition in understanding.filter_conditions
+                    if condition.unit_token is not None
+                ),
+                None,
+            )
+            if unit_token is not None:
+                return _unsupported(
+                    query,
+                    "unit_conversion_not_approved",
+                    [*trace, f"단위 변환 승인: 실패 ({unit_token})"],
+                )
+            return _unsupported(
+                query,
+                "semantic_operation_not_open",
+                [*trace, "연산 승인: CLOSED"],
             )
         if (
             g3_approval is not None

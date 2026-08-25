@@ -15,14 +15,10 @@ import pytest
 from openpyxl import Workbook
 
 from helpers import make_column, make_profiles
+from pipeline.dataset_contract import TABLE_COLUMN_COUNTS
 
 
-OFFICIAL_SYNTHETIC_COUNTS = {
-    "PRBD01N001": 40,
-    "PREF01N001": 73,
-    "PREF02N001": 49,
-    "PRFD01N001": 45,
-}
+OFFICIAL_SYNTHETIC_COUNTS = dict(TABLE_COLUMN_COUNTS)
 
 
 @dataclass(frozen=True, slots=True)
@@ -128,10 +124,10 @@ def synthetic_g2a_sources(tmp_path: Path) -> SyntheticG2ASources:
 
 @pytest.fixture
 def official_synthetic_profiles() -> tuple[dict[str, Any], dict[str, Any]]:
-    """Return four synthetic tables with the official 40/73/49/45 shape.
+    """Return four synthetic tables with the active official column shape.
 
     The first table intentionally has two occurrences of the same source name,
-    proving that 207-column coverage is based on physical occurrences rather
+    proving that full-column coverage is based on physical occurrences rather
     than a dictionary keyed only by column name.
     """
 

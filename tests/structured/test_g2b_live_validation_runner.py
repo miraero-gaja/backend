@@ -27,7 +27,10 @@ from pipeline.profiling.constants import EXPECTED_TOTAL_ROWS, REPORT_FILENAMES, 
 from pipeline.profiling.discovery import SourceWorkbook, sha256_file
 from pipeline.structured import runner
 from pipeline.structured.reports import G2B_REPORT_FILENAMES
-from pipeline.structured.schema import OFFICIAL_STAGING_COLUMN_COUNTS
+from pipeline.structured.schema import (
+    OFFICIAL_STAGING_COLUMN_COUNTS,
+    OFFICIAL_STAGING_COLUMN_TOTAL,
+)
 
 
 def _write_json(path: Path, document: dict[str, Any]) -> None:
@@ -204,7 +207,7 @@ def _write_upstream_reports(
             "g2a_status": "PASS",
             "validation": {
                 "is_valid": True,
-                "actual_source_column_count": 207,
+                "actual_source_column_count": OFFICIAL_STAGING_COLUMN_TOTAL,
             },
         },
         "g2a_lineage_summary.json": {
