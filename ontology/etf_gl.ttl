@@ -1,0 +1,91 @@
+@prefix ma: <urn:miraeasset:financial-agent:ontology:2026:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ma:EtfGlOntology a ma:DomainOntology ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:describesClass ma:GlobalETF ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "해외ETF" .
+
+ma:pref02_product_identifier a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "pd_itm_no" ;
+    ma:semanticKey "pref02.product_identifier" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:CONFIRMED ;
+    ma:valueDomainStatus ma:CONFIRMED ;
+    ma:allowedOperation ma:PROJECT ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T3_TEAM_TRIANGULATED_EVIDENCE, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA, ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:needsReview "false" ;
+    ma:rationale "Projection-only stable source identifier; code meaning is not inferred." .
+
+ma:pref02_product_name a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "pd_nm" ;
+    ma:semanticKey "pref02.product_name" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:CONFIRMED ;
+    ma:valueDomainStatus ma:CONFIRMED ;
+    ma:allowedOperation ma:PROJECT ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T2_OFFICIAL_SIBLING_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:needsReview "false" ;
+    ma:rationale "Projection-only source-native display name; uniqueness is not inferred." .
+
+ma:pref02_aum_latest a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "du_last_aum" ;
+    ma:semanticKey "pref02.aum_latest" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NEED_REVIEW ;
+    ma:valueDomainStatus ma:CONFIRMED ;
+    ma:allowedOperation ma:PROJECT, ma:SORT_DESC ;
+    ma:closedOperation ma:LT, ma:LE, ma:GT, ma:GE ;
+    ma:evidenceTier ma:T2_OFFICIAL_SIBLING_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "AUM" ;
+    ma:needsReview "true" ;
+    ma:rationale "PROJECT and source-native SORT_DESC are open; absolute thresholds remain closed until unit and scale approval." .
+
+ma:pref02_expense_ratio a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "cu_charge_rt" ;
+    ma:semanticKey "pref02.expense_ratio" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NEED_REVIEW ;
+    ma:valueDomainStatus ma:NEED_REVIEW ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T2_OFFICIAL_SIBLING_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:SIBLING_SCHEMA, ma:PROFILE_ARTIFACT ;
+    ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "총보수" ;
+    ma:needsReview "true" ;
+    ma:rationale "Concept only; unit, scale, and value zero meaning are not approved." .
+
+ma:pref02_exchange_market_code_unresolved a ma:UnresolvedSourceField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "pd_exg_mkt_cd" ;
+    ma:conceptStatus ma:UNKNOWN ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:NEED_REVIEW ;
+    ma:evidenceTier ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:PROFILE_ARTIFACT ;
+    ma:provenance "artifacts/profiling/g3a1_pref02/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:3cec19043f742771e0016d56fe806f19ad78f4295d1ae59192740a78feb2253b" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:needsReview "true" ;
+    ma:rationale "Observed source codes are not assigned exchange meanings." .

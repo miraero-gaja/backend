@@ -1,0 +1,76 @@
+@prefix ma: <urn:miraeasset:financial-agent:ontology:2026:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ma:BondKrOntology a ma:DomainOntology ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:describesClass ma:DomesticBond ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "국내채권" .
+
+ma:prbd_pd_risk_gcd_unresolved a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "PD_RISK_GCD" ;
+    ma:semanticKey "prbd.pd_risk_gcd_unresolved" ;
+    ma:conceptStatus ma:UNKNOWN ;
+    ma:unitStatus ma:UNKNOWN ;
+    ma:valueDomainStatus ma:NEED_REVIEW ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:PROFILE_ARTIFACT ;
+    ma:provenance "artifacts/profiling/g3a1_prbd/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:728f44a567a986d21cf843d711c6c4dfa1a24d05b39c7da0541b981b57ecccf8" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "위험등급" ;
+    ma:needsReview "true" ;
+    ma:rationale "0~6 value meaning and risk direction are not approved." .
+
+ma:prbd_dur_unresolved a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "DUR" ;
+    ma:semanticKey "prbd.dur_unresolved" ;
+    ma:conceptStatus ma:UNKNOWN ;
+    ma:unitStatus ma:UNKNOWN ;
+    ma:valueDomainStatus ma:NEED_REVIEW ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:PROFILE_ARTIFACT ;
+    ma:provenance "artifacts/profiling/g3a1_prbd/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:728f44a567a986d21cf843d711c6c4dfa1a24d05b39c7da0541b981b57ecccf8" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "듀레이션", "duration" ;
+    ma:needsReview "true" ;
+    ma:rationale "Exact financial meaning and distinction from NDY_DUR and COV are not approved." .
+
+ma:prbd_ndy_dur_unresolved a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "NDY_DUR" ;
+    ma:semanticKey "prbd.ndy_dur_unresolved" ;
+    ma:conceptStatus ma:UNKNOWN ;
+    ma:unitStatus ma:UNKNOWN ;
+    ma:valueDomainStatus ma:NEED_REVIEW ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:PROFILE_ARTIFACT ;
+    ma:provenance "artifacts/profiling/g3a1_prbd/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:728f44a567a986d21cf843d711c6c4dfa1a24d05b39c7da0541b981b57ecccf8" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "듀레이션", "duration" ;
+    ma:needsReview "true" ;
+    ma:rationale "Exact financial meaning and distinction from DUR and COV are not approved." .
+
+ma:prbd_cov_unresolved a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "COV" ;
+    ma:semanticKey "prbd.cov_unresolved" ;
+    ma:conceptStatus ma:UNKNOWN ;
+    ma:unitStatus ma:UNKNOWN ;
+    ma:valueDomainStatus ma:NEED_REVIEW ;
+    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:evidenceTier ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
+    ma:evidenceType ma:PROFILE_ARTIFACT ;
+    ma:provenance "artifacts/profiling/g3a1_prbd/g1_data_profile.json" ;
+    ma:sourceIdentity "sha256:728f44a567a986d21cf843d711c6c4dfa1a24d05b39c7da0541b981b57ecccf8" ;
+    ma:sourceSnapshot ma:Snapshot20260711 ;
+    ma:alias "듀레이션", "duration" ;
+    ma:needsReview "true" ;
+    ma:rationale "Exact financial meaning and distinction from DUR and NDY_DUR are not approved." .
