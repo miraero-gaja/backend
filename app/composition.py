@@ -79,7 +79,7 @@ def _array(value: Any, *, label: str) -> Sequence[Any]:
 def load_full_staging_schema(
     report_path: str | Path,
 ) -> StagingSchemaSpec:
-    """Restore the validated 4-table/207-column G2-B staging contract."""
+    """Restore the validated active four-table G2-B staging contract."""
 
     path = Path(report_path).expanduser().resolve(strict=True)
     if not path.is_file():

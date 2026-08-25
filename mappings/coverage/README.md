@@ -5,7 +5,7 @@ and data profiles by `(logical_table_id, qualified_name)`. `qualified_name`
 contains the header occurrence number, so duplicate source headers are not
 collapsed.
 
-The official four-table dataset is validated against 207 actual columns and
+The active official four-table dataset is validated against 280 actual columns and
 requires exact schema/data identity and order. Every coverage entry contains
 source identity, declared type, non-null ratio, conservative identifier role,
 typed/concept/unit/code status, supported operations, and review notes.

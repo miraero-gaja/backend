@@ -1,16 +1,14 @@
 # G2 Core Field Mapping
 
 This package is the narrow agent-facing allowlist for G2 Structured Baseline.
-It is not a replacement for the 207-column Typed Staging registry.
+It is not a replacement for the 280-column Typed Staging registry.
 
 ## Evidence boundary
 
-- The four official schema workbooks were extracted read-only and matched the
-  G1 schema profile exactly.
-- `PREF01N001` has 73 official display names and `PRFD01N001` has 45.
-- `PRBD01N001` and `PREF02N001` have no official display-name/description
-  values. Their abbreviations and sample values are insufficient evidence, so
-  all 89 columns remain unconfirmed for agent field selection.
+- The active physical dataset contract is the 2026-08-24 four-table release.
+- Existing Priority A semantic approvals are intentionally not expanded by the
+  physical-shape migration. They require separate G1 evidence regeneration and
+  semantic review before any new field or operation can be approved.
 - Semantic keys are table-scoped. Similar fields in ETF and fund tables are
   not declared to be one canonical concept.
 

@@ -6,20 +6,21 @@ from typing import Any
 
 from mappings.concepts import build_concept_registry
 from mappings.coverage import build_coverage_registry
+from pipeline.dataset_contract import TOTAL_COLUMNS
 
 from helpers import make_column, make_profiles
 
 
-def test_coverage_registry_has_exact_207_occurrence_aware_entries_and_100_percent(
+def test_coverage_registry_has_exact_official_entries_and_100_percent(
     official_synthetic_profiles: tuple[dict[str, Any], dict[str, Any]],
 ) -> None:
     schema_profile, data_profile = official_synthetic_profiles
 
     registry = build_coverage_registry(schema_profile, data_profile)
 
-    assert registry["summary"]["actual_column_count"] == 207
-    assert registry["summary"]["registry_entry_count"] == 207
-    assert registry["summary"]["covered_column_count"] == 207
+    assert registry["summary"]["actual_column_count"] == TOTAL_COLUMNS
+    assert registry["summary"]["registry_entry_count"] == TOTAL_COLUMNS
+    assert registry["summary"]["covered_column_count"] == TOTAL_COLUMNS
     assert registry["summary"]["coverage_ratio"] == 1.0
     assert registry["validation"]["exact_source_coverage"] is True
     assert registry["validation"]["expected_column_count_match"] is True
@@ -28,7 +29,7 @@ def test_coverage_registry_has_exact_207_occurrence_aware_entries_and_100_percen
         (entry["logical_table_id"], entry["qualified_name"])
         for entry in registry["entries"]
     }
-    assert len(identities) == 207
+    assert len(identities) == TOTAL_COLUMNS
     assert ("PRBD01N001", "duplicate_header#1") in identities
     assert ("PRBD01N001", "duplicate_header#2") in identities
 

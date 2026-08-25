@@ -75,10 +75,13 @@ def test_unapproved_financial_units_are_unsupported(question: str) -> None:
 @pytest.mark.parametrize(
     ("question", "reason"),
     (
-        ("국내채권 위험등급 1 이하", "semantic_concept_not_confirmed"),
+        (
+            "국내채권 위험등급 1 이하",
+            "semantic_operation_not_open",
+        ),
         (
             "국내채권 듀레이션 3 이하",
-            "semantic_field_distinction_unapproved",
+            "semantic_operation_not_open",
         ),
     ),
 )
@@ -86,12 +89,47 @@ def test_prbd_unresolved_meanings_are_unsupported(
     question: str,
     reason: str,
 ) -> None:
+    """PRBD concept is now T1-confirmed from the official 20260824 schema,
+    but code-value meaning/direction (pd_risk_gcd) and unit/scale (all four
+    fields) remain unapproved, so EQ/NE/comparison/sort stay CLOSED. The
+    "듀레이션" alias now resolves unambiguously to dur only (익일 듀레이션
+    and 컨벡시티 have their own distinct aliases), so this case now also
+    fails closed at the operation gate rather than at a multi-field
+    ambiguity gate.
+    """
+
     grounded = _ground(question)
 
     assert grounded.route_hint is RouteHint.UNSUPPORTED
     assert grounded.structured_query is None
     assert grounded.understanding is not None
     assert grounded.understanding.unsupported_reason == reason
+
+
+@pytest.mark.parametrize(
+    "question",
+    (
+        "국내채권 듀레이션과 익일 듀레이션 비교",
+        "국내채권 컨벡시티와 듀레이션 비교",
+    ),
+)
+def test_prbd_two_distinct_duration_family_fields_named_together_are_ambiguous(
+    question: str,
+) -> None:
+    """When two distinct PRBD duration-family fields are each explicitly
+    named in the same query, alias resolution must not silently collapse
+    to a single field: both semantic keys are genuinely present, so the
+    query must fail closed as an unresolved multi-field ambiguity rather
+    than being executed as a STRUCTURED query for just one of them.
+    """
+
+    grounded = _ground(question)
+
+    assert grounded.route_hint is RouteHint.UNSUPPORTED
+    assert grounded.structured_query is None
+    assert grounded.understanding is not None
+    assert grounded.understanding.status is QueryUnderstandingStatus.AMBIGUOUS
+    assert grounded.understanding.ambiguity == ("multiple_semantic_fields",)
 
 
 def test_confirmed_g2_field_filter_builds_deterministic_contract() -> None:
@@ -149,7 +187,14 @@ def test_unapproved_domestic_etf_fee_preserves_semantic_and_unit_reason() -> Non
     assert grounded.understanding.unsupported_reason == "unit_conversion_not_approved"
 
 
-def test_unresolved_bond_risk_concept_is_preserved_without_an_operation() -> None:
+def test_bond_risk_grade_query_has_no_recognized_operation() -> None:
+    """A bare "위험등급 알려줘" question names no filter/sort/range word, so
+    grounding cannot recognize a projection/filter/sort operation to build
+    for it. The semantic key is still preserved in the trace even though
+    concept is now T1-confirmed (this is a query-shape gap, not a semantic
+    concept gap).
+    """
+
     grounded = _ground("국내채권 위험등급 알려줘")
 
     assert grounded.route_hint is RouteHint.UNSUPPORTED
@@ -158,7 +203,7 @@ def test_unresolved_bond_risk_concept_is_preserved_without_an_operation() -> Non
         "prbd.pd_risk_gcd_unresolved",
     )
     assert grounded.understanding.unsupported_reason == (
-        "semantic_concept_not_confirmed"
+        "query_operation_not_recognized"
     )
 
 

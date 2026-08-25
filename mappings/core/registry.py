@@ -1,11 +1,11 @@
 """Minimal, officially evidenced field allowlist for G2 Core QA.
 
-This registry is deliberately narrower than the 207-column typed staging
-schema.  A column is present here only after a field-level review of the
-official schema description.  Columns that are absent remain ``UNMAPPED`` for
+This registry is deliberately narrower than the active typed staging
+schema. A column is present here only after a field-level review of the
+official schema description. Columns that are absent remain ``UNMAPPED`` for
 agent use even though they may still be stored in PostgreSQL.
 
-Semantic keys are table-scoped on purpose.  G2 does not claim that similarly
+Semantic keys are table-scoped on purpose. G2 does not claim that similarly
 named fields across product families are one canonical concept.
 """
 
@@ -18,6 +18,8 @@ from dataclasses import asdict, dataclass
 from enum import StrEnum
 from types import MappingProxyType
 from typing import Any
+
+from pipeline.dataset_contract import TABLE_COLUMN_COUNTS, TOTAL_COLUMNS
 
 
 class SemanticStatus(StrEnum):
@@ -38,18 +40,16 @@ class CoreUnitStatus(StrEnum):
 
 
 ALLOWED_OPERATIONS = frozenset({"EQ", "NE", "LT", "LE", "GT", "GE", "SORT"})
-SUPPORTED_TARGET_TYPES = frozenset({"TEXT", "DECIMAL", "INTEGER", "DATE", "TIMESTAMP"})
-OFFICIAL_TABLE_COLUMN_COUNTS: Mapping[str, int] = MappingProxyType(
-    {
-        "PRBD01N001": 40,
-        "PREF01N001": 73,
-        "PREF02N001": 49,
-        "PRFD01N001": 45,
-    }
+SUPPORTED_TARGET_TYPES = frozenset(
+    {"TEXT", "DECIMAL", "INTEGER", "DATE", "TIMESTAMP"}
 )
-OFFICIAL_COLUMN_COUNT = sum(OFFICIAL_TABLE_COLUMN_COUNTS.values())
 
-_SEMANTIC_KEY_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_]*)+$")
+OFFICIAL_TABLE_COLUMN_COUNTS: Mapping[str, int] = TABLE_COLUMN_COUNTS
+OFFICIAL_COLUMN_COUNT = TOTAL_COLUMNS
+
+_SEMANTIC_KEY_PATTERN = re.compile(
+    r"^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_]*)+$"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -72,27 +72,60 @@ class CoreFieldMapping:
             raise ValueError(
                 "semantic_field_key must be a stable, table-scoped dotted key"
             )
+
         if self.logical_table_id not in OFFICIAL_TABLE_COLUMN_COUNTS:
-            raise ValueError(f"unknown logical_table_id: {self.logical_table_id}")
+            raise ValueError(
+                f"unknown logical_table_id: {self.logical_table_id}"
+            )
+
         if not self.source_column:
             raise ValueError("source_column must not be empty")
+
         if self.qualified_name != f"{self.source_column}#1":
-            raise ValueError("qualified_name must preserve the official #1 occurrence")
+            raise ValueError(
+                "qualified_name must preserve the official #1 occurrence"
+            )
+
         if not self.official_schema_description.strip():
-            raise ValueError("official_schema_description must not be blank")
+            raise ValueError(
+                "official_schema_description must not be blank"
+            )
+
         if self.target_type not in SUPPORTED_TARGET_TYPES:
-            raise ValueError(f"unsupported target_type: {self.target_type}")
+            raise ValueError(
+                f"unsupported target_type: {self.target_type}"
+            )
+
         if len(set(self.allowed_operations)) != len(self.allowed_operations):
-            raise ValueError("allowed_operations must not contain duplicates")
-        invalid_operations = set(self.allowed_operations) - ALLOWED_OPERATIONS
+            raise ValueError(
+                "allowed_operations must not contain duplicates"
+            )
+
+        invalid_operations = (
+            set(self.allowed_operations) - ALLOWED_OPERATIONS
+        )
+
         if invalid_operations:
             raise ValueError(
-                f"unsupported allowed_operations: {sorted(invalid_operations)}"
+                f"unsupported allowed_operations: "
+                f"{sorted(invalid_operations)}"
             )
-        if self.semantic_status is not SemanticStatus.CONFIRMED and self.allowed_operations:
-            raise ValueError("only CONFIRMED fields may expose query operations")
-        if self.semantic_status is SemanticStatus.CONFIRMED and not self.allowed_operations:
-            raise ValueError("CONFIRMED fields must expose at least one safe operation")
+
+        if (
+            self.semantic_status is not SemanticStatus.CONFIRMED
+            and self.allowed_operations
+        ):
+            raise ValueError(
+                "only CONFIRMED fields may expose query operations"
+            )
+
+        if (
+            self.semantic_status is SemanticStatus.CONFIRMED
+            and not self.allowed_operations
+        ):
+            raise ValueError(
+                "CONFIRMED fields must expose at least one safe operation"
+            )
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-ready record without changing the reviewed values."""
@@ -135,12 +168,13 @@ _NUMERIC_RANGE = ("EQ", "NE", "LT", "LE", "GT", "GE", "SORT")
 _TEMPORAL_RANGE = ("EQ", "NE", "LT", "LE", "GT", "GE", "SORT")
 
 _OFFICIAL_DESCRIPTION_NOTE = (
-    "Meaning is taken verbatim from the official schema display name; no alias "
-    "or cross-product canonical merge is asserted."
+    "Meaning is taken verbatim from the official schema display name; "
+    "no alias or cross-product canonical merge is asserted."
 )
+
 _SOURCE_NATIVE_ORDER_NOTE = (
-    "Official description confirms the metric, but no official unit/scale is "
-    "declared. Only source-native ordering is allowed; no conversion or "
+    "Official description confirms the metric, but no official unit/scale "
+    "is declared. Only source-native ordering is allowed; no conversion or "
     "threshold interpretation is performed."
 )
 
@@ -299,7 +333,10 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         _TEXT_EQ,
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.NOT_APPLICABLE,
-        "The official display-name typo is preserved verbatim; code values are not reinterpreted.",
+        (
+            "The official display-name typo is preserved verbatim; "
+            "code values are not reinterpreted."
+        ),
     ),
     _field(
         "pref01.listed_share_count",
@@ -310,18 +347,27 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         _NUMERIC_RANGE,
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
-        "The official description explicitly identifies a share count and the schema declares numeric. Comparisons use the unconverted source-native value; no scale is inferred.",
+        (
+            "The official description explicitly identifies a share count "
+            "and the schema declares numeric. Comparisons use the unconverted "
+            "source-native value; no scale is inferred."
+        ),
     ),
     _field(
         "pref01.daily_updated_at",
         "PREF01N001",
         "du_upt_dt",
         "일간갱신일자",
-        "TIMESTAMP",
-        _TEMPORAL_RANGE,
+        "TEXT",
+        _TEXT_EQ,
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.NOT_APPLICABLE,
-        "Official description and declared timestamp type both support temporal comparison and ordering.",
+        (
+            "Official description identifies an update date, but the active "
+            "2026-08-24 schema declares the physical type as text. Only exact "
+            "equality/inequality is approved; temporal ordering or range "
+            "comparison is not approved."
+        ),
     ),
     _field(
         "pref01.return_1m",
@@ -367,6 +413,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
     ),
+
     # Clear business labels whose current technical type/unit is not query-safe.
     _field(
         "pref01.total_fee_rate",
@@ -377,7 +424,10 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         (),
         SemanticStatus.NEED_REVIEW,
         CoreUnitStatus.UNMAPPED,
-        "Meaning is explicit, but the official type is text and no rate scale is declared; numeric querying is blocked.",
+        (
+            "Meaning is explicit, but the official type is text and no rate "
+            "scale is declared; numeric querying is blocked."
+        ),
     ),
     _field(
         "pref01.other_expense_rate",
@@ -388,7 +438,10 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         (),
         SemanticStatus.NEED_REVIEW,
         CoreUnitStatus.UNMAPPED,
-        "Meaning is explicit, but the official type is text and no rate scale is declared; numeric querying is blocked.",
+        (
+            "Meaning is explicit, but the official type is text and no rate "
+            "scale is declared; numeric querying is blocked."
+        ),
     ),
     _field(
         "pref01.trading_available_date",
@@ -399,7 +452,10 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         (),
         SemanticStatus.NEED_REVIEW,
         CoreUnitStatus.NOT_APPLICABLE,
-        "The official description is date-like, but the declared/typed target is text; temporal operations are blocked.",
+        (
+            "The official description is date-like, but the declared/typed "
+            "target is text; temporal operations are blocked."
+        ),
     ),
     _field(
         "pref01.trading_end_date",
@@ -410,8 +466,12 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         (),
         SemanticStatus.NEED_REVIEW,
         CoreUnitStatus.NOT_APPLICABLE,
-        "The official description is date-like, but the declared/typed target is text; temporal operations are blocked.",
+        (
+            "The official description is date-like, but the declared/typed "
+            "target is text; temporal operations are blocked."
+        ),
     ),
+
     # PRFD01N001 (public fund): identifiers, categories, risk, size, returns.
     _field(
         "prfd.product_name",
@@ -455,7 +515,10 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         _TEXT_EQ,
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.NOT_APPLICABLE,
-        "Field meaning is explicit; code values remain opaque and require exact-value filtering.",
+        (
+            "Field meaning is explicit; code values remain opaque and "
+            "require exact-value filtering."
+        ),
     ),
     _field(
         "prfd.public_private_category",
@@ -499,7 +562,10 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         _TEXT_EQ,
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.NOT_APPLICABLE,
-        "The field is the currency code itself; this does not establish units for separate amount fields.",
+        (
+            "The field is the currency code itself; this does not establish "
+            "units for separate amount fields."
+        ),
     ),
     _field(
         "prfd.risk_grade_code",
@@ -576,28 +642,44 @@ def validate_core_field_registry(
     """Validate unique identities and the strict confirmed-only allowlist."""
 
     records = tuple(entries)
-    keys = [entry.semantic_field_key for entry in records]
-    source_identities = [
-        (entry.logical_table_id, entry.qualified_name) for entry in records
+
+    keys = [
+        entry.semantic_field_key
+        for entry in records
     ]
-    duplicate_keys = sorted(key for key, count in Counter(keys).items() if count > 1)
-    duplicate_sources = sorted(
-        f"{table_id}.{qualified_name}"
-        for (table_id, qualified_name), count in Counter(source_identities).items()
+
+    source_identities = [
+        (entry.logical_table_id, entry.qualified_name)
+        for entry in records
+    ]
+
+    duplicate_keys = sorted(
+        key
+        for key, count in Counter(keys).items()
         if count > 1
     )
+
+    duplicate_sources = sorted(
+        f"{table_id}.{qualified_name}"
+        for (table_id, qualified_name), count
+        in Counter(source_identities).items()
+        if count > 1
+    )
+
     unsafe_non_confirmed = sorted(
         entry.semantic_field_key
         for entry in records
         if entry.semantic_status is not SemanticStatus.CONFIRMED
         and entry.allowed_operations
     )
+
     is_valid = (
         not duplicate_keys
         and not duplicate_sources
         and not unsafe_non_confirmed
         and len(records) <= OFFICIAL_COLUMN_COUNT
     )
+
     return {
         "registry_entry_count": len(records),
         "official_column_count": OFFICIAL_COLUMN_COUNT,
@@ -614,13 +696,22 @@ def get_confirmed_core_fields(
 ) -> tuple[CoreFieldMapping, ...]:
     """Return only fields approved for the Structured Tool."""
 
-    if logical_table_id is not None and logical_table_id not in OFFICIAL_TABLE_COLUMN_COUNTS:
-        raise KeyError(f"unknown logical_table_id: {logical_table_id}")
+    if (
+        logical_table_id is not None
+        and logical_table_id not in OFFICIAL_TABLE_COLUMN_COUNTS
+    ):
+        raise KeyError(
+            f"unknown logical_table_id: {logical_table_id}"
+        )
+
     return tuple(
         entry
         for entry in CORE_FIELD_MAPPINGS
         if entry.semantic_status is SemanticStatus.CONFIRMED
-        and (logical_table_id is None or entry.logical_table_id == logical_table_id)
+        and (
+            logical_table_id is None
+            or entry.logical_table_id == logical_table_id
+        )
     )
 
 
@@ -640,18 +731,33 @@ def get_confirmed_field_map(
 def get_core_mapping_summary() -> dict[str, Any]:
     """Summarize reviewed entries while treating all absent columns as unmapped."""
 
-    status_counts = Counter(entry.semantic_status.value for entry in CORE_FIELD_MAPPINGS)
+    status_counts = Counter(
+        entry.semantic_status.value
+        for entry in CORE_FIELD_MAPPINGS
+    )
+
     status_counts[SemanticStatus.UNMAPPED.value] += (
         OFFICIAL_COLUMN_COUNT - len(CORE_FIELD_MAPPINGS)
     )
 
     table_summary: dict[str, dict[str, int]] = {}
+
     for table_id, official_count in OFFICIAL_TABLE_COLUMN_COUNTS.items():
         table_entries = tuple(
-            entry for entry in CORE_FIELD_MAPPINGS if entry.logical_table_id == table_id
+            entry
+            for entry in CORE_FIELD_MAPPINGS
+            if entry.logical_table_id == table_id
         )
-        table_counts = Counter(entry.semantic_status.value for entry in table_entries)
-        table_counts[SemanticStatus.UNMAPPED.value] += official_count - len(table_entries)
+
+        table_counts = Counter(
+            entry.semantic_status.value
+            for entry in table_entries
+        )
+
+        table_counts[SemanticStatus.UNMAPPED.value] += (
+            official_count - len(table_entries)
+        )
+
         table_summary[table_id] = {
             "official_column_count": official_count,
             "reviewed_entry_count": len(table_entries),
@@ -665,7 +771,8 @@ def get_core_mapping_summary() -> dict[str, Any]:
         "reviewed_entry_count": len(CORE_FIELD_MAPPINGS),
         "agent_allowed_field_count": len(get_confirmed_core_fields()),
         "semantic_status_counts": {
-            status.value: status_counts[status.value] for status in SemanticStatus
+            status.value: status_counts[status.value]
+            for status in SemanticStatus
         },
         "table_status_counts": table_summary,
     }
@@ -677,14 +784,23 @@ def build_core_field_registry() -> dict[str, Any]:
     return {
         "registry_format_version": "1.0",
         "policy": {
-            "evidence": "official_schema_display_name_and_declared_type",
+            "evidence": (
+                "official_schema_display_name_and_declared_type"
+            ),
             "agent_field_selection": "CONFIRMED_ONLY",
             "unlisted_official_columns": "UNMAPPED",
-            "semantic_keys": "TABLE_SCOPED_NO_CROSS_PRODUCT_MERGE",
-            "numeric_values": "SOURCE_NATIVE_NO_UNIT_OR_SCALE_CONVERSION",
+            "semantic_keys": (
+                "TABLE_SCOPED_NO_CROSS_PRODUCT_MERGE"
+            ),
+            "numeric_values": (
+                "SOURCE_NATIVE_NO_UNIT_OR_SCALE_CONVERSION"
+            ),
             "text_dates": "NO_TEMPORAL_OPERATIONS",
         },
-        "entries": [entry.to_dict() for entry in CORE_FIELD_MAPPINGS],
+        "entries": [
+            entry.to_dict()
+            for entry in CORE_FIELD_MAPPINGS
+        ],
         "summary": get_core_mapping_summary(),
         "validation": validate_core_field_registry(),
     }

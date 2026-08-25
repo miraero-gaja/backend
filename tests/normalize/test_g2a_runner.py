@@ -50,7 +50,7 @@ def test_run_g2a_writes_exactly_five_reports_without_mutating_inputs(
 ) -> None:
     """Run the real orchestrator with only its official counts test-patched.
 
-    Production keeps the hard 207-column/145,393-row checks.  This test replaces
+    Production keeps the active official physical-shape checks. This test replaces
     those constants only inside the temporary process so the same orchestration
     can be exercised over eight synthetic columns and eight synthetic rows.
     """
