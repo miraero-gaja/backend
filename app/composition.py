@@ -13,7 +13,13 @@ from fastapi import Request
 from app.agent.contracts import RouteHint
 from app.agent.executor import ToolExecutor
 from app.core.config import Settings
-from app.generation import AnswerGenerator, DeterministicAnswerGenerator
+from app.core.logging import LogFields, get_logger
+from app.generation import (
+    AnswerGenerator,
+    DeterministicAnswerGenerator,
+    HyperClovaAnswerGenerator,
+)
+from app.llm import build_hcx_client
 from app.structured import (
     AsyncQueryBackend,
     LayeredStructuredQueryPlanner,
@@ -51,6 +57,7 @@ _DEFAULT_G2B_STRUCTURED_SCHEMA_PATH = (
     / "g2b"
     / "g2b_structured_schema.json"
 )
+logger = get_logger(__name__)
 
 
 class ApplicationCompositionError(RuntimeError):
@@ -218,6 +225,26 @@ def _configured_backend(settings: Settings) -> AsyncQueryBackend:
     return PsycopgQueryBackend(connection_factory)
 
 
+def _configured_answer_generator(settings: Settings) -> AnswerGenerator:
+    if not settings.hcx_enabled:
+        return DeterministicAnswerGenerator()
+    if not settings.hcx_ready:
+        logger.warning(
+            "hcx_generation_disabled",
+            extra=LogFields(error_code="HCX_CONFIG_MISSING").as_extra(),
+        )
+        return DeterministicAnswerGenerator()
+    try:
+        transport = build_hcx_client(settings)
+    except ValueError:
+        logger.warning(
+            "hcx_generation_disabled",
+            extra=LogFields(error_code="HCX_CONFIG_INVALID").as_extra(),
+        )
+        return DeterministicAnswerGenerator()
+    return HyperClovaAnswerGenerator(transport)
+
+
 @dataclass(frozen=True, slots=True)
 class ApplicationRuntime:
     staging_schema: StagingSchemaSpec
@@ -276,7 +303,11 @@ def build_application_runtime(
         structured_planner=structured_planner,
         structured_executor=structured_executor,
         tool_executor=tool_executor,
-        answer_generator=answer_generator or DeterministicAnswerGenerator(),
+        answer_generator=(
+            answer_generator
+            if answer_generator is not None
+            else _configured_answer_generator(settings)
+        ),
     )
 
 

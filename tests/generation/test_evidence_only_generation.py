@@ -125,7 +125,7 @@ def test_evidence_only_hcx_stub_answer_is_accepted() -> None:
     assert result.answer == (
         "상품명[검증 ETF] (상품ID[ETF001])의 source-native 값은 30입니다."
     )
-    assert result.provider == "hyperclova-x"
+    assert result.provider == "hyperclova_x"
     assert result.used_fallback is False
     assert result.validation_status is GenerationValidationStatus.ACCEPTED
     assert result.elapsed_ms >= 0
