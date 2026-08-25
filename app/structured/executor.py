@@ -9,7 +9,12 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from app.evidence.models import EvidenceItem, ScalarValue
+from app.evidence.models import (
+    AggregateEvidence,
+    EvidenceItem,
+    ScalarValue,
+    SupportStatus,
+)
 
 from .compiler import CompiledStructuredQuery
 from .contracts import (
@@ -53,6 +58,7 @@ class StructuredExecutionResult:
     columns: tuple[str, ...]
     evidence: tuple[EvidenceItem, ...]
     compiled_query: CompiledStructuredQuery
+    aggregate_evidence: tuple[AggregateEvidence, ...] = ()
     status: StructuredQueryStatus = StructuredQueryStatus.SUPPORTED
     semantic_gate_trace: tuple[SemanticGateTrace, ...] = ()
 
@@ -96,6 +102,20 @@ class StructuredQueryExecutor:
             candidates = ({"count": count},)
             columns = ("count",)
             evidence: tuple[EvidenceItem, ...] = ()
+            aggregate_evidence = (
+                AggregateEvidence(
+                    source_table=query.product_scope,
+                    operation="COUNT",
+                    value=count,
+                    query_fingerprint=structured_query_fingerprint(query),
+                    condition_ids=tuple(
+                        selection.condition_id
+                        for selection in compiled.evidence_fields
+                        if selection.condition_id is not None
+                    ),
+                    decision=SupportStatus.SUPPORTED,
+                ),
+            )
         else:
             candidates = tuple(row_to_candidate(row, compiled) for row in rows)
             evidence = tuple(
@@ -104,11 +124,13 @@ class StructuredQueryExecutor:
             columns = tuple(
                 selection.field.semantic_key for selection in compiled.projected_fields
             )
+            aggregate_evidence = ()
         return StructuredExecutionResult(
             query_fingerprint=structured_query_fingerprint(query),
             candidates=candidates,
             columns=columns,
             evidence=evidence,
+            aggregate_evidence=aggregate_evidence,
             compiled_query=compiled,
             status=(
                 compiled.planning_status

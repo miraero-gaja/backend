@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from pipeline.dataset_contract import TOTAL_COLUMNS
+
 
 G2A_FORMAT_VERSION = "1.0"
-EXPECTED_COVERAGE_COLUMN_COUNT = 207
+EXPECTED_COVERAGE_COLUMN_COUNT = TOTAL_COLUMNS
 
 G2A_REPORT_FILENAMES = (
     "g2a_typed_rules.json",

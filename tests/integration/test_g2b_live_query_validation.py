@@ -4,8 +4,8 @@ loaded PostgreSQL staging database.
 Unlike ``test_postgres_structured.py`` (which creates its own disposable
 temporary table under a *separate* ``G2B_TEST_DATABASE_URL``), this test
 deliberately targets the SAME ``DATABASE_URL`` the application and the G2-B
-loader already use, because the goal is to validate the actual 145,393-row
-staging tables that are already loaded -- not a synthetic fixture.
+loader already use, because the goal is to validate staging tables for the
+active official dataset contract -- not a synthetic fixture.
 
 This test never loads, replaces, inserts, updates, or deletes anything. It
 only builds a read-only ``TrustedQueryRegistry`` from the existing G1/G2-A

@@ -146,6 +146,13 @@ def test_count_zero_is_a_valid_deterministic_result_without_fake_row_evidence() 
 
     assert result.candidates == ({"count": 0},)
     assert result.evidence == ()
+    assert len(result.aggregate_evidence) == 1
+    aggregate = result.aggregate_evidence[0]
+    assert aggregate.source_table == "PRBD01N001"
+    assert aggregate.operation == "COUNT"
+    assert aggregate.value == 0
+    assert aggregate.condition_ids == ()
+    assert aggregate.query_fingerprint == result.query_fingerprint
 
 
 class FakeDescription:
@@ -230,6 +237,7 @@ def test_tool_adapter_executes_an_explicit_structured_contract_directly() -> Non
 
     assert result.candidates == ({"count": 3},)
     assert result.columns == ("count",)
+    assert result.aggregate_evidence[0].value == 3
 
 
 def test_tool_adapter_reads_the_plan_from_the_generic_contract() -> None:
@@ -249,3 +257,4 @@ def test_tool_adapter_reads_the_plan_from_the_generic_contract() -> None:
     assert result.candidates == ({"count": 3},)
     assert result.columns == ("count",)
     assert result.evidence == ()
+    assert result.aggregate_evidence[0].value == 3

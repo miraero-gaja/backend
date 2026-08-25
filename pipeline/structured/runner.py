@@ -286,7 +286,9 @@ def _validate_g2a(
     if not isinstance(reported_rules, list):
         raise G2BRunnerError("G2-A typed rules must be a list")
     if len(reported_rules) != OFFICIAL_STAGING_COLUMN_TOTAL:
-        raise G2BRunnerError("G2-A typed rule count is not 207")
+        raise G2BRunnerError(
+            f"G2-A typed rule count is not {OFFICIAL_STAGING_COLUMN_TOTAL}"
+        )
     expected_rules = [rule.to_dict() for rule in rules]
     if not all(isinstance(rule, Mapping) for rule in reported_rules):
         raise G2BRunnerError("G2-A typed rule entries must be objects")
@@ -303,7 +305,10 @@ def _validate_g2a(
     if not isinstance(validation, Mapping) or validation.get("is_valid") is not True:
         raise G2BRunnerError("G2-A coverage validation is not PASS")
     if int(validation.get("actual_source_column_count", -1)) != OFFICIAL_STAGING_COLUMN_TOTAL:
-        raise G2BRunnerError("G2-A coverage does not contain 207 source columns")
+        raise G2BRunnerError(
+            "G2-A coverage does not contain "
+            f"{OFFICIAL_STAGING_COLUMN_TOTAL} source columns"
+        )
 
     lineage = documents["g2a_lineage_summary.json"]
     summary = lineage.get("summary")
@@ -1026,7 +1031,7 @@ def run_g2b_live_validation(
     This is a companion entry point to :func:`run_g2b`, not a replacement.
     It never loads, replaces, or reloads any PostgreSQL data -- it requires
     an existing G2-B report set whose ``database.status`` is already
-    ``"PASS"`` (i.e. the 145,393-row staging load already happened, most
+    ``"PASS"`` (i.e. the active official staging load already happened, most
     likely via ``run_g2b(..., execute_database=True, ...)``), rebuilds a
     ``TrustedQueryRegistry`` read-only from the same official inputs, then
     executes only the SELECT-only Live Structured Query Validation shapes

@@ -14,6 +14,8 @@ from dataclasses import asdict, is_dataclass
 from enum import Enum
 from typing import Any
 
+from pipeline.dataset_contract import OFFICIAL_TABLE_IDS as DATASET_TABLE_IDS
+from pipeline.dataset_contract import TOTAL_COLUMNS
 from mappings.concepts.registry import (
     ConceptRegistryError,
     build_concept_registry,
@@ -21,10 +23,8 @@ from mappings.concepts.registry import (
 )
 
 
-OFFICIAL_EXPECTED_COLUMN_COUNT = 207
-OFFICIAL_TABLE_IDS = frozenset(
-    {"PRBD01N001", "PREF01N001", "PREF02N001", "PRFD01N001"}
-)
+OFFICIAL_EXPECTED_COLUMN_COUNT = TOTAL_COLUMNS
+OFFICIAL_TABLE_IDS = DATASET_TABLE_IDS
 TYPED_STATUSES = frozenset(
     {"READY", "PARSE_REVIEW_REQUIRED", "UNSUPPORTED", "UNASSESSED"}
 )

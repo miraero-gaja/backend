@@ -141,6 +141,12 @@ def _supported_answer(query: QueryContract, decision: SupportDecision) -> str:
         if understanding is not None and understanding.product_candidate
         else "선택한 상품군"
     )
+    if decision.aggregate_evidence:
+        aggregate = decision.aggregate_evidence[0]
+        return (
+            f"{product}에서 검증된 전체 상품 개수는 "
+            f"{aggregate.value}개입니다."
+        )[:MAX_ANSWER_CHARS]
     field = (
         understanding.requested_field_alias
         if understanding is not None and understanding.requested_field_alias
@@ -222,7 +228,9 @@ class DeterministicAnswerRenderer:
 
         if query.required_inputs:
             answer = missing_input_answer(query.required_inputs)
-        elif decision.status is SupportStatus.SUPPORTED and decision.evidence:
+        elif decision.status is SupportStatus.SUPPORTED and (
+            decision.evidence or decision.aggregate_evidence
+        ):
             answer = _supported_answer(query, decision)
         elif decision.status is SupportStatus.NO_MATCH:
             answer = (

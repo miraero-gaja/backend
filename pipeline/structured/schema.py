@@ -14,18 +14,14 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from pipeline.dataset_contract import TABLE_COLUMN_COUNTS, TOTAL_COLUMNS
 from pipeline.normalize.models import TargetType, TypedRule
 from pipeline.normalize.type_rules import canonicalize_declared_type
 
 
 STAGING_SCHEMA_NAME = "structured_staging"
-OFFICIAL_STAGING_COLUMN_COUNTS: dict[str, int] = {
-    "PRBD01N001": 40,
-    "PREF01N001": 73,
-    "PREF02N001": 49,
-    "PRFD01N001": 45,
-}
-OFFICIAL_STAGING_COLUMN_TOTAL = sum(OFFICIAL_STAGING_COLUMN_COUNTS.values())
+OFFICIAL_STAGING_COLUMN_COUNTS: Mapping[str, int] = TABLE_COLUMN_COUNTS
+OFFICIAL_STAGING_COLUMN_TOTAL = TOTAL_COLUMNS
 
 _LOGICAL_TABLE_ID = re.compile(r"[A-Z][A-Z0-9_]{1,30}", re.ASCII)
 _SAFE_IDENTIFIER = re.compile(r"[a-z_][a-z0-9_]{0,62}", re.ASCII)
@@ -308,7 +304,7 @@ def build_staging_schema(
     *,
     expected_column_counts: Mapping[str, int] = OFFICIAL_STAGING_COLUMN_COUNTS,
 ) -> StagingSchemaSpec:
-    """Build and validate the complete official four-table/207-column shape.
+    """Build and validate the complete active official four-table shape.
 
     Tests may pass an explicit smaller ``expected_column_counts`` mapping.  The
     production default is deliberately strict and cannot silently omit a table

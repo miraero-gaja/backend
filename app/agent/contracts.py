@@ -4,7 +4,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.evidence.models import EvidenceItem, ReasonCode, ScalarValue
+from app.evidence.models import AggregateEvidence, EvidenceItem, ReasonCode, ScalarValue
 from app.structured.contracts import (
     AggregateFunction,
     FilterOperator,
@@ -92,4 +92,5 @@ class ToolResult(BaseModel):
     warnings: tuple[str, ...] = ()
     error_code: ReasonCode | None = None
     evidence: tuple[EvidenceItem, ...] = ()
+    aggregate_evidence: tuple[AggregateEvidence, ...] = ()
     validation_trace: tuple[str, ...] = ()

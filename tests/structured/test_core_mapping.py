@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from pipeline.dataset_contract import TABLE_COLUMN_COUNTS, TOTAL_COLUMNS
 from mappings.core import (
     CORE_FIELD_MAPPINGS,
     CoreUnitStatus,
@@ -19,20 +20,20 @@ from mappings.core import (
 def test_priority_a_is_a_minimal_subset_with_exact_universe_counts() -> None:
     summary = get_core_mapping_summary()
 
-    assert summary["official_column_count"] == 207
+    assert summary["official_column_count"] == TOTAL_COLUMNS
     assert summary["reviewed_entry_count"] == 38
     assert summary["agent_allowed_field_count"] == 34
     assert summary["semantic_status_counts"] == {
         "CONFIRMED": 34,
         "NEED_REVIEW": 4,
-        "UNMAPPED": 169,
+        "UNMAPPED": TOTAL_COLUMNS - len(CORE_FIELD_MAPPINGS),
     }
     assert summary["table_status_counts"]["PRBD01N001"] == {
-        "official_column_count": 40,
+        "official_column_count": TABLE_COLUMN_COUNTS["PRBD01N001"],
         "reviewed_entry_count": 0,
         "CONFIRMED": 0,
         "NEED_REVIEW": 0,
-        "UNMAPPED": 40,
+        "UNMAPPED": TABLE_COLUMN_COUNTS["PRBD01N001"],
     }
     assert summary["table_status_counts"]["PREF02N001"]["CONFIRMED"] == 0
 

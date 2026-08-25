@@ -3,7 +3,7 @@
 from datetime import date
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 ScalarValue = str | int | float | bool | None
 
@@ -45,6 +45,19 @@ class EvidenceItem(BaseModel):
     ruleset_version: str | None = None
 
 
+class AggregateEvidence(BaseModel):
+    """A validated aggregate result that is not misrepresented as a source row."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    source_table: str
+    operation: str = Field(pattern=r"^COUNT$")
+    value: int = Field(ge=0)
+    query_fingerprint: str
+    condition_ids: tuple[str, ...] = ()
+    decision: SupportStatus
+
+
 class SupportDecision(BaseModel):
     """Whether the available evidence supports generating a public answer."""
 
@@ -53,5 +66,5 @@ class SupportDecision(BaseModel):
     status: SupportStatus
     reason_codes: tuple[ReasonCode, ...] = ()
     evidence: tuple[EvidenceItem, ...] = ()
+    aggregate_evidence: tuple[AggregateEvidence, ...] = ()
     summary: str
-

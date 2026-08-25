@@ -1,0 +1,2120 @@
+{
+  "dataset_name": "team_golden_queries_v1",
+  "dataset_kind": "evaluation_simulation",
+  "official_ground_truth": false,
+  "source_snapshot": "2026-08-24",
+  "benchmark_mode": "live",
+  "live_data_used": true,
+  "generation_mode": "deterministic",
+  "case_count": 40,
+  "overall": {
+    "passed": 40,
+    "evaluated": 40,
+    "rate": 1.0
+  },
+  "metrics": {
+    "routing_accuracy": {
+      "passed": 40,
+      "evaluated": 40,
+      "rate": 1.0
+    },
+    "support_status_accuracy": {
+      "passed": 40,
+      "evaluated": 40,
+      "rate": 1.0
+    },
+    "semantic_grounding_accuracy": {
+      "passed": 40,
+      "evaluated": 40,
+      "rate": 1.0
+    },
+    "operation_accuracy": {
+      "passed": 40,
+      "evaluated": 40,
+      "rate": 1.0
+    },
+    "result_set_correctness": {
+      "passed": 19,
+      "evaluated": 19,
+      "rate": 1.0
+    },
+    "top_n_ordering_correctness": {
+      "passed": 8,
+      "evaluated": 8,
+      "rate": 1.0
+    },
+    "answer_schema_validity": {
+      "passed": 40,
+      "evaluated": 40,
+      "rate": 1.0
+    },
+    "evidence_validity": {
+      "passed": 40,
+      "evaluated": 40,
+      "rate": 1.0
+    },
+    "hallucination_fail_closed_violation_count": 0,
+    "generation_validation_fallback_count": 0,
+    "latency_ms": {
+      "p50": 33.646,
+      "p95": 179.47
+    }
+  },
+  "category_pass_rates": {
+    "공모펀드": {
+      "passed": 10,
+      "evaluated": 10,
+      "rate": 1.0
+    },
+    "국내 ETF": {
+      "passed": 10,
+      "evaluated": 10,
+      "rate": 1.0
+    },
+    "국내채권": {
+      "passed": 10,
+      "evaluated": 10,
+      "rate": 1.0
+    },
+    "해외 ETF": {
+      "passed": 10,
+      "evaluated": 10,
+      "rate": 1.0
+    }
+  },
+  "query_type_pass_rates": {
+    "AMBIGUOUS_FIELD": {
+      "passed": 1,
+      "evaluated": 1,
+      "rate": 1.0
+    },
+    "AMBIGUOUS_SCOPE": {
+      "passed": 1,
+      "evaluated": 1,
+      "rate": 1.0
+    },
+    "COUNT": {
+      "passed": 4,
+      "evaluated": 4,
+      "rate": 1.0
+    },
+    "EQ": {
+      "passed": 4,
+      "evaluated": 4,
+      "rate": 1.0
+    },
+    "FILTER_SORT_TOP_N": {
+      "passed": 1,
+      "evaluated": 1,
+      "rate": 1.0
+    },
+    "MISSING_OPERATION": {
+      "passed": 1,
+      "evaluated": 1,
+      "rate": 1.0
+    },
+    "NO_MATCH": {
+      "passed": 3,
+      "evaluated": 3,
+      "rate": 1.0
+    },
+    "RANGE": {
+      "passed": 1,
+      "evaluated": 1,
+      "rate": 1.0
+    },
+    "TOP_N": {
+      "passed": 6,
+      "evaluated": 6,
+      "rate": 1.0
+    },
+    "UNKNOWN_FIELD": {
+      "passed": 5,
+      "evaluated": 5,
+      "rate": 1.0
+    },
+    "UNSUPPORTED_AGGREGATION": {
+      "passed": 1,
+      "evaluated": 1,
+      "rate": 1.0
+    },
+    "UNSUPPORTED_DOMAIN": {
+      "passed": 3,
+      "evaluated": 3,
+      "rate": 1.0
+    },
+    "UNSUPPORTED_OPERATION": {
+      "passed": 5,
+      "evaluated": 5,
+      "rate": 1.0
+    },
+    "UNSUPPORTED_UNIT": {
+      "passed": 4,
+      "evaluated": 4,
+      "rate": 1.0
+    }
+  },
+  "failure_distribution": {},
+  "result_validation_summary": {
+    "EVALUATED": 19,
+    "UNSUPPORTED_CASE_HAS_NO_RESULT_SET": 21
+  },
+  "dataset_expectation_variations": [
+    {
+      "case_id": "etf-kr-01",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    },
+    {
+      "case_id": "etf-kr-03",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    },
+    {
+      "case_id": "etf-gl-09",
+      "dataset_expected_status": "NO_MATCH",
+      "live_expected_status": "SUPPORTED"
+    },
+    {
+      "case_id": "fund-01",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    },
+    {
+      "case_id": "fund-03",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    }
+  ],
+  "failures": [],
+  "cases": [
+    {
+      "case_id": "bond-01",
+      "product_family": "국내채권",
+      "query_type": "COUNT",
+      "question": "국내채권 개수",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [
+        "COUNT"
+      ],
+      "actual_operation": [
+        "COUNT"
+      ],
+      "expected_result_count": 21882,
+      "actual_result_count": 21882,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 167.611,
+      "rationale": "명시적 상품군의 무필터 COUNT는 planner가 승인한다.",
+      "evidence_basis": "G2 staging table identity and deterministic simulation fixture count."
+    },
+    {
+      "case_id": "bond-02",
+      "product_family": "국내채권",
+      "query_type": "UNSUPPORTED_DOMAIN",
+      "question": "국내채권 위험등급 1 이하",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "actual_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "expected_operation": [
+        "LE"
+      ],
+      "actual_operation": [
+        "LE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 17.607,
+      "rationale": "pd_risk_gcd의 선언명·타입은 T1_OFFICIAL_SCHEMA로 CONFIRMED되었으나, 코드값 의미와 위험 방향은 여전히 미승인이라 비교 연산(LE)은 CLOSED다.",
+      "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), valueDomain NEED_REVIEW, EQ/NE/LT/LE/GT/GE/SORT_ASC/SORT_DESC 전부 CLOSED."
+    },
+    {
+      "case_id": "bond-03",
+      "product_family": "국내채권",
+      "query_type": "UNSUPPORTED_DOMAIN",
+      "question": "국내채권 위험등급 6 이상",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "actual_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "expected_operation": [
+        "GE"
+      ],
+      "actual_operation": [
+        "GE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 20.306,
+      "rationale": "코드값의 숫자 순서를 위험 방향으로 해석하지 않으므로, concept이 CONFIRMED여도 비교 연산(GE)은 CLOSED 상태를 유지한다.",
+      "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), 코드 순서/방향 미승인으로 comparison operation 전부 CLOSED."
+    },
+    {
+      "case_id": "bond-04",
+      "product_family": "국내채권",
+      "query_type": "AMBIGUOUS_FIELD",
+      "question": "국내채권 듀레이션과 익일 듀레이션 비교",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 20.249,
+      "rationale": "듀레이션과 익일 듀레이션이 각각 독립적인 occurrence로 명시되어 서로 다른 두 semantic field(prbd.dur_unresolved, prbd.ndy_dur_unresolved)가 동시에 매치된다. Span-aware alias longest-match는 두 occurrence가 서로 nested되어 있지 않으므로 어느 한 쪽만 임의로 선택하지 않고, parser가 multiple_semantic_fields ambiguity로 fail-closed한다.",
+      "evidence_basis": "mappings/aliases/registry.py의 span-aware _select_longest_matches와 app/agent/parser.py의 다중 필드 ambiguity 정책(len(fields) > 1 → multiple_semantic_fields)."
+    },
+    {
+      "case_id": "bond-05",
+      "product_family": "국내채권",
+      "query_type": "UNSUPPORTED_UNIT",
+      "question": "국내채권 duration 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.dur_unresolved"
+      ],
+      "actual_semantic_keys": [
+        "prbd.dur_unresolved"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 15.419,
+      "rationale": "'duration' alias는 이제 prbd.dur_unresolved 하나로만 unambiguous하게 resolve된다. 다만 unit/scale이 NEED_REVIEW 상태로 남아 있어 SORT_DESC를 포함한 모든 numeric operation이 CLOSED이므로 여전히 UNSUPPORTED다.",
+      "evidence_basis": "G3 semantic registry: prbd.dur_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), unit NEED_REVIEW, 8개 runtime operation 전부 CLOSED."
+    },
+    {
+      "case_id": "bond-06",
+      "product_family": "국내채권",
+      "query_type": "UNKNOWN_FIELD",
+      "question": "국내채권 만기수익률 높은 순 5개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 34.911,
+      "rationale": "No approved alias or semantic field exists.",
+      "evidence_basis": "Core and semantic registries contain no approved PRBD yield concept."
+    },
+    {
+      "case_id": "bond-07",
+      "product_family": "국내채권",
+      "query_type": "MISSING_OPERATION",
+      "question": "국내채권 위험등급 알려줘",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "actual_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 18.508,
+      "rationale": "pd_risk_gcd 개념은 T1으로 CONFIRMED되었으나, 질의에 실행 가능한 filter/sort 표현이 없어 operation을 인식하지 못한다.",
+      "evidence_basis": "G3 registry T1_OFFICIAL_SCHEMA CONFIRMED concept + deterministic parser contract (인식 가능한 operation 키워드 없음)."
+    },
+    {
+      "case_id": "bond-08",
+      "product_family": "국내채권",
+      "query_type": "UNSUPPORTED_DOMAIN",
+      "question": "국내채권 위험등급 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "actual_semantic_keys": [
+        "prbd.pd_risk_gcd_unresolved"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 22.691,
+      "rationale": "코드값 순서를 위험 방향으로 해석하지 않으므로 concept이 CONFIRMED여도 SORT_DESC는 CLOSED 상태를 유지한다.",
+      "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), SORT_ASC/SORT_DESC 포함 전 operation CLOSED."
+    },
+    {
+      "case_id": "bond-09",
+      "product_family": "국내채권",
+      "query_type": "UNKNOWN_FIELD",
+      "question": "국내채권 쿠폰금리 3 이상",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 33.646,
+      "rationale": "No approved coupon-rate alias exists.",
+      "evidence_basis": "Current alias and semantic registries."
+    },
+    {
+      "case_id": "bond-10",
+      "product_family": "국내채권",
+      "query_type": "AMBIGUOUS_SCOPE",
+      "question": "국내채권과 국내 ETF 개수",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": null,
+      "actual_product_scope": null,
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 15.735,
+      "rationale": "Two explicit product scopes must not be guessed.",
+      "evidence_basis": "Deterministic product alias policy."
+    },
+    {
+      "case_id": "etf-kr-01",
+      "product_family": "국내 ETF",
+      "query_type": "EQ",
+      "question": "국내 ETF 중 상품코드가 069500인 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.product_code"
+      ],
+      "actual_semantic_keys": [
+        "pref01.product_code"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 103.568,
+      "rationale": "Official product code supports exact EQ.",
+      "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live status/count are resolved by an independent structured oracle."
+    },
+    {
+      "case_id": "etf-kr-02",
+      "product_family": "국내 ETF",
+      "query_type": "NO_MATCH",
+      "question": "국내 ETF 중 상품코드가 999999인 상품",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.product_code"
+      ],
+      "actual_semantic_keys": [
+        "pref01.product_code"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 88.251,
+      "rationale": "Supported EQ with zero fixture rows is NO_MATCH.",
+      "evidence_basis": "G2 mapping plus deterministic fixture absence; live status/count are resolved by an independent structured oracle."
+    },
+    {
+      "case_id": "etf-kr-03",
+      "product_family": "국내 ETF",
+      "query_type": "EQ",
+      "question": "국내 ETF 상품명 KODEX 200과 같은 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.product_name"
+      ],
+      "actual_semantic_keys": [
+        "pref01.product_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 90.815,
+      "rationale": "Product-name EQ is approved by G2 and should be understood.",
+      "evidence_basis": "G2 CONFIRMED pref01.product_name EQ permission; live status/count are oracle-resolved."
+    },
+    {
+      "case_id": "etf-kr-04",
+      "product_family": "국내 ETF",
+      "query_type": "RANGE",
+      "question": "국내 ETF 상장주식수 100 이상",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.listed_share_count"
+      ],
+      "actual_semantic_keys": [
+        "pref01.listed_share_count"
+      ],
+      "expected_operation": [
+        "GE"
+      ],
+      "actual_operation": [
+        "GE"
+      ],
+      "expected_result_count": 1777,
+      "actual_result_count": 1777,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 612.421,
+      "rationale": "Source-native numeric comparison is G2-approved.",
+      "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live results use the structured oracle."
+    },
+    {
+      "case_id": "etf-kr-05",
+      "product_family": "국내 ETF",
+      "query_type": "FILTER_SORT_TOP_N",
+      "question": "국내 ETF 상장주식수 100 이상 높은 순 2개",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.listed_share_count"
+      ],
+      "actual_semantic_keys": [
+        "pref01.listed_share_count"
+      ],
+      "expected_operation": [
+        "GE",
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "GE",
+        "SORT_DESC"
+      ],
+      "expected_result_count": 2,
+      "actual_result_count": 2,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 118.426,
+      "rationale": "Approved filter, sort and limit combination.",
+      "evidence_basis": "G2 allowed operations and deterministic fixture; live results use the structured oracle."
+    },
+    {
+      "case_id": "etf-kr-06",
+      "product_family": "국내 ETF",
+      "query_type": "TOP_N",
+      "question": "국내 ETF AUM 내림차순 3개",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref01.aum_latest"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": 3,
+      "actual_result_count": 3,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 103.346,
+      "rationale": "Source-native AUM ordering is approved.",
+      "evidence_basis": "G2 SORT-only approval; no unit conversion; live results use the structured oracle."
+    },
+    {
+      "case_id": "etf-kr-07",
+      "product_family": "국내 ETF",
+      "query_type": "TOP_N",
+      "question": "국내 ETF AUM 오름차순 2개",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref01.aum_latest"
+      ],
+      "expected_operation": [
+        "SORT_ASC"
+      ],
+      "actual_operation": [
+        "SORT_ASC"
+      ],
+      "expected_result_count": 2,
+      "actual_result_count": 2,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 117.621,
+      "rationale": "G2 SORT permission supports source-native ascending order.",
+      "evidence_basis": "G2 SORT-only approval; no unit conversion; live results use the structured oracle."
+    },
+    {
+      "case_id": "etf-kr-08",
+      "product_family": "국내 ETF",
+      "query_type": "COUNT",
+      "question": "국내 ETF 개수",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [
+        "COUNT"
+      ],
+      "actual_operation": [
+        "COUNT"
+      ],
+      "expected_result_count": 1780,
+      "actual_result_count": 1780,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 205.661,
+      "rationale": "Unfiltered table COUNT is planner-approved.",
+      "evidence_basis": "Structured COUNT contract and deterministic fixture count."
+    },
+    {
+      "case_id": "etf-kr-09",
+      "product_family": "국내 ETF",
+      "query_type": "UNSUPPORTED_UNIT",
+      "question": "국내 ETF 총보수 0.5% 이하",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.total_fee_rate"
+      ],
+      "actual_semantic_keys": [
+        "pref01.total_fee_rate"
+      ],
+      "expected_operation": [
+        "LE"
+      ],
+      "actual_operation": [
+        "LE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 17.404,
+      "rationale": "Rate scale and numeric type are not approved.",
+      "evidence_basis": "G2 NEED_REVIEW field with no operations."
+    },
+    {
+      "case_id": "etf-kr-10",
+      "product_family": "국내 ETF",
+      "query_type": "UNKNOWN_FIELD",
+      "question": "국내 ETF 변동성 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 30.751,
+      "rationale": "Volatility is not an approved alias/field.",
+      "evidence_basis": "Current alias and core registries."
+    },
+    {
+      "case_id": "etf-gl-01",
+      "product_family": "해외 ETF",
+      "query_type": "TOP_N",
+      "question": "해외 ETF 중 AUM이 큰 상품 3개",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": 3,
+      "actual_result_count": 3,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 117.691,
+      "rationale": "Approved source-native AUM descending Top-3.",
+      "evidence_basis": "G3 PROJECT/SORT_DESC approval and simulation fixture; live identities/order use the structured oracle."
+    },
+    {
+      "case_id": "etf-gl-02",
+      "product_family": "해외 ETF",
+      "query_type": "TOP_N",
+      "question": "해외 ETF AUM Top 2",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": 2,
+      "actual_result_count": 2,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 109.57,
+      "rationale": "Explicit Top-N implies approved descending ranking.",
+      "evidence_basis": "G3 SORT_DESC and default multi-projection; live identities/order use the structured oracle."
+    },
+    {
+      "case_id": "etf-gl-03",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "해외 ETF AUM 오름차순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "expected_operation": [
+        "SORT_ASC"
+      ],
+      "actual_operation": [
+        "SORT_ASC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.727,
+      "rationale": "Only SORT_DESC is OPEN.",
+      "evidence_basis": "G3 semantic operation approval."
+    },
+    {
+      "case_id": "etf-gl-04",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_UNIT",
+      "question": "해외 ETF AUM 100억 이상",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "expected_operation": [
+        "GE"
+      ],
+      "actual_operation": [
+        "GE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 1.981,
+      "rationale": "AUM unit and scale are unresolved.",
+      "evidence_basis": "G3 unit NEED_REVIEW and threshold CLOSED."
+    },
+    {
+      "case_id": "etf-gl-05",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "해외 ETF AUM 100 이상",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "expected_operation": [
+        "GE"
+      ],
+      "actual_operation": [
+        "GE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.364,
+      "rationale": "Absolute threshold remains CLOSED even without an explicit unit token.",
+      "evidence_basis": "G3 GE CLOSED."
+    },
+    {
+      "case_id": "etf-gl-06",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_UNIT",
+      "question": "해외 ETF 총보수 0.5% 이하",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.expense_ratio"
+      ],
+      "actual_semantic_keys": [
+        "pref02.expense_ratio"
+      ],
+      "expected_operation": [
+        "LE"
+      ],
+      "actual_operation": [
+        "LE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 3.471,
+      "rationale": "Expense unit, scale and zero meaning are unresolved.",
+      "evidence_basis": "G3 concept-only approval with numeric operations CLOSED."
+    },
+    {
+      "case_id": "etf-gl-07",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "해외 ETF 총보수 1 이하",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.expense_ratio"
+      ],
+      "actual_semantic_keys": [
+        "pref02.expense_ratio"
+      ],
+      "expected_operation": [
+        "LE"
+      ],
+      "actual_operation": [
+        "LE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 3.226,
+      "rationale": "Profiling does not approve numeric comparison.",
+      "evidence_basis": "G3 LE CLOSED."
+    },
+    {
+      "case_id": "etf-gl-08",
+      "product_family": "해외 ETF",
+      "query_type": "COUNT",
+      "question": "해외 ETF 개수",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [
+        "COUNT"
+      ],
+      "actual_operation": [
+        "COUNT"
+      ],
+      "expected_result_count": 6037,
+      "actual_result_count": 6037,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 94.302,
+      "rationale": "Unfiltered table COUNT is planner-approved.",
+      "evidence_basis": "Structured COUNT contract and deterministic fixture count."
+    },
+    {
+      "case_id": "etf-gl-09",
+      "product_family": "해외 ETF",
+      "query_type": "NO_MATCH",
+      "question": "해외 ETF 중 AUM이 큰 상품 3개",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "actual_semantic_keys": [
+        "pref02.aum_latest"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": 3,
+      "actual_result_count": 3,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 179.47,
+      "rationale": "Simulation injects zero rows; live status is resolved from the actual staging result instead of reusing the fixture expectation.",
+      "evidence_basis": "Explicit zero-row simulation fixture plus live structured oracle."
+    },
+    {
+      "case_id": "etf-gl-10",
+      "product_family": "해외 ETF",
+      "query_type": "UNKNOWN_FIELD",
+      "question": "해외 ETF 변동성 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.439,
+      "rationale": "No approved volatility field exists.",
+      "evidence_basis": "Current alias and semantic registries."
+    },
+    {
+      "case_id": "fund-01",
+      "product_family": "공모펀드",
+      "query_type": "EQ",
+      "question": "공모펀드 중 상품코드가 F001인 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.product_code"
+      ],
+      "actual_semantic_keys": [
+        "prfd.product_code"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 151.714,
+      "rationale": "Official fund product code supports EQ.",
+      "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live status/count are oracle-resolved."
+    },
+    {
+      "case_id": "fund-02",
+      "product_family": "공모펀드",
+      "query_type": "NO_MATCH",
+      "question": "공모펀드 중 상품코드가 NONE인 상품",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.product_code"
+      ],
+      "actual_semantic_keys": [
+        "prfd.product_code"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 100.091,
+      "rationale": "Supported EQ with no matching fixture row.",
+      "evidence_basis": "G2 mapping plus deterministic fixture absence; live status/count are oracle-resolved."
+    },
+    {
+      "case_id": "fund-03",
+      "product_family": "공모펀드",
+      "query_type": "EQ",
+      "question": "공모펀드 상품명 글로벌성장펀드와 같은 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.product_name"
+      ],
+      "actual_semantic_keys": [
+        "prfd.product_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 105.484,
+      "rationale": "Product-name EQ is approved by G2 and should be understood.",
+      "evidence_basis": "G2 CONFIRMED prfd.product_name EQ permission; live status/count are oracle-resolved."
+    },
+    {
+      "case_id": "fund-04",
+      "product_family": "공모펀드",
+      "query_type": "TOP_N",
+      "question": "공모펀드 순자산 높은 순 3개",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.net_assets"
+      ],
+      "actual_semantic_keys": [
+        "prfd.net_assets"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": 3,
+      "actual_result_count": 3,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 118.438,
+      "rationale": "Source-native net-assets ordering is approved.",
+      "evidence_basis": "G2 SORT-only approval; live identities/order use the structured oracle."
+    },
+    {
+      "case_id": "fund-05",
+      "product_family": "공모펀드",
+      "query_type": "TOP_N",
+      "question": "공모펀드 순자산 오름차순 2개",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.net_assets"
+      ],
+      "actual_semantic_keys": [
+        "prfd.net_assets"
+      ],
+      "expected_operation": [
+        "SORT_ASC"
+      ],
+      "actual_operation": [
+        "SORT_ASC"
+      ],
+      "expected_result_count": 2,
+      "actual_result_count": 2,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": true,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 102.484,
+      "rationale": "Source-native ascending ordering is approved.",
+      "evidence_basis": "G2 SORT-only approval; live identities/order use the structured oracle."
+    },
+    {
+      "case_id": "fund-06",
+      "product_family": "공모펀드",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "공모펀드 순자산 100 이상",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.net_assets"
+      ],
+      "actual_semantic_keys": [
+        "prfd.net_assets"
+      ],
+      "expected_operation": [
+        "GE"
+      ],
+      "actual_operation": [
+        "GE"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 3.045,
+      "rationale": "Net-assets absolute threshold is not approved.",
+      "evidence_basis": "G2 prfd.net_assets allows SORT only and unit is UNMAPPED."
+    },
+    {
+      "case_id": "fund-07",
+      "product_family": "공모펀드",
+      "query_type": "COUNT",
+      "question": "공모펀드 개수",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [
+        "COUNT"
+      ],
+      "actual_operation": [
+        "COUNT"
+      ],
+      "expected_result_count": 23676,
+      "actual_result_count": 23676,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 83.352,
+      "rationale": "Unfiltered table COUNT is planner-approved.",
+      "evidence_basis": "Structured COUNT contract and deterministic fixture count."
+    },
+    {
+      "case_id": "fund-08",
+      "product_family": "공모펀드",
+      "query_type": "UNSUPPORTED_AGGREGATION",
+      "question": "공모펀드 상품코드 F001인 상품 개수",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.product_code"
+      ],
+      "actual_semantic_keys": [
+        "prfd.product_code"
+      ],
+      "expected_operation": [
+        "EQ",
+        "COUNT"
+      ],
+      "actual_operation": [
+        "EQ",
+        "COUNT"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.983,
+      "rationale": "Filtered aggregation is intentionally fail-closed.",
+      "evidence_basis": "Grounder filtered_aggregation_not_supported policy."
+    },
+    {
+      "case_id": "fund-09",
+      "product_family": "공모펀드",
+      "query_type": "UNKNOWN_FIELD",
+      "question": "공모펀드 총보수 낮은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [],
+      "actual_semantic_keys": [],
+      "expected_operation": [],
+      "actual_operation": [],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.039,
+      "rationale": "No approved public-fund fee alias exists.",
+      "evidence_basis": "Current alias and core registries."
+    },
+    {
+      "case_id": "fund-10",
+      "product_family": "공모펀드",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "공모펀드 상품명 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.product_name"
+      ],
+      "actual_semantic_keys": [
+        "prfd.product_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 3.525,
+      "rationale": "Product name has EQ/NE permission, not SORT.",
+      "evidence_basis": "G2 allowed operations."
+    }
+  ]
+}
