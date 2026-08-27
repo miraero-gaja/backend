@@ -22,6 +22,7 @@ from app.generation import (
 from app.llm import build_hcx_client
 from app.structured import (
     AsyncQueryBackend,
+    CrossProductQueryExecutor,
     LayeredStructuredQueryPlanner,
     PsycopgQueryBackend,
     SemanticGatedQueryPlanner,
@@ -253,6 +254,7 @@ class ApplicationRuntime:
     structured_planner: LayeredStructuredQueryPlanner
     structured_executor: StructuredQueryExecutor
     tool_executor: ToolExecutor
+    cross_product_executor: CrossProductQueryExecutor
     answer_generator: AnswerGenerator
 
 
@@ -296,6 +298,7 @@ def build_application_runtime(
             RouteHint.COST_RULES: CostRulesToolAdapter(),
         }
     )
+    cross_product_executor = CrossProductQueryExecutor(structured_executor)
     return ApplicationRuntime(
         staging_schema=schema,
         g2_registry=g2_registry,
@@ -303,6 +306,7 @@ def build_application_runtime(
         structured_planner=structured_planner,
         structured_executor=structured_executor,
         tool_executor=tool_executor,
+        cross_product_executor=cross_product_executor,
         answer_generator=(
             answer_generator
             if answer_generator is not None
@@ -320,6 +324,15 @@ def get_tool_executor(request: Request) -> ToolExecutor:
     return runtime.tool_executor
 
 
+def get_cross_product_executor(request: Request) -> CrossProductQueryExecutor:
+    """FastAPI dependency backed by the application-composed runtime."""
+
+    runtime = getattr(request.app.state, "runtime", None)
+    if not isinstance(runtime, ApplicationRuntime):
+        raise ApplicationCompositionError("application runtime is not initialized")
+    return runtime.cross_product_executor
+
+
 def get_answer_generator(request: Request) -> AnswerGenerator:
     """FastAPI dependency for the injected evidence-only generation boundary."""
 
@@ -335,6 +348,7 @@ __all__ = [
     "UnavailableStructuredBackend",
     "build_application_runtime",
     "get_answer_generator",
+    "get_cross_product_executor",
     "get_tool_executor",
     "load_full_staging_schema",
 ]

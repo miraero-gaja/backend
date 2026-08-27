@@ -19,6 +19,7 @@ class RouteHint(StrEnum):
     GRAPH = "graph"
     VECTOR = "vector"
     COST_RULES = "cost_rules"
+    CROSS_PRODUCT = "cross_product"
 
 
 class QueryUnderstandingStatus(StrEnum):
@@ -59,6 +60,39 @@ class QueryUnderstandingResult(BaseModel):
     execution_trace: tuple[str, ...] = ()
 
 
+class CrossProductScopeQuery(BaseModel):
+    """One product scope participating in a cross-product query intent."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    product_candidate: str = Field(min_length=1)
+    logical_table_id: str = Field(min_length=1)
+
+
+class CrossProductUnderstanding(BaseModel):
+    """Deterministic multi-scope understanding for cross-product retrieval.
+
+    This is additive to -- and never replaces -- the single-scope
+    ``QueryUnderstandingResult`` path. It only exists when the parser
+    detects an explicit cross-product intent (2+ distinct product scopes
+    plus a metric that is table-scope-invariant, e.g. COUNT). Comparability
+    across scopes is enforced separately by
+    ``app.agent.cross_product_compat.is_cross_product_metric_compatible``;
+    an incompatible metric must resolve to UNSUPPORTED, never a forced
+    merge.
+    """
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    metric: AggregateFunction
+    scopes: tuple[CrossProductScopeQuery, ...] = Field(min_length=2)
+    status: QueryUnderstandingStatus = QueryUnderstandingStatus.PARSED
+    structured_queries: tuple[StructuredQueryContract, ...] = ()
+    ambiguity: tuple[str, ...] = ()
+    unsupported_reason: str | None = None
+    execution_trace: tuple[str, ...] = ()
+
+
 class QueryContract(BaseModel):
     """A generic execution plan that does not presume dataset columns."""
 
@@ -77,6 +111,7 @@ class QueryContract(BaseModel):
     route_hint: RouteHint = RouteHint.UNSUPPORTED
     structured_query: StructuredQueryContract | None = None
     understanding: QueryUnderstandingResult | None = None
+    cross_product: CrossProductUnderstanding | None = None
 
 
 class ToolResult(BaseModel):

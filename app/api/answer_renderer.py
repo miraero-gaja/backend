@@ -12,6 +12,7 @@ from app.core.constants import (
 )
 from app.evidence.models import ReasonCode, SupportDecision, SupportStatus
 from app.evidence.serializer import serialize_evidence
+from app.structured.cross_product import CrossProductExecutionResult, CrossProductScopeStatus
 from mappings.semantic import get_semantic_field_approval
 
 
@@ -258,9 +259,92 @@ class DeterministicAnswerRenderer:
         )
 
 
+def _cross_product_scope_label(query: QueryContract, logical_table_id: str) -> str:
+    cross_product = query.cross_product
+    if cross_product is not None:
+        for scope in cross_product.scopes:
+            if scope.logical_table_id == logical_table_id:
+                return scope.product_candidate
+    return logical_table_id
+
+
+def _cross_product_trace(
+    query: QueryContract,
+    cross_result: CrossProductExecutionResult,
+) -> str:
+    steps = ["입력 검증", f"cross-product 상품군 {len(cross_result.scopes)}개 감지"]
+    for outcome in cross_result.scopes:
+        label = _cross_product_scope_label(query, outcome.logical_table_id)
+        steps.append(f"{label} retrieval: {outcome.status.value}")
+    steps.append(f"cross-product merge: {cross_result.status.value}")
+    return _bounded_steps(steps)
+
+
+def _cross_product_supported_answer(
+    query: QueryContract,
+    cross_result: CrossProductExecutionResult,
+) -> str:
+    parts = []
+    for outcome in cross_result.scopes:
+        if outcome.status is not CrossProductScopeStatus.SUPPORTED or outcome.result is None:
+            continue
+        label = _cross_product_scope_label(query, outcome.logical_table_id)
+        count = outcome.result.candidates[0]["count"]
+        parts.append(f"{label} {count}개")
+    return f"cross-product COUNT 결과: {', '.join(parts)}."[:MAX_ANSWER_CHARS]
+
+
+def _cross_product_partial_answer(
+    query: QueryContract,
+    cross_result: CrossProductExecutionResult,
+) -> str:
+    supported_parts = []
+    failed_labels = []
+    for outcome in cross_result.scopes:
+        label = _cross_product_scope_label(query, outcome.logical_table_id)
+        if outcome.status is CrossProductScopeStatus.SUPPORTED and outcome.result is not None:
+            count = outcome.result.candidates[0]["count"]
+            supported_parts.append(f"{label} {count}개")
+        else:
+            failed_labels.append(label)
+    return (
+        f"일부 상품군만 확인했습니다. 확인된 결과: {', '.join(supported_parts)}. "
+        f"확인하지 못한 상품군: {', '.join(failed_labels)}."
+    )[:MAX_ANSWER_CHARS]
+
+
+def render_cross_product_answer(
+    query: QueryContract,
+    cross_result: CrossProductExecutionResult,
+    decision: SupportDecision,
+) -> RenderedAnswer:
+    """Render a cross-product merge result with the same bounded, evidence-only
+    policy as ``DeterministicAnswerRenderer.render`` -- never calling an LLM
+    to search/sort/compute, only to phrase this deterministic outcome."""
+
+    retrieved_context = serialize_evidence(decision)
+    think_trace = _cross_product_trace(query, cross_result)
+
+    if decision.status is SupportStatus.SUPPORTED:
+        answer = _cross_product_supported_answer(query, cross_result)
+    elif decision.status is SupportStatus.PARTIAL:
+        answer = _cross_product_partial_answer(query, cross_result)
+    elif ReasonCode.TOOL_FAILURE in decision.reason_codes:
+        answer = "시스템 조회 실패로 현재 결과를 확인할 수 없습니다."
+    else:
+        answer = UNSUPPORTED_ANSWER
+
+    return RenderedAnswer(
+        retrieved_context=retrieved_context,
+        think_trace=think_trace,
+        answer=answer[:MAX_ANSWER_CHARS],
+    )
+
+
 __all__ = [
     "DeterministicAnswerRenderer",
     "MAX_ANSWER_CHARS",
     "MAX_THINK_TRACE_CHARS",
     "RenderedAnswer",
+    "render_cross_product_answer",
 ]

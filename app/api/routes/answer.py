@@ -5,18 +5,29 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, Request
 
+from app.agent.contracts import RouteHint
 from app.agent.executor import ToolExecutor
 from app.agent.grounder import OntologyGrounder
 from app.agent.parser import QueryParser
 from app.agent.router import QueryRouter
-from app.api.answer_renderer import DeterministicAnswerRenderer
+from app.api.answer_renderer import DeterministicAnswerRenderer, render_cross_product_answer
 from app.api.schemas import AnswerResponse, Utf8JSONResponse
-from app.composition import get_answer_generator, get_tool_executor
+from app.composition import (
+    get_answer_generator,
+    get_cross_product_executor,
+    get_tool_executor,
+)
 from app.core.config import Settings, get_settings
-from app.core.deadline import Deadline
+from app.core.deadline import Deadline, DeadlineExceeded
 from app.core.logging import LogFields, get_logger
 from app.evidence.validator import EvidenceValidator
 from app.generation import AnswerGenerator, GenerationInput
+from app.structured import CrossProductQueryExecutor
+from app.structured.cross_product import (
+    CrossProductExecutionResult,
+    CrossProductMergeStatus,
+    evaluate_cross_product,
+)
 
 router = APIRouter()
 logger = get_logger(__name__)
@@ -34,6 +45,9 @@ async def answer(
     question: Annotated[str, Query(description="Question text echoed unchanged")],
     settings: Annotated[Settings, Depends(get_settings)],
     tool_executor: Annotated[ToolExecutor, Depends(get_tool_executor)],
+    cross_product_executor: Annotated[
+        CrossProductQueryExecutor, Depends(get_cross_product_executor)
+    ],
     answer_generator: Annotated[AnswerGenerator, Depends(get_answer_generator)],
 ) -> AnswerResponse:
     """Execute the Core pipeline and render only deterministic validated facts."""
@@ -48,10 +62,36 @@ async def answer(
     )
     grounded_query = grounder.ground(query)
     route = query_router.route(grounded_query)
-    tool_results = await tool_executor.execute(grounded_query, route, deadline)
-    evidence = tuple(item for result in tool_results for item in result.evidence)
-    decision = evidence_validator.validate(grounded_query, tool_results, evidence)
-    rendered = answer_renderer.render(grounded_query, decision)
+
+    if route is RouteHint.CROSS_PRODUCT and grounded_query.cross_product is not None:
+        cross_product = grounded_query.cross_product
+        scopes = tuple(
+            (scope.logical_table_id, structured_query)
+            for scope, structured_query in zip(
+                cross_product.scopes, cross_product.structured_queries, strict=True
+            )
+        )
+        try:
+            cross_result = await deadline.run(
+                lambda: cross_product_executor.execute(
+                    metric=cross_product.metric,
+                    scopes=scopes,
+                )
+            )
+        except DeadlineExceeded:
+            cross_result = CrossProductExecutionResult(
+                metric=cross_product.metric,
+                status=CrossProductMergeStatus.TOOL_FAILURE,
+                scopes=(),
+            )
+        decision = evaluate_cross_product(cross_result)
+        rendered = render_cross_product_answer(grounded_query, cross_result, decision)
+    else:
+        tool_results = await tool_executor.execute(grounded_query, route, deadline)
+        evidence = tuple(item for result in tool_results for item in result.evidence)
+        decision = evidence_validator.validate(grounded_query, tool_results, evidence)
+        rendered = answer_renderer.render(grounded_query, decision)
+
     generation_input = GenerationInput.from_decision(
         question=question,
         decision_status=decision.status,

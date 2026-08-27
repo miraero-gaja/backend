@@ -11,6 +11,14 @@ from .contracts import (
     StructuredQueryStatus,
     StructuredSort,
 )
+from .cross_product import (
+    CrossProductExecutionResult,
+    CrossProductMergeStatus,
+    CrossProductQueryExecutor,
+    CrossProductScopeOutcome,
+    CrossProductScopeStatus,
+    evaluate_cross_product,
+)
 from .errors import (
     StructuredQueryError,
     StructuredQueryValidationError,
@@ -39,6 +47,11 @@ __all__ = [
     "AggregateFunction",
     "AsyncQueryBackend",
     "CompiledStructuredQuery",
+    "CrossProductExecutionResult",
+    "CrossProductMergeStatus",
+    "CrossProductQueryExecutor",
+    "CrossProductScopeOutcome",
+    "CrossProductScopeStatus",
     "FilterOperator",
     "LayeredStructuredQueryPlanner",
     "PsycopgQueryBackend",
@@ -61,4 +74,5 @@ __all__ = [
     "TrustedQueryRegistry",
     "TrustedTable",
     "build_trusted_query_registry",
+    "evaluate_cross_product",
 ]
