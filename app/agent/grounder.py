@@ -7,6 +7,7 @@ from app.agent.contracts import (
     QueryUnderstandingStatus,
     RouteHint,
 )
+from app.agent.cross_product_compat import is_cross_product_metric_compatible
 from app.structured.contracts import (
     AggregateFunction,
     StructuredFilter,
@@ -44,6 +45,12 @@ class OntologyGrounder:
     """Approve parsed operations through G2 plus the separate G3 safety layer."""
 
     def ground(self, query: QueryContract) -> QueryContract:
+        # Cross-product understanding is an additive, separate track from
+        # the single-scope understanding path below -- it never touches
+        # query.understanding or the single-product branches.
+        if query.cross_product is not None:
+            return self._ground_cross_product(query)
+
         # Preserve the established G2 caller contract for already-built plans.
         if query.understanding is None:
             if (
@@ -263,3 +270,62 @@ class OntologyGrounder:
                 "understanding": approved_understanding,
             }
         )
+
+    def _ground_cross_product(self, query: QueryContract) -> QueryContract:
+        """Approve a multi-scope cross-product understanding, fail-closed.
+
+        This mirrors the single-scope COUNT branch above (one
+        ``StructuredQueryContract`` per product scope, reusing the closed
+        ``StructuredQueryContract`` type as-is) but never merges rows
+        itself -- it only builds the independent per-scope structured
+        queries. Actual retrieval/merge happens in
+        ``app.structured.cross_product.CrossProductQueryExecutor``, which
+        runs each scope through the unmodified ``StructuredQueryExecutor``.
+        """
+
+        cross_product = query.cross_product
+        assert cross_product is not None
+        if cross_product.status is not QueryUnderstandingStatus.PARSED:
+            return query.model_copy(update={"route_hint": RouteHint.UNSUPPORTED})
+
+        trace = list(cross_product.execution_trace)
+        if not is_cross_product_metric_compatible(cross_product.metric):
+            return query.model_copy(
+                update={
+                    "route_hint": RouteHint.UNSUPPORTED,
+                    "cross_product": cross_product.model_copy(
+                        update={
+                            "status": QueryUnderstandingStatus.UNSUPPORTED,
+                            "unsupported_reason": "cross_product_metric_not_compatible",
+                            "execution_trace": tuple(
+                                [*trace, "cross-product metric 호환성 승인: 실패"]
+                            ),
+                        }
+                    ),
+                }
+            )
+
+        if cross_product.metric is AggregateFunction.COUNT:
+            structured_queries = tuple(
+                StructuredQueryContract(
+                    product_scope=scope.logical_table_id,
+                    aggregate=AggregateFunction.COUNT,
+                )
+                for scope in cross_product.scopes
+            )
+            trace.append("cross-product 집계 승인: COUNT")
+            approved = cross_product.model_copy(
+                update={
+                    "status": QueryUnderstandingStatus.SUPPORTED,
+                    "structured_queries": structured_queries,
+                    "execution_trace": tuple(trace),
+                }
+            )
+            return query.model_copy(
+                update={
+                    "route_hint": RouteHint.CROSS_PRODUCT,
+                    "cross_product": approved,
+                }
+            )
+
+        return query.model_copy(update={"route_hint": RouteHint.UNSUPPORTED})

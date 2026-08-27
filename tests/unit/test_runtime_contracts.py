@@ -31,6 +31,7 @@ def test_query_contract_exposes_required_runtime_fields() -> None:
         "route_hint",
         "structured_query",
         "understanding",
+        "cross_product",
     }
 
     assert set(QueryContract.model_fields) == expected_fields

@@ -61,6 +61,7 @@ class GoldenCase:
     fixture_mode: str
     rationale: str
     evidence_basis: str
+    expected_cross_product_counts: dict[str, int] | None = None
 
 
 def load_dataset(path: Path = DEFAULT_DATASET) -> tuple[dict[str, Any], tuple[GoldenCase, ...]]:
@@ -139,64 +140,99 @@ def _comparison(left: Any, operator: FilterOperator, right: Any) -> bool:
     }[operator]
 
 
+def _simulated_rows(
+    query: QueryContract | StructuredQueryContract,
+    compiled: Any,
+    fixture_mode: str,
+) -> tuple[Mapping[str, Any], ...]:
+    """Build deterministic fixture rows for one structured plan. Shared by
+    the single-product SimulationBackend.configure and the cross-product
+    SimulationBackend.configure_cross_product -- both execute independent,
+    per-scope plans through the same fixture-shaping logic."""
+
+    if query is None or compiled is None or fixture_mode == "EMPTY":
+        return ()
+    source = list(SIMULATED_ROWS[query.product_scope])
+    selections = {item.field.semantic_key: item for item in compiled.evidence_fields}
+    for clause in query.filters:
+        selection = selections[clause.field]
+        expected = _typed(str(clause.value), selection.field.target_type)
+        source = [
+            row for row in source
+            if _comparison(
+                _typed(row[clause.field], selection.field.target_type),
+                clause.operator,
+                expected,
+            )
+        ]
+    if query.sort is not None:
+        selection = selections[query.sort.field]
+        source.sort(
+            key=lambda row: _typed(row[query.sort.field], selection.field.target_type),
+            reverse=query.sort.direction is SortDirection.DESC,
+        )
+    if query.limit is not None:
+        source = source[: query.limit]
+    if query.aggregate is AggregateFunction.COUNT:
+        return ({"__count": len(source)},)
+    result: list[Mapping[str, Any]] = []
+    for row in source:
+        raw_record: dict[str, Any] = {}
+        parse_statuses: dict[str, str] = {}
+        record: dict[str, Any] = {
+            "__source_row_id": f"srid:v1:eval-{query.product_scope}-{row['__id']}",
+            "__logical_table_id": query.product_scope,
+            "__raw_record": raw_record,
+            "__parse_statuses": parse_statuses,
+        }
+        for selection in compiled.evidence_fields:
+            key = selection.field.semantic_key
+            value = row[key]
+            raw_record[selection.field.qualified_name] = {
+                "type": _raw_type(selection.field.target_type),
+                "value": value,
+            }
+            parse_statuses[selection.field.qualified_name] = "OK"
+            record[selection.value_alias] = _typed(value, selection.field.target_type)
+        result.append(record)
+    return tuple(result)
+
+
 class SimulationBackend:
     def __init__(self) -> None:
         self.rows: tuple[Mapping[str, Any], ...] = ()
         self.calls: list[tuple[str, tuple[Any, ...]]] = []
+        self._cross_product_responses: dict[str, tuple[Mapping[str, Any], ...]] | None = None
 
     def configure(self, query: QueryContract | None, compiled: Any, fixture_mode: str) -> None:
         self.calls = []
-        if query is None or compiled is None or fixture_mode == "EMPTY":
-            self.rows = ()
-            return
-        source = list(SIMULATED_ROWS[query.product_scope])
-        selections = {item.field.semantic_key: item for item in compiled.evidence_fields}
-        for clause in query.filters:
-            selection = selections[clause.field]
-            expected = _typed(str(clause.value), selection.field.target_type)
-            source = [
-                row for row in source
-                if _comparison(
-                    _typed(row[clause.field], selection.field.target_type),
-                    clause.operator,
-                    expected,
-                )
-            ]
-        if query.sort is not None:
-            selection = selections[query.sort.field]
-            source.sort(
-                key=lambda row: _typed(row[query.sort.field], selection.field.target_type),
-                reverse=query.sort.direction is SortDirection.DESC,
-            )
-        if query.limit is not None:
-            source = source[: query.limit]
-        if query.aggregate is AggregateFunction.COUNT:
-            self.rows = ({"__count": len(source)},)
-            return
-        result: list[Mapping[str, Any]] = []
-        for row in source:
-            raw_record: dict[str, Any] = {}
-            parse_statuses: dict[str, str] = {}
-            record: dict[str, Any] = {
-                "__source_row_id": f"srid:v1:eval-{query.product_scope}-{row['__id']}",
-                "__logical_table_id": query.product_scope,
-                "__raw_record": raw_record,
-                "__parse_statuses": parse_statuses,
-            }
-            for selection in compiled.evidence_fields:
-                key = selection.field.semantic_key
-                value = row[key]
-                raw_record[selection.field.qualified_name] = {
-                    "type": _raw_type(selection.field.target_type),
-                    "value": value,
-                }
-                parse_statuses[selection.field.qualified_name] = "OK"
-                record[selection.value_alias] = _typed(value, selection.field.target_type)
-            result.append(record)
-        self.rows = tuple(result)
+        self._cross_product_responses = None
+        self.rows = _simulated_rows(query, compiled, fixture_mode)
+
+    def configure_cross_product(
+        self,
+        scopes: tuple[tuple[StructuredQueryContract, Any], ...],
+        fixture_mode: str,
+    ) -> None:
+        """Configure one independent fixture response per product scope,
+        dispatched by the compiled plan's physical staging table name --
+        each scope is executed through its own independent SQL call, never
+        merged at the row level here."""
+
+        self.calls = []
+        self.rows = ()
+        self._cross_product_responses = {
+            compiled.table.table_name: _simulated_rows(query, compiled, fixture_mode)
+            for query, compiled in scopes
+        }
 
     async def fetch_all(self, sql: str, parameters: Sequence[Any]) -> Sequence[Mapping[str, Any]]:
         self.calls.append((sql, tuple(parameters)))
+        if self._cross_product_responses is not None:
+            for table_name, rows in self._cross_product_responses.items():
+                if table_name in sql:
+                    return rows
+            raise AssertionError(f"unconfigured cross-product scope in sql: {sql}")
         return self.rows
 
 
@@ -232,9 +268,40 @@ class OracleOutcome:
     basis: str = "LIVE_POSTGRESQL_STRUCTURED_ORACLE"
 
 
-def _oracle_query(case: GoldenCase) -> StructuredQueryContract | None:
+@dataclass(frozen=True, slots=True)
+class CrossProductOracleOutcome:
+    """A live multi-scope oracle outcome: one independent COUNT against the
+    real PostgreSQL staging table per product scope, merged with the exact
+    same status policy as app.structured.cross_product (ALL_SUPPORTED ->
+    SUPPORTED, at least one scope succeeded but not all -> PARTIAL, no
+    scope succeeded but at least one errored -> TOOL_FAILURE, no scope
+    succeeded and none errored -> UNSUPPORTED). ``counts_by_table`` holds
+    only the scopes that themselves succeeded -- a failed scope contributes
+    nothing, mirroring how the runtime never fabricates a count for a scope
+    it could not retrieve."""
+
+    status: str
+    counts_by_table: dict[str, int]
+    basis: str = "LIVE_POSTGRESQL_STRUCTURED_ORACLE"
+
+
+def _oracle_query(
+    case: GoldenCase,
+) -> StructuredQueryContract | tuple[StructuredQueryContract, ...] | None:
     if case.expected_status not in {"SUPPORTED", "NO_MATCH"}:
         return None
+    if case.expected_cross_product_counts is not None:
+        # A cross-product case has no single product_scope -- each scope
+        # gets its own independent COUNT oracle contract, mirroring how
+        # CrossProductQueryExecutor runs one StructuredQueryContract per
+        # scope rather than a single merged query.
+        return tuple(
+            StructuredQueryContract(
+                product_scope=table,
+                aggregate=AggregateFunction.COUNT,
+            )
+            for table in case.expected_cross_product_counts
+        )
     if "COUNT" in case.expected_operation:
         return StructuredQueryContract(
             product_scope=case.expected_product_scope or "",
@@ -297,10 +364,57 @@ def _source_row_ids(evidence: Sequence[Any]) -> tuple[str, ...]:
     return tuple(dict.fromkeys(item.source_row_id for item in evidence))
 
 
+def _cross_product_oracle_outcome(
+    executor: Any,
+    case: GoldenCase,
+) -> tuple[CrossProductOracleOutcome | None, str | None]:
+    """Build the live oracle for a cross-product case: one independent
+    StructuredQueryContract COUNT per scope (from ``_oracle_query``, never
+    the simulation fixture's expected values) run against the same real
+    ``StructuredQueryExecutor`` the single-product oracle uses.
+
+    This mirrors ``_oracle_outcome``'s own failure philosophy exactly: the
+    oracle answers "what does the live database actually contain" -- it is
+    not a re-implementation of the runtime's PARTIAL/TOOL_FAILURE merge
+    policy. If any single scope's oracle query cannot be answered (a query
+    exception, or a malformed COUNT shape), the whole oracle is unavailable
+    for this case -- exactly like the single-product oracle already treats
+    any exception as "no live oracle," not as "expect TOOL_FAILURE" -- and
+    the case falls back to the dataset's declared expectation with
+    ``result_evaluated=False`` rather than asserting an unvalidated guess.
+    Runtime PARTIAL/TOOL_FAILURE outcomes stay purely an *actual*-side
+    signal, verified against ``actual_status`` below, never a golden
+    *expected* value."""
+
+    query = _oracle_query(case)
+    if query is None:
+        return None, "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+    if not isinstance(query, tuple):
+        return None, "CROSS_PRODUCT_CASE_HAS_NO_MULTI_SCOPE_ORACLE"
+    counts_by_table: dict[str, int] = {}
+    try:
+        for scope_query in query:
+            result = asyncio.run(executor.execute(scope_query))
+            if len(result.aggregate_evidence) != 1:
+                return None, "LIVE_ORACLE_AGGREGATE_INVALID"
+            counts_by_table[scope_query.product_scope] = result.aggregate_evidence[0].value
+    except Exception:
+        return None, "LIVE_ORACLE_EXECUTION_FAILED"
+    return (
+        CrossProductOracleOutcome(status="SUPPORTED", counts_by_table=counts_by_table),
+        None,
+    )
+
+
 def _oracle_outcome(executor: Any, case: GoldenCase) -> tuple[OracleOutcome | None, str | None]:
     query = _oracle_query(case)
     if query is None:
         return None, "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+    if isinstance(query, tuple):
+        # Cross-product cases are validated through
+        # _cross_product_oracle_outcome instead -- this function stays the
+        # single-scope oracle so its existing behavior is unchanged.
+        return None, "CROSS_PRODUCT_CASE_HAS_NO_SINGLE_SCOPE_ORACLE"
     try:
         result = asyncio.run(executor.execute(query))
     except Exception:
@@ -503,28 +617,58 @@ def run_benchmark(
 
     with TestClient(application, raise_server_exceptions=False) as client:
         for case in cases:
+            parsed = parser.parse(request_id=f"eval-{case.case_id}", question_id=case.case_id, question=case.question)
+            grounded = grounder.ground(parsed)
+            route = router.route(grounded)
+            cross_product = grounded.cross_product
+
             oracle: OracleOutcome | None = None
+            cross_oracle: CrossProductOracleOutcome | None = None
             oracle_reason: str | None = None
             if mode == "live":
-                oracle, oracle_reason = _oracle_outcome(
-                    runtime.structured_executor,
-                    case,
-                )
+                if cross_product is not None:
+                    cross_oracle, oracle_reason = _cross_product_oracle_outcome(
+                        runtime.structured_executor,
+                        case,
+                    )
+                else:
+                    oracle, oracle_reason = _oracle_outcome(
+                        runtime.structured_executor,
+                        case,
+                    )
             expected_status = (
-                oracle.status if oracle is not None else case.expected_status
+                cross_oracle.status
+                if cross_oracle is not None
+                else oracle.status
+                if oracle is not None
+                else case.expected_status
             )
             expected_count = (
                 oracle.result_count
                 if oracle is not None
                 else case.expected_result_count
             )
-            parsed = parser.parse(request_id=f"eval-{case.case_id}", question_id=case.case_id, question=case.question)
-            grounded = grounder.ground(parsed)
-            route = router.route(grounded)
             if backend is not None:
-                plan = grounded.structured_query
-                compiled = application.state.runtime.structured_planner.compile(plan) if plan is not None else None
-                backend.configure(plan, compiled, case.fixture_mode)
+                if cross_product is not None and cross_product.structured_queries:
+                    scope_plans = tuple(
+                        (
+                            structured_query,
+                            application.state.runtime.structured_planner.compile(
+                                structured_query
+                            ),
+                        )
+                        for structured_query in cross_product.structured_queries
+                    )
+                    backend.configure_cross_product(scope_plans, case.fixture_mode)
+                elif cross_product is None:
+                    plan = grounded.structured_query
+                    compiled = application.state.runtime.structured_planner.compile(plan) if plan is not None else None
+                    backend.configure(plan, compiled, case.fixture_mode)
+                else:
+                    # Cross-product intent was detected but grounding refused it
+                    # (e.g. an incompatible metric) -- nothing to compile, and no
+                    # backend call should happen for this fail-closed case.
+                    backend.configure(None, None, case.fixture_mode)
             generation_start = len(generator.results) if generator is not None else 0
             tool_start = len(recording_tools.results)
             started = monotonic()
@@ -548,7 +692,6 @@ def run_benchmark(
             actual_scope = understanding.logical_table_id if understanding is not None else None
             actual_keys = tuple(understanding.semantic_keys) if understanding is not None else ()
             actual_ops = _operations(grounded)
-            expected_route = RouteHint.STRUCTURED if expected_status in {"SUPPORTED", "NO_MATCH"} else RouteHint.UNSUPPORTED
             observed_tool_results = (
                 recording_tools.results[-1]
                 if len(recording_tools.results) > tool_start
@@ -558,48 +701,89 @@ def run_benchmark(
                 observed_tool_results
             )
             actual_count = tool_count if tool_count is not None else _row_count(context)
-            if mode == "simulation" and case.expected_result_count is not None:
-                result_evaluated = True
-                result_reason = None
-                result_basis = "DETERMINISTIC_SIMULATION_FIXTURE"
-                result_correct = (
-                    actual_count == case.expected_result_count
-                    and (
-                        not case.expected_identifiers
-                        or actual_product_keys == case.expected_identifiers
-                    )
+            actual_cross_product_counts: dict[str, Any] | None = None
+            if cross_product is not None:
+                # A cross-product understanding has no single product_scope,
+                # semantic key, or tool-executor result (route.CROSS_PRODUCT
+                # bypasses ToolExecutor entirely) -- validate it on its own
+                # terms instead of forcing it through the single-product
+                # scope/tool-result facts above.
+                expected_route = (
+                    RouteHint.CROSS_PRODUCT if expected_status == "SUPPORTED" else RouteHint.UNSUPPORTED
                 )
-            elif mode == "live" and oracle is not None:
-                result_evaluated = True
-                result_reason = None
-                result_basis = oracle.basis
-                identity_correct = (
-                    True
-                    if "COUNT" in case.expected_operation
-                    else set(actual_source_ids) == set(oracle.source_row_ids)
-                )
-                result_correct = (
-                    actual_count == oracle.result_count and identity_correct
-                )
-            else:
-                result_evaluated = False
-                result_reason = oracle_reason or "NO_DETERMINISTIC_EXPECTATION"
-                result_basis = None
-                result_correct = None
-            if (
-                mode == "live"
-                and oracle is not None
-                and oracle.status == "SUPPORTED"
-                and any(
-                    operation.startswith("SORT_")
-                    for operation in case.expected_operation
-                )
-            ):
-                ordering = actual_source_ids == oracle.source_row_ids
-            elif mode == "live":
+                actual_cross_product_counts = {
+                    item.get("source_table"): item.get("value")
+                    for item in context.get("aggregate_evidence", [])
+                    if isinstance(item, dict)
+                }
+                if mode == "simulation" and case.expected_cross_product_counts is not None:
+                    result_evaluated = True
+                    result_reason = None
+                    result_basis = "DETERMINISTIC_SIMULATION_FIXTURE"
+                    result_correct = actual_cross_product_counts == case.expected_cross_product_counts
+                elif mode == "live" and cross_oracle is not None:
+                    # Never compare against the simulation fixture's values here --
+                    # this is the live PostgreSQL oracle's own independently
+                    # retrieved per-scope counts. Table-keyed dict equality checks
+                    # per-scope count correctness and scope identity together (a
+                    # missing/extra/mismatched table fails); a COUNT-only merge has
+                    # no rows to order, so there is no separate ordering dimension.
+                    result_evaluated = True
+                    result_reason = None
+                    result_basis = cross_oracle.basis
+                    result_correct = actual_cross_product_counts == cross_oracle.counts_by_table
+                else:
+                    result_evaluated = False
+                    result_reason = oracle_reason or "NO_DETERMINISTIC_EXPECTATION"
+                    result_basis = None
+                    result_correct = None
+                expected_count = None
+                actual_count = None
                 ordering = None
             else:
-                ordering = _ordering_valid(case, grounded, context)
+                expected_route = RouteHint.STRUCTURED if expected_status in {"SUPPORTED", "NO_MATCH"} else RouteHint.UNSUPPORTED
+                if mode == "simulation" and case.expected_result_count is not None:
+                    result_evaluated = True
+                    result_reason = None
+                    result_basis = "DETERMINISTIC_SIMULATION_FIXTURE"
+                    result_correct = (
+                        actual_count == case.expected_result_count
+                        and (
+                            not case.expected_identifiers
+                            or actual_product_keys == case.expected_identifiers
+                        )
+                    )
+                elif mode == "live" and oracle is not None:
+                    result_evaluated = True
+                    result_reason = None
+                    result_basis = oracle.basis
+                    identity_correct = (
+                        True
+                        if "COUNT" in case.expected_operation
+                        else set(actual_source_ids) == set(oracle.source_row_ids)
+                    )
+                    result_correct = (
+                        actual_count == oracle.result_count and identity_correct
+                    )
+                else:
+                    result_evaluated = False
+                    result_reason = oracle_reason or "NO_DETERMINISTIC_EXPECTATION"
+                    result_basis = None
+                    result_correct = None
+                if (
+                    mode == "live"
+                    and oracle is not None
+                    and oracle.status == "SUPPORTED"
+                    and any(
+                        operation.startswith("SORT_")
+                        for operation in case.expected_operation
+                    )
+                ):
+                    ordering = actual_source_ids == oracle.source_row_ids
+                elif mode == "live":
+                    ordering = None
+                else:
+                    ordering = _ordering_valid(case, grounded, context)
             backend_calls = len(backend.calls) if backend is not None else None
             hallucination_violation = expected_status == "UNSUPPORTED" and (
                 actual_status == "SUPPORTED" or (backend_calls is not None and backend_calls > 0)
@@ -631,7 +815,11 @@ def run_benchmark(
                 "dataset_expected_status": case.expected_status,
                 "expected_status": expected_status,
                 "expected_status_source": (
-                    oracle.basis if oracle is not None else "DATASET_METADATA"
+                    cross_oracle.basis
+                    if cross_oracle is not None
+                    else oracle.basis
+                    if oracle is not None
+                    else "DATASET_METADATA"
                 ),
                 "actual_status": actual_status,
                 "expected_product_scope": case.expected_product_scope,
@@ -642,6 +830,8 @@ def run_benchmark(
                 "actual_operation": list(actual_ops),
                 "expected_result_count": expected_count,
                 "actual_result_count": actual_count,
+                "expected_cross_product_counts": case.expected_cross_product_counts,
+                "actual_cross_product_counts": actual_cross_product_counts,
                 "result_validation": {
                     "evaluated": result_evaluated,
                     "basis": result_basis,

@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 
 from app.agent.contracts import (
+    CrossProductScopeQuery,
+    CrossProductUnderstanding,
     ParsedFilterCondition,
     QueryContract,
     QueryUnderstandingResult,
@@ -101,6 +103,69 @@ def _parse_filter(
 class QueryParser:
     """Extract only explicit product, field, comparison, sort, and Top-N tokens."""
 
+    def _try_cross_product(
+        self,
+        *,
+        request_id: str,
+        question_id: str,
+        question: str,
+        products: tuple,
+    ) -> QueryContract | None:
+        """Detect a deterministic cross-product COUNT intent, if any.
+
+        Returns None when the question does not qualify -- callers must
+        then fall through to the existing single-product (or ambiguous
+        multi-scope) handling unchanged. Qualification is structural, not
+        tied to any specific product pair or golden query text:
+        - 2+ distinct matched product scopes
+        - an explicit COUNT intent token
+        - no field-specific alias hit for any matched scope (a
+          field-specific question about multiple products stays
+          multiple_product_scopes/AMBIGUOUS, since per-field comparability
+          across scopes is not established here).
+        """
+
+        seen: dict[str, object] = {}
+        for product in products:
+            seen.setdefault(product.logical_table_id, product)
+        distinct_products = tuple(seen.values())
+        if len(distinct_products) < 2:
+            return None
+        if _COUNT_INTENT.search(question) is None:
+            return None
+        if any(
+            field_alias_matches(product.logical_table_id, question)
+            for product in distinct_products
+        ):
+            return None
+
+        trace = [
+            f"cross-product 상품군: {product.display_name} → {product.logical_table_id}"
+            for product in distinct_products
+        ]
+        trace.append("cross-product 집계 의도: COUNT")
+        scopes = tuple(
+            CrossProductScopeQuery(
+                product_candidate=product.display_name,
+                logical_table_id=product.logical_table_id,
+            )
+            for product in distinct_products
+        )
+        cross_product = CrossProductUnderstanding(
+            metric=AggregateFunction.COUNT,
+            scopes=scopes,
+            status=QueryUnderstandingStatus.PARSED,
+            execution_trace=tuple(trace),
+        )
+        return QueryContract(
+            request_id=request_id,
+            question_id=question_id,
+            product_scopes=tuple(product.logical_table_id for product in distinct_products),
+            semantic_intent="deterministic_cross_product_candidate",
+            route_hint=RouteHint.UNSUPPORTED,
+            cross_product=cross_product,
+        )
+
     def parse(
         self,
         *,
@@ -131,6 +196,15 @@ class QueryParser:
         trace: list[str] = []
         ambiguity: list[str] = []
         products = product_alias_matches(question)
+        if len(products) >= 2:
+            cross_product_contract = self._try_cross_product(
+                request_id=request_id,
+                question_id=question_id,
+                question=question,
+                products=products,
+            )
+            if cross_product_contract is not None:
+                return cross_product_contract
         if len(products) != 1:
             reason = (
                 "product_scope_missing"

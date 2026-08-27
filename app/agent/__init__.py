@@ -1,6 +1,8 @@
 """Schema-agnostic query planning and tool execution boundary."""
 
 from app.agent.contracts import (
+    CrossProductScopeQuery,
+    CrossProductUnderstanding,
     ParsedFilterCondition,
     QueryContract,
     QueryUnderstandingResult,
@@ -10,6 +12,8 @@ from app.agent.contracts import (
 )
 
 __all__ = [
+    "CrossProductScopeQuery",
+    "CrossProductUnderstanding",
     "ParsedFilterCondition",
     "QueryContract",
     "QueryUnderstandingResult",

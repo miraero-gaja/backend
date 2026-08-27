@@ -5,8 +5,10 @@ from datetime import date
 
 import pytest
 
+from app.structured import AggregateFunction
 from eval.error_taxonomy import FailureType
 from eval.runners.team_golden import (
+    _cross_product_oracle_outcome,
     _oracle_query,
     load_dataset,
     run_benchmark,
@@ -197,3 +199,113 @@ def test_live_mode_requires_database_url(monkeypatch) -> None:
     monkeypatch.delenv("DATABASE_URL", raising=False)
     with pytest.raises(RuntimeError, match="DATABASE_URL"):
         run_benchmark(mode="live", use_hcx=False)
+
+
+class _FakeAggregateItem:
+    def __init__(self, value: int) -> None:
+        self.value = value
+
+
+class _FakeStructuredResult:
+    def __init__(self, value: int) -> None:
+        self.aggregate_evidence = (_FakeAggregateItem(value),)
+
+
+class _FakeStructuredExecutor:
+    """Stands in for StructuredQueryExecutor so the cross-product live
+    oracle can be tested without a real PostgreSQL connection."""
+
+    def __init__(self, values_by_table: dict, fail_tables: frozenset = frozenset()) -> None:
+        self._values = values_by_table
+        self._fail_tables = fail_tables
+
+    async def execute(self, query):
+        if query.product_scope in self._fail_tables:
+            raise RuntimeError(f"database unavailable for {query.product_scope}")
+        return _FakeStructuredResult(self._values[query.product_scope])
+
+
+def _cross_product_case(case_id: str = "etf-11"):
+    _, cases = load_dataset()
+    return next(case for case in cases if case.case_id == case_id)
+
+
+def test_oracle_query_builds_one_independent_count_contract_per_scope() -> None:
+    """The live oracle for a cross-product case must be built from
+    independent per-scope COUNT contracts, mirroring how
+    CrossProductQueryExecutor runs one StructuredQueryContract per scope
+    rather than a single merged query."""
+
+    case = _cross_product_case()
+    queries = _oracle_query(case)
+
+    assert isinstance(queries, tuple)
+    assert len(queries) == len(case.expected_cross_product_counts)
+    assert {query.product_scope for query in queries} == set(
+        case.expected_cross_product_counts
+    )
+    assert all(query.aggregate is AggregateFunction.COUNT for query in queries)
+
+
+def test_cross_product_oracle_reports_live_counts_per_scope_and_identity() -> None:
+    case = _cross_product_case()
+    executor = _FakeStructuredExecutor({"PREF01N001": 11, "PREF02N001": 22})
+
+    outcome, reason = _cross_product_oracle_outcome(executor, case)
+
+    assert reason is None
+    assert outcome is not None
+    assert outcome.status == "SUPPORTED"
+    assert outcome.counts_by_table == {"PREF01N001": 11, "PREF02N001": 22}
+    # Scope identity: exactly the two scopes this case is about, no more, no less.
+    assert set(outcome.counts_by_table) == set(case.expected_cross_product_counts)
+
+
+def test_cross_product_oracle_never_uses_the_simulation_fixture_values() -> None:
+    """The live oracle must reflect the actual (fake) database response,
+    not the deterministic simulation fixture's expected_cross_product_counts
+    -- here the two are deliberately different so a bug that reused the
+    fixture would be caught immediately."""
+
+    case = _cross_product_case()
+    live_values = {"PREF01N001": 999, "PREF02N001": 888}
+    assert live_values != case.expected_cross_product_counts
+
+    executor = _FakeStructuredExecutor(live_values)
+    outcome, _ = _cross_product_oracle_outcome(executor, case)
+
+    assert outcome.counts_by_table == live_values
+
+
+def test_cross_product_oracle_is_unavailable_when_any_scope_query_fails() -> None:
+    """Mirrors the single-product oracle's own philosophy: an oracle-side
+    query failure makes the whole oracle unavailable (result_evaluated is
+    False downstream) rather than being reinterpreted as an 'expected
+    TOOL_FAILURE' golden value -- TOOL_FAILURE stays a purely actual-side
+    runtime signal."""
+
+    case = _cross_product_case()
+    executor = _FakeStructuredExecutor(
+        {"PREF01N001": 11, "PREF02N001": 22},
+        fail_tables=frozenset({"PREF02N001"}),
+    )
+
+    outcome, reason = _cross_product_oracle_outcome(executor, case)
+
+    assert outcome is None
+    assert reason == "LIVE_ORACLE_EXECUTION_FAILED"
+
+
+def test_non_cross_product_case_has_no_multi_scope_oracle() -> None:
+    _, cases = load_dataset()
+    single_product_case = next(
+        case for case in cases if case.expected_cross_product_counts is None
+        and case.expected_status == "SUPPORTED"
+    )
+
+    outcome, reason = _cross_product_oracle_outcome(
+        _FakeStructuredExecutor({}), single_product_case
+    )
+
+    assert outcome is None
+    assert reason == "CROSS_PRODUCT_CASE_HAS_NO_MULTI_SCOPE_ORACLE"

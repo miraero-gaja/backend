@@ -11,6 +11,10 @@ class QueryRouter:
     def route(self, query: QueryContract) -> RouteHint:
         if query.required_inputs:
             return RouteHint.UNSUPPORTED
+        if query.cross_product is not None:
+            if query.cross_product.status is QueryUnderstandingStatus.SUPPORTED:
+                return RouteHint.CROSS_PRODUCT
+            return RouteHint.UNSUPPORTED
         if query.understanding is not None and query.understanding.status in {
             QueryUnderstandingStatus.AMBIGUOUS,
             QueryUnderstandingStatus.UNSUPPORTED,
