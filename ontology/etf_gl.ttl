@@ -14,15 +14,16 @@ ma:pref02_product_identifier a ma:SemanticField ;
     ma:conceptStatus ma:CONFIRMED ;
     ma:unitStatus ma:CONFIRMED ;
     ma:valueDomainStatus ma:CONFIRMED ;
-    ma:allowedOperation ma:PROJECT ;
-    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:allowedOperation ma:PROJECT, ma:EQ, ma:NE ;
+    ma:closedOperation ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
     ma:evidenceTier ma:T1_OFFICIAL_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
     ma:evidenceType ma:OFFICIAL_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
     ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/20260824/g1/g1_schema_profile.json", "artifacts/profiling/20260824/g1/g1_data_profile.json", "artifacts/profiling/20260824/g2a/g2a_typed_rules.json" ;
     ma:sourceIdentity "sha256:32ac732f0501f4ab518682175fecc50756ee1eafde9296801f139d62559b5e64", "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
     ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "해외ETF RIC" ;
     ma:needsReview "false" ;
-    ma:rationale "Projection-only; pd_itm_no is a statistical unique candidate observed in the 20260824 G1 profile (0 duplicates among 6,037 non-null values), not a declared official primary key. Code meaning is not inferred." .
+    ma:rationale "PROJECT and exact source-native EQ/NE only; pd_itm_no is a statistical unique candidate observed in the 20260824 G1 profile (0 duplicates among 6,037 non-null values), not a declared official primary key. Code meaning and ordering are not inferred." .
 
 ma:pref02_product_name a ma:SemanticField ;
     ma:logicalTableId "PREF02N001" ;
@@ -31,15 +32,80 @@ ma:pref02_product_name a ma:SemanticField ;
     ma:conceptStatus ma:CONFIRMED ;
     ma:unitStatus ma:CONFIRMED ;
     ma:valueDomainStatus ma:CONFIRMED ;
-    ma:allowedOperation ma:PROJECT ;
-    ma:closedOperation ma:EQ, ma:NE, ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
+    ma:allowedOperation ma:PROJECT, ma:EQ, ma:NE ;
+    ma:closedOperation ma:LT, ma:LE, ma:GT, ma:GE, ma:SORT_ASC, ma:SORT_DESC ;
     ma:evidenceTier ma:T1_OFFICIAL_SCHEMA, ma:T4_INTERNAL_REPRODUCIBLE_VALIDATION ;
     ma:evidenceType ma:OFFICIAL_SCHEMA, ma:PROFILE_ARTIFACT, ma:INTERNAL_VALIDATION ;
     ma:provenance "mappings/semantic/registry.py", "artifacts/profiling/20260824/g1/g1_schema_profile.json", "artifacts/profiling/20260824/g1/g1_file_manifest.json", "artifacts/profiling/20260824/g2a/g2a_typed_rules.json" ;
     ma:sourceIdentity "sha256:32ac732f0501f4ab518682175fecc50756ee1eafde9296801f139d62559b5e64", "sha256:ca6a274aeaf3f884f2f7635d7802558bc6dabf408871ecb1f71e5a50d9d34067" ;
     ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "상품명" ;
     ma:needsReview "false" ;
-    ma:rationale "Projection-only source-native display name; uniqueness is not inferred." .
+    ma:rationale "PROJECT and exact source-native EQ/NE only; name ordering and uniqueness are not inferred." .
+
+ma:pref02_fund_manager_name a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "cu_fund_mgmt_co" ;
+    ma:semanticKey "pref02.fund_manager_name" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "운용사" ;
+    ma:needsReview "false" .
+
+ma:pref02_base_index_name a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "cu_base_index" ;
+    ma:semanticKey "pref02.base_index_name" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:sourceLiteralClassification ma:SOURCE_NOT_AVAILABLE ;
+    ma:semanticLiteralClassification ma:NULL_EQUIVALENT ;
+    ma:nullEquivalentLiteral "Index is not provided by Management Company", "Index is not available on Lipper Database" ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "기초지수" ;
+    ma:needsReview "false" ;
+    ma:rationale "The two registered source literals are availability sentinels, not index names. The 2026-08-24 live PostgreSQL check observed 2,285 Management Company sentinel rows and 635 Lipper Database sentinel rows. Raw/staging values remain unchanged; semantic PROJECT/EQ/NE excludes them as NULL_EQUIVALENT." .
+
+ma:pref02_investment_asset_type a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "wu_inv_ast_type" ;
+    ma:semanticKey "pref02.investment_asset_type" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "투자자산군" ;
+    ma:needsReview "false" .
+
+ma:pref02_investment_region a ma:SemanticField ;
+    ma:logicalTableId "PREF02N001" ;
+    ma:sourceColumn "wu_inv_rgn" ;
+    ma:semanticKey "pref02.investment_region" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "투자지역" ;
+    ma:needsReview "false" .
 
 ma:pref02_aum_latest a ma:SemanticField ;
     ma:logicalTableId "PREF02N001" ;

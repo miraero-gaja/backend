@@ -17,6 +17,7 @@ ma:Operation a rdfs:Class .
 ma:EvidenceTier a rdfs:Class .
 ma:EvidenceType a rdfs:Class .
 ma:SourceSnapshot a rdfs:Class .
+ma:LiteralClassification a rdfs:Class .
 
 ma:logicalTableId a rdf:Property .
 ma:sourceColumn a rdf:Property .
@@ -37,6 +38,9 @@ ma:alias a rdf:Property .
 ma:needsReview a rdf:Property .
 ma:describesClass a rdf:Property .
 ma:rationale a rdf:Property .
+ma:nullEquivalentLiteral a rdf:Property .
+ma:sourceLiteralClassification a rdf:Property .
+ma:semanticLiteralClassification a rdf:Property .
 
 ma:CONFIRMED a ma:ApprovalStatus .
 ma:NEED_REVIEW a ma:ApprovalStatus .
@@ -45,6 +49,9 @@ ma:UNMAPPED a ma:ApprovalStatus .
 ma:NOT_APPLICABLE a ma:ApprovalStatus .
 ma:OPEN a ma:ApprovalStatus .
 ma:CLOSED a ma:ApprovalStatus .
+
+ma:SOURCE_NOT_AVAILABLE a ma:LiteralClassification .
+ma:NULL_EQUIVALENT a ma:LiteralClassification .
 
 ma:PROJECT a ma:Operation .
 ma:EQ a ma:Operation .

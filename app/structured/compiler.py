@@ -121,6 +121,11 @@ def _coerce_bound_value(field: TrustedField, value: Any) -> Any:
             raise StructuredQueryValidationError(
                 f"{field.semantic_key} requires a TEXT value"
             )
+        if field.is_null_equivalent(value):
+            raise StructuredQueryValidationError(
+                f"{field.semantic_key} null-equivalent source literal is not "
+                "an actual query value"
+            )
         return value
     if field.target_type is TargetType.DECIMAL:
         return _decimal(value)
@@ -262,6 +267,29 @@ class StructuredQueryCompiler:
                 for selection in evidence
             ]
             select_sql = ", ".join(technical_selects + value_selects)
+
+        availability_fields = (
+            tuple(field for field, _ in filter_fields)
+            if query.aggregate is AggregateFunction.COUNT
+            else tuple(selection.field for selection in evidence)
+        )
+        guarded_keys: set[str] = set()
+        for field in availability_fields:
+            if (
+                not field.null_equivalent_literals
+                or field.semantic_key in guarded_keys
+            ):
+                continue
+            guarded_keys.add(field.semantic_key)
+            placeholders = ", ".join(
+                "%s" for _ in field.null_equivalent_literals
+            )
+            physical_column = _quote(field.physical_column)
+            predicates.append(
+                f"({physical_column} IS NOT NULL AND "
+                f"{physical_column} NOT IN ({placeholders}))"
+            )
+            parameters.extend(field.null_equivalent_literals)
 
         sql_parts = [
             f"SELECT {select_sql}",

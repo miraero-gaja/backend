@@ -20,6 +20,7 @@ from app.structured.contracts import (
 )
 from mappings.aliases import field_alias_matches, product_alias_matches
 from mappings.core import SemanticStatus, get_confirmed_field_map
+from mappings.semantic import get_semantic_field_approval
 
 
 _COMPARATORS = {
@@ -98,6 +99,32 @@ def _parse_filter(
                     value=equality.group(1).strip(),
                 )
     return None
+
+
+def _eq_operation_is_open(
+    logical_table_id: str,
+    semantic_keys: tuple[str, ...],
+) -> bool:
+    """Mirror grounder precedence when deciding whether text EQ may parse."""
+
+    core_fields = get_confirmed_field_map(logical_table_id)
+    for semantic_key in semantic_keys:
+        semantic_approval = get_semantic_field_approval(
+            logical_table_id,
+            semantic_key,
+        )
+        if semantic_approval is not None:
+            if "EQ" in semantic_approval.open_operations:
+                return True
+            continue
+        mapping = core_fields.get(semantic_key)
+        if (
+            mapping is not None
+            and mapping.semantic_status is SemanticStatus.CONFIRMED
+            and "EQ" in mapping.allowed_operations
+        ):
+            return True
+    return False
 
 
 class QueryParser:
@@ -281,16 +308,9 @@ class QueryParser:
             _parse_filter(
                 question,
                 field_alias,
-                eq_approved=any(
-                    mapping.semantic_status is SemanticStatus.CONFIRMED
-                    and "EQ" in mapping.allowed_operations
-                    for semantic_key in fields[0].semantic_keys
-                    for mapping in (
-                        get_confirmed_field_map(product.logical_table_id).get(
-                            semantic_key
-                        ),
-                    )
-                    if mapping is not None
+                eq_approved=_eq_operation_is_open(
+                    product.logical_table_id,
+                    fields[0].semantic_keys,
                 ),
             )
             if field_alias is not None

@@ -7,6 +7,68 @@ ma:BondKrOntology a ma:DomainOntology ;
     ma:sourceSnapshot ma:Snapshot20260824 ;
     ma:alias "국내채권" .
 
+ma:prbd_product_code a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "pd_no" ;
+    ma:semanticKey "prbd.product_code" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "상품코드", "채권종목번호" ;
+    ma:needsReview "false" ;
+    ma:rationale "Exact source-native identifier equality only; no official primary-key, code-meaning, or ordering claim." .
+
+ma:prbd_product_name a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "pd_nm" ;
+    ma:semanticKey "prbd.product_name" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "상품명", "채권명" ;
+    ma:needsReview "false" ;
+    ma:rationale "Exact source-native name equality only; no trimming, text normalization, or ordering." .
+
+ma:prbd_product_mid_category_name a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "std_pd_mcls_nm" ;
+    ma:semanticKey "prbd.product_mid_category_name" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "상품중분류명" ;
+    ma:needsReview "false" .
+
+ma:prbd_product_sub_category_name a ma:SemanticField ;
+    ma:logicalTableId "PRBD01N001" ;
+    ma:sourceColumn "std_pd_scls_nm" ;
+    ma:semanticKey "prbd.product_sub_category_name" ;
+    ma:conceptStatus ma:CONFIRMED ;
+    ma:unitStatus ma:NOT_APPLICABLE ;
+    ma:valueDomainStatus ma:UNKNOWN ;
+    ma:allowedOperation ma:EQ, ma:NE ;
+    ma:evidenceTier ma:T1_OFFICIAL_SCHEMA ;
+    ma:evidenceType ma:OFFICIAL_SCHEMA ;
+    ma:provenance "mappings/core/registry.py" ;
+    ma:sourceSnapshot ma:Snapshot20260824 ;
+    ma:alias "상품소분류명" ;
+    ma:needsReview "false" .
+
 ma:prbd_pd_risk_gcd_unresolved a ma:SemanticField ;
     ma:logicalTableId "PRBD01N001" ;
     ma:sourceColumn "pd_risk_gcd" ;

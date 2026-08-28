@@ -39,6 +39,29 @@ class CoreUnitStatus(StrEnum):
     NOT_APPLICABLE = "NOT_APPLICABLE"
 
 
+SOURCE_NOT_AVAILABLE = "SOURCE_NOT_AVAILABLE"
+NULL_EQUIVALENT = "NULL_EQUIVALENT"
+
+
+@dataclass(frozen=True, slots=True)
+class FieldNullEquivalentPolicy:
+    """One field-specific source literal policy; never a staging rewrite."""
+
+    source_classification: str
+    semantic_classification: str
+    literals: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if self.source_classification != SOURCE_NOT_AVAILABLE:
+            raise ValueError("unsupported source literal classification")
+        if self.semantic_classification != NULL_EQUIVALENT:
+            raise ValueError("unsupported semantic literal classification")
+        if not self.literals or any(not value for value in self.literals):
+            raise ValueError("null-equivalent literals must not be empty")
+        if len(set(self.literals)) != len(self.literals):
+            raise ValueError("null-equivalent literals must be unique")
+
+
 ALLOWED_OPERATIONS = frozenset({"EQ", "NE", "LT", "LE", "GT", "GE", "SORT"})
 SUPPORTED_TARGET_TYPES = frozenset(
     {"TEXT", "DECIMAL", "INTEGER", "DATE", "TIMESTAMP"}
@@ -66,6 +89,7 @@ class CoreFieldMapping:
     semantic_status: SemanticStatus
     unit_status: CoreUnitStatus
     notes: str
+    null_equivalent_policy: FieldNullEquivalentPolicy | None = None
 
     def __post_init__(self) -> None:
         if not _SEMANTIC_KEY_PATTERN.fullmatch(self.semantic_field_key):
@@ -127,6 +151,16 @@ class CoreFieldMapping:
                 "CONFIRMED fields must expose at least one safe operation"
             )
 
+        if self.null_equivalent_policy is not None:
+            if self.target_type != "TEXT":
+                raise ValueError(
+                    "null-equivalent policy is allowed only for TEXT fields"
+                )
+            if self.semantic_status is not SemanticStatus.CONFIRMED:
+                raise ValueError(
+                    "null-equivalent policy requires a CONFIRMED field"
+                )
+
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-ready record without changing the reviewed values."""
 
@@ -134,6 +168,12 @@ class CoreFieldMapping:
         record["semantic_status"] = self.semantic_status.value
         record["unit_status"] = self.unit_status.value
         record["allowed_operations"] = list(self.allowed_operations)
+        if self.null_equivalent_policy is None:
+            record.pop("null_equivalent_policy")
+        else:
+            record["null_equivalent_policy"]["literals"] = list(
+                self.null_equivalent_policy.literals
+            )
         return record
 
 
@@ -147,6 +187,7 @@ def _field(
     semantic_status: SemanticStatus,
     unit_status: CoreUnitStatus,
     notes: str,
+    null_equivalent_policy: FieldNullEquivalentPolicy | None = None,
 ) -> CoreFieldMapping:
     return CoreFieldMapping(
         semantic_field_key=semantic_field_key,
@@ -159,6 +200,7 @@ def _field(
         semantic_status=semantic_status,
         unit_status=unit_status,
         notes=notes,
+        null_equivalent_policy=null_equivalent_policy,
     )
 
 
@@ -172,14 +214,90 @@ _OFFICIAL_DESCRIPTION_NOTE = (
     "no alias or cross-product canonical merge is asserted."
 )
 
+_SOURCE_NATIVE_TEXT_EQ_NOTE = (
+    "The official schema identifies a text name/category concept. EQ/NE "
+    "compare the preserved source-native text only; no trimming, code-value "
+    "interpretation, semantic ordering, or cross-product merge is approved."
+)
+
 _SOURCE_NATIVE_ORDER_NOTE = (
     "Official description confirms the metric, but no official unit/scale "
     "is declared. Only source-native ordering is allowed; no conversion or "
     "threshold interpretation is performed."
 )
 
+_PREF02_BASE_INDEX_NULL_EQUIVALENT_POLICY = FieldNullEquivalentPolicy(
+    source_classification=SOURCE_NOT_AVAILABLE,
+    semantic_classification=NULL_EQUIVALENT,
+    literals=(
+        "Index is not provided by Management Company",
+        "Index is not available on Lipper Database",
+    ),
+)
+
+FIELD_NULL_EQUIVALENT_POLICIES: Mapping[
+    tuple[str, str], FieldNullEquivalentPolicy
+] = MappingProxyType(
+    {
+        (
+            "PREF02N001",
+            "pref02.base_index_name",
+        ): _PREF02_BASE_INDEX_NULL_EQUIVALENT_POLICY,
+    }
+)
+
 
 CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
+    # PRBD01N001 (domestic bond): source-native identifiers, names,
+    # classifications, and one profile-validated text date.
+    _field(
+        "prbd.product_code",
+        "PRBD01N001",
+        "pd_no",
+        "상품번호/채권종목번호",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        (
+            "The official schema identifies the opaque bond product number. "
+            "EQ/NE and projection preserve the raw token; no primary-key, "
+            "code-meaning, or ordering claim is made."
+        ),
+    ),
+    _field(
+        "prbd.product_name",
+        "PRBD01N001",
+        "pd_nm",
+        "상품명/채권명",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "prbd.product_mid_category_name",
+        "PRBD01N001",
+        "std_pd_mcls_nm",
+        "상품중분류명",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "prbd.product_sub_category_name",
+        "PRBD01N001",
+        "std_pd_scls_nm",
+        "상품소분류명",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
     # PREF01N001 (domestic ETF): identifiers, names, market/category, and risk.
     _field(
         "pref01.product_name",
@@ -290,6 +408,39 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.NOT_APPLICABLE,
         _OFFICIAL_DESCRIPTION_NOTE,
+    ),
+    _field(
+        "pref01.fund_manager_name",
+        "PREF01N001",
+        "cu_fund_mgmt_co",
+        "운용사",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "pref01.base_index_name",
+        "PREF01N001",
+        "cu_base_index",
+        "기초지수",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "pref01.strategy_name",
+        "PREF01N001",
+        "cu_strtegy",
+        "운용전략",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
     ),
     _field(
         "pref01.risk_grade_code",
@@ -472,6 +623,63 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         ),
     ),
 
+    # PREF02N001 (global ETF): source-native names/categories and one
+    # profile-validated text date. Product identifier/name remain governed
+    # by their separately evidenced G3 approvals.
+    _field(
+        "pref02.fund_manager_name",
+        "PREF02N001",
+        "cu_fund_mgmt_co",
+        "운용사",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "pref02.base_index_name",
+        "PREF02N001",
+        "cu_base_index",
+        "기초지수",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        (
+            "Exact source-native EQ/NE applies only to actual index names. "
+            "The two registered source-availability sentinels remain intact "
+            "in raw/staging data but are NULL_EQUIVALENT for semantic query "
+            "execution and evidence. The 2026-08-24 live PostgreSQL check "
+            "observed 2,285 Management Company sentinel rows and 635 Lipper "
+            "Database sentinel rows."
+        ),
+        null_equivalent_policy=FIELD_NULL_EQUIVALENT_POLICIES[
+            ("PREF02N001", "pref02.base_index_name")
+        ],
+    ),
+    _field(
+        "pref02.investment_asset_type",
+        "PREF02N001",
+        "wu_inv_ast_type",
+        "투자자산군",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "pref02.investment_region",
+        "PREF02N001",
+        "wu_inv_rgn",
+        "투자지역",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
     # PRFD01N001 (public fund): identifiers, categories, risk, size, returns.
     _field(
         "prfd.product_name",
@@ -590,6 +798,50 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         _OFFICIAL_DESCRIPTION_NOTE,
     ),
     _field(
+        "prfd.benchmark_name",
+        "PRFD01N001",
+        "bmrk_nm",
+        "벤치마크명",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "prfd.class_name",
+        "PRFD01N001",
+        "han_clas_nm",
+        "클래스 한글 표기",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "prfd.class_sales_channel_name",
+        "PRFD01N001",
+        "han_clas_sales_channel",
+        "클래스 판매채널",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
+        "prfd.zero_in_type_name",
+        "PRFD01N001",
+        "zrin_ptn_nm",
+        "제로인유형명",
+        "TEXT",
+        _TEXT_EQ,
+        SemanticStatus.CONFIRMED,
+        CoreUnitStatus.NOT_APPLICABLE,
+        _SOURCE_NATIVE_TEXT_EQ_NOTE,
+    ),
+    _field(
         "prfd.net_assets",
         "PRFD01N001",
         "fd_nast_suma",
@@ -673,10 +925,28 @@ def validate_core_field_registry(
         and entry.allowed_operations
     )
 
+    attached_null_equivalent_policies = {
+        (entry.logical_table_id, entry.semantic_field_key): (
+            entry.null_equivalent_policy
+        )
+        for entry in records
+        if entry.null_equivalent_policy is not None
+    }
+    null_equivalent_policy_drift = sorted(
+        f"{table_id}.{semantic_key}"
+        for table_id, semantic_key in (
+            set(attached_null_equivalent_policies)
+            | set(FIELD_NULL_EQUIVALENT_POLICIES)
+        )
+        if attached_null_equivalent_policies.get((table_id, semantic_key))
+        != FIELD_NULL_EQUIVALENT_POLICIES.get((table_id, semantic_key))
+    )
+
     is_valid = (
         not duplicate_keys
         and not duplicate_sources
         and not unsafe_non_confirmed
+        and not null_equivalent_policy_drift
         and len(records) <= OFFICIAL_COLUMN_COUNT
     )
 
@@ -687,6 +957,7 @@ def validate_core_field_registry(
         "duplicate_semantic_field_keys": duplicate_keys,
         "duplicate_source_identities": duplicate_sources,
         "non_confirmed_with_operations": unsafe_non_confirmed,
+        "null_equivalent_policy_drift": null_equivalent_policy_drift,
         "is_valid": is_valid,
     }
 
@@ -796,6 +1067,9 @@ def build_core_field_registry() -> dict[str, Any]:
                 "SOURCE_NATIVE_NO_UNIT_OR_SCALE_CONVERSION"
             ),
             "text_dates": "NO_TEMPORAL_OPERATIONS",
+            "null_equivalents": (
+                "FIELD_SPECIFIC_SEMANTIC_ONLY_NO_RAW_OR_STAGING_REWRITE"
+            ),
         },
         "entries": [
             entry.to_dict()
@@ -809,11 +1083,15 @@ def build_core_field_registry() -> dict[str, Any]:
 __all__ = [
     "ALLOWED_OPERATIONS",
     "CORE_FIELD_MAPPINGS",
+    "FIELD_NULL_EQUIVALENT_POLICIES",
+    "FieldNullEquivalentPolicy",
     "CoreFieldMapping",
     "CoreUnitStatus",
     "OFFICIAL_COLUMN_COUNT",
     "OFFICIAL_TABLE_COLUMN_COUNTS",
     "SemanticStatus",
+    "NULL_EQUIVALENT",
+    "SOURCE_NOT_AVAILABLE",
     "build_core_field_registry",
     "get_confirmed_core_fields",
     "get_confirmed_field_map",

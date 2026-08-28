@@ -113,7 +113,7 @@ def test_unknown_semantic_key_fails_closed() -> None:
         ("pref02.product_name", "pd_nm"),
     ),
 )
-def test_pref02_display_fields_are_projection_only(
+def test_pref02_display_fields_open_exact_text_equality_only(
     semantic_key: str,
     source_column: str,
 ) -> None:
@@ -123,12 +123,17 @@ def test_pref02_display_fields_are_projection_only(
     assert approval.source_column == source_column
     assert approval.concept.status is ClaimStatus.CONFIRMED
     assert approval.concept.evidence_tier is EvidenceTier.T1_OFFICIAL_SCHEMA
-    assert approval.open_operations == ("PROJECT",)
+    assert approval.open_operations == ("PROJECT", "EQ", "NE")
     assert approval.value_domain.provenance[0].is_reproducible_artifact is True
-    assert all(
-        operation.status is OperationStatus.CLOSED
+    assert {
+        operation.operation
         for operation in approval.operations
-        if operation.operation != "PROJECT"
+        if operation.status is OperationStatus.CLOSED
+    } == {"LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"}
+    assert all(
+        operation.provenance[0].is_reproducible_artifact
+        for operation in approval.operations
+        if operation.operation in {"EQ", "NE"}
     )
 
 

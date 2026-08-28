@@ -63,6 +63,9 @@ class TrustedField:
     target_type: TargetType
     allowed_operations: frozenset[str]
     unit: str | None = None
+    null_equivalent_literals: tuple[str, ...] = ()
+    source_literal_classification: str | None = None
+    semantic_literal_classification: str | None = None
 
     def __post_init__(self) -> None:
         if not self.semantic_key or not self.semantic_key.strip():
@@ -79,6 +82,41 @@ class TrustedField:
                 f"unknown allowed operations for {self.semantic_key}: {sorted(unknown)}"
             )
         object.__setattr__(self, "allowed_operations", operations)
+        if len(set(self.null_equivalent_literals)) != len(
+            self.null_equivalent_literals
+        ):
+            raise StructuredRegistryError(
+                f"duplicate null-equivalent literal for {self.semantic_key}"
+            )
+        has_policy = bool(self.null_equivalent_literals)
+        has_classifications = (
+            self.source_literal_classification is not None
+            and self.semantic_literal_classification is not None
+        )
+        if has_policy != has_classifications:
+            raise StructuredRegistryError(
+                f"incomplete null-equivalent policy for {self.semantic_key}"
+            )
+        if has_policy:
+            if self.target_type is not TargetType.TEXT:
+                raise StructuredRegistryError(
+                    "null-equivalent policy is allowed only for TEXT fields"
+                )
+            if any(not literal for literal in self.null_equivalent_literals):
+                raise StructuredRegistryError(
+                    f"blank null-equivalent literal for {self.semantic_key}"
+                )
+            if self.source_literal_classification != "SOURCE_NOT_AVAILABLE":
+                raise StructuredRegistryError(
+                    f"unsupported source literal classification for {self.semantic_key}"
+                )
+            if self.semantic_literal_classification != "NULL_EQUIVALENT":
+                raise StructuredRegistryError(
+                    f"unsupported semantic literal classification for {self.semantic_key}"
+                )
+
+    def is_null_equivalent(self, value: Any) -> bool:
+        return isinstance(value, str) and value in self.null_equivalent_literals
 
 
 class TrustedQueryRegistry:
@@ -175,6 +213,9 @@ def build_trusted_query_registry(
                 f"mapping={mapping_target}, staging={column.target_type.value}"
             )
         operations = _record_value(mapping, "allowed_operations") or ()
+        null_equivalent_policy = _record_value(
+            mapping, "null_equivalent_policy"
+        )
         trusted_fields.append(
             TrustedField(
                 semantic_key=str(_record_value(mapping, "semantic_field_key") or ""),
@@ -184,6 +225,32 @@ def build_trusted_query_registry(
                 physical_column=column.db_column_name,
                 target_type=column.target_type,
                 allowed_operations=frozenset(str(value) for value in operations),
+                null_equivalent_literals=tuple(
+                    str(value)
+                    for value in (
+                        _record_value(null_equivalent_policy, "literals") or ()
+                    )
+                ),
+                source_literal_classification=(
+                    str(
+                        _record_value(
+                            null_equivalent_policy,
+                            "source_classification",
+                        )
+                    )
+                    if null_equivalent_policy is not None
+                    else None
+                ),
+                semantic_literal_classification=(
+                    str(
+                        _record_value(
+                            null_equivalent_policy,
+                            "semantic_classification",
+                        )
+                    )
+                    if null_equivalent_policy is not None
+                    else None
+                ),
             )
         )
     return TrustedQueryRegistry(tables, trusted_fields)

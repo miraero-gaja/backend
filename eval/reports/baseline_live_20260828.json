@@ -6,36 +6,36 @@
   "benchmark_mode": "live",
   "live_data_used": true,
   "generation_mode": "deterministic",
-  "case_count": 44,
+  "case_count": 56,
   "overall": {
-    "passed": 44,
-    "evaluated": 44,
+    "passed": 56,
+    "evaluated": 56,
     "rate": 1.0
   },
   "metrics": {
     "routing_accuracy": {
-      "passed": 44,
-      "evaluated": 44,
+      "passed": 56,
+      "evaluated": 56,
       "rate": 1.0
     },
     "support_status_accuracy": {
-      "passed": 44,
-      "evaluated": 44,
+      "passed": 56,
+      "evaluated": 56,
       "rate": 1.0
     },
     "semantic_grounding_accuracy": {
-      "passed": 44,
-      "evaluated": 44,
+      "passed": 56,
+      "evaluated": 56,
       "rate": 1.0
     },
     "operation_accuracy": {
-      "passed": 44,
-      "evaluated": 44,
+      "passed": 56,
+      "evaluated": 56,
       "rate": 1.0
     },
     "result_set_correctness": {
-      "passed": 23,
-      "evaluated": 23,
+      "passed": 31,
+      "evaluated": 31,
       "rate": 1.0
     },
     "top_n_ordering_correctness": {
@@ -44,41 +44,41 @@
       "rate": 1.0
     },
     "answer_schema_validity": {
-      "passed": 44,
-      "evaluated": 44,
+      "passed": 56,
+      "evaluated": 56,
       "rate": 1.0
     },
     "evidence_validity": {
-      "passed": 44,
-      "evaluated": 44,
+      "passed": 56,
+      "evaluated": 56,
       "rate": 1.0
     },
     "hallucination_fail_closed_violation_count": 0,
     "generation_validation_fallback_count": 0,
     "latency_ms": {
-      "p50": 72.106,
-      "p95": 194.102
+      "p50": 76.788,
+      "p95": 241.22
     }
   },
   "category_pass_rates": {
     "공모펀드": {
-      "passed": 11,
-      "evaluated": 11,
+      "passed": 14,
+      "evaluated": 14,
       "rate": 1.0
     },
     "국내 ETF": {
-      "passed": 11,
-      "evaluated": 11,
+      "passed": 14,
+      "evaluated": 14,
       "rate": 1.0
     },
     "국내채권": {
-      "passed": 11,
-      "evaluated": 11,
+      "passed": 14,
+      "evaluated": 14,
       "rate": 1.0
     },
     "해외 ETF": {
-      "passed": 11,
-      "evaluated": 11,
+      "passed": 14,
+      "evaluated": 14,
       "rate": 1.0
     }
   },
@@ -104,8 +104,8 @@
       "rate": 1.0
     },
     "EQ": {
-      "passed": 4,
-      "evaluated": 4,
+      "passed": 8,
+      "evaluated": 8,
       "rate": 1.0
     },
     "FILTER_SORT_TOP_N": {
@@ -119,8 +119,8 @@
       "rate": 1.0
     },
     "NO_MATCH": {
-      "passed": 3,
-      "evaluated": 3,
+      "passed": 7,
+      "evaluated": 7,
       "rate": 1.0
     },
     "RANGE": {
@@ -149,8 +149,8 @@
       "rate": 1.0
     },
     "UNSUPPORTED_OPERATION": {
-      "passed": 5,
-      "evaluated": 5,
+      "passed": 9,
+      "evaluated": 9,
       "rate": 1.0
     },
     "UNSUPPORTED_UNIT": {
@@ -161,8 +161,8 @@
   },
   "failure_distribution": {},
   "result_validation_summary": {
-    "EVALUATED": 23,
-    "UNSUPPORTED_CASE_HAS_NO_RESULT_SET": 21
+    "EVALUATED": 31,
+    "UNSUPPORTED_CASE_HAS_NO_RESULT_SET": 25
   },
   "dataset_expectation_variations": [
     {
@@ -187,6 +187,21 @@
     },
     {
       "case_id": "fund-03",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    },
+    {
+      "case_id": "bond-12",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    },
+    {
+      "case_id": "etf-kr-12",
+      "dataset_expected_status": "SUPPORTED",
+      "live_expected_status": "NO_MATCH"
+    },
+    {
+      "case_id": "etf-gl-12",
       "dataset_expected_status": "SUPPORTED",
       "live_expected_status": "NO_MATCH"
     }
@@ -237,7 +252,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 129.123,
+      "latency_ms": 103.023,
       "rationale": "명시적 상품군의 무필터 COUNT는 planner가 승인한다.",
       "evidence_basis": "G2 staging table identity and deterministic simulation fixture count."
     },
@@ -289,7 +304,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 4.182,
+      "latency_ms": 3.112,
       "rationale": "pd_risk_gcd의 선언명·타입은 T1_OFFICIAL_SCHEMA로 CONFIRMED되었으나, 코드값 의미와 위험 방향은 여전히 미승인이라 비교 연산(LE)은 CLOSED다.",
       "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), valueDomain NEED_REVIEW, EQ/NE/LT/LE/GT/GE/SORT_ASC/SORT_DESC 전부 CLOSED."
     },
@@ -341,7 +356,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 4.268,
+      "latency_ms": 2.926,
       "rationale": "코드값의 숫자 순서를 위험 방향으로 해석하지 않으므로, concept이 CONFIRMED여도 비교 연산(GE)은 CLOSED 상태를 유지한다.",
       "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), 코드 순서/방향 미승인으로 comparison operation 전부 CLOSED."
     },
@@ -385,7 +400,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 6.927,
+      "latency_ms": 3.191,
       "rationale": "듀레이션과 익일 듀레이션이 각각 독립적인 occurrence로 명시되어 서로 다른 두 semantic field(prbd.dur_unresolved, prbd.ndy_dur_unresolved)가 동시에 매치된다. Span-aware alias longest-match는 두 occurrence가 서로 nested되어 있지 않으므로 어느 한 쪽만 임의로 선택하지 않고, parser가 multiple_semantic_fields ambiguity로 fail-closed한다.",
       "evidence_basis": "mappings/aliases/registry.py의 span-aware _select_longest_matches와 app/agent/parser.py의 다중 필드 ambiguity 정책(len(fields) > 1 → multiple_semantic_fields)."
     },
@@ -437,7 +452,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 4.731,
+      "latency_ms": 2.788,
       "rationale": "'duration' alias는 이제 prbd.dur_unresolved 하나로만 unambiguous하게 resolve된다. 다만 unit/scale이 NEED_REVIEW 상태로 남아 있어 SORT_DESC를 포함한 모든 numeric operation이 CLOSED이므로 여전히 UNSUPPORTED다.",
       "evidence_basis": "G3 semantic registry: prbd.dur_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), unit NEED_REVIEW, 8개 runtime operation 전부 CLOSED."
     },
@@ -481,7 +496,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 16.191,
+      "latency_ms": 2.648,
       "rationale": "No approved alias or semantic field exists.",
       "evidence_basis": "Core and semantic registries contain no approved PRBD yield concept."
     },
@@ -529,7 +544,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 13.596,
+      "latency_ms": 2.869,
       "rationale": "pd_risk_gcd 개념은 T1으로 CONFIRMED되었으나, 질의에 실행 가능한 filter/sort 표현이 없어 operation을 인식하지 못한다.",
       "evidence_basis": "G3 registry T1_OFFICIAL_SCHEMA CONFIRMED concept + deterministic parser contract (인식 가능한 operation 키워드 없음)."
     },
@@ -581,7 +596,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 14.913,
+      "latency_ms": 2.746,
       "rationale": "코드값 순서를 위험 방향으로 해석하지 않으므로 concept이 CONFIRMED여도 SORT_DESC는 CLOSED 상태를 유지한다.",
       "evidence_basis": "G3 semantic registry: prbd.pd_risk_gcd_unresolved concept CONFIRMED(T1_OFFICIAL_SCHEMA), SORT_ASC/SORT_DESC 포함 전 operation CLOSED."
     },
@@ -625,7 +640,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 15.503,
+      "latency_ms": 2.714,
       "rationale": "No approved coupon-rate alias exists.",
       "evidence_basis": "Current alias and semantic registries."
     },
@@ -675,7 +690,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 157.994,
+      "latency_ms": 156.895,
       "rationale": "Two explicit product scopes with a bare COUNT intent must retrieve and merge deterministically, not be guessed away as ambiguous.",
       "evidence_basis": "Deterministic cross-product COUNT capability (per-scope independent retrieval, merge only when compatible)."
     },
@@ -727,7 +742,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 90.084,
+      "latency_ms": 86.515,
       "rationale": "Official product code supports exact EQ.",
       "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live status/count are resolved by an independent structured oracle."
     },
@@ -779,7 +794,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 80.453,
+      "latency_ms": 77.037,
       "rationale": "Supported EQ with zero fixture rows is NO_MATCH.",
       "evidence_basis": "G2 mapping plus deterministic fixture absence; live status/count are resolved by an independent structured oracle."
     },
@@ -831,7 +846,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 75.494,
+      "latency_ms": 81.841,
       "rationale": "Product-name EQ is approved by G2 and should be understood.",
       "evidence_basis": "G2 CONFIRMED pref01.product_name EQ permission; live status/count are oracle-resolved."
     },
@@ -883,7 +898,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 560.833,
+      "latency_ms": 527.145,
       "rationale": "Source-native numeric comparison is G2-approved.",
       "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live results use the structured oracle."
     },
@@ -937,7 +952,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 84.923,
+      "latency_ms": 85.751,
       "rationale": "Approved filter, sort and limit combination.",
       "evidence_basis": "G2 allowed operations and deterministic fixture; live results use the structured oracle."
     },
@@ -989,7 +1004,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 87.026,
+      "latency_ms": 84.472,
       "rationale": "Source-native AUM ordering is approved.",
       "evidence_basis": "G2 SORT-only approval; no unit conversion; live results use the structured oracle."
     },
@@ -1041,7 +1056,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 79.389,
+      "latency_ms": 192.464,
       "rationale": "G2 SORT permission supports source-native ascending order.",
       "evidence_basis": "G2 SORT-only approval; no unit conversion; live results use the structured oracle."
     },
@@ -1089,7 +1104,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 72.106,
+      "latency_ms": 75.181,
       "rationale": "Unfiltered table COUNT is planner-approved.",
       "evidence_basis": "Structured COUNT contract and deterministic fixture count."
     },
@@ -1141,7 +1156,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.654,
+      "latency_ms": 2.817,
       "rationale": "Rate scale and numeric type are not approved.",
       "evidence_basis": "G2 NEED_REVIEW field with no operations."
     },
@@ -1185,7 +1200,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.189,
+      "latency_ms": 2.639,
       "rationale": "Volatility is not an approved alias/field.",
       "evidence_basis": "Current alias and core registries."
     },
@@ -1237,7 +1252,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 79.007,
+      "latency_ms": 82.851,
       "rationale": "Approved source-native AUM descending Top-3.",
       "evidence_basis": "G3 PROJECT/SORT_DESC approval and simulation fixture; live identities/order use the structured oracle."
     },
@@ -1289,7 +1304,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 85.239,
+      "latency_ms": 241.22,
       "rationale": "Explicit Top-N implies approved descending ranking.",
       "evidence_basis": "G3 SORT_DESC and default multi-projection; live identities/order use the structured oracle."
     },
@@ -1341,7 +1356,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.639,
+      "latency_ms": 4.573,
       "rationale": "Only SORT_DESC is OPEN.",
       "evidence_basis": "G3 semantic operation approval."
     },
@@ -1393,7 +1408,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.382,
+      "latency_ms": 4.794,
       "rationale": "AUM unit and scale are unresolved.",
       "evidence_basis": "G3 unit NEED_REVIEW and threshold CLOSED."
     },
@@ -1445,7 +1460,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 3.067,
+      "latency_ms": 7.122,
       "rationale": "Absolute threshold remains CLOSED even without an explicit unit token.",
       "evidence_basis": "G3 GE CLOSED."
     },
@@ -1497,7 +1512,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.761,
+      "latency_ms": 3.307,
       "rationale": "Expense unit, scale and zero meaning are unresolved.",
       "evidence_basis": "G3 concept-only approval with numeric operations CLOSED."
     },
@@ -1549,7 +1564,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 3.22,
+      "latency_ms": 2.177,
       "rationale": "Profiling does not approve numeric comparison.",
       "evidence_basis": "G3 LE CLOSED."
     },
@@ -1597,7 +1612,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 194.102,
+      "latency_ms": 95.413,
       "rationale": "Unfiltered table COUNT is planner-approved.",
       "evidence_basis": "Structured COUNT contract and deterministic fixture count."
     },
@@ -1649,7 +1664,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 102.666,
+      "latency_ms": 117.053,
       "rationale": "Simulation injects zero rows; live status is resolved from the actual staging result instead of reusing the fixture expectation.",
       "evidence_basis": "Explicit zero-row simulation fixture plus live structured oracle."
     },
@@ -1693,7 +1708,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 3.392,
+      "latency_ms": 3.558,
       "rationale": "No approved volatility field exists.",
       "evidence_basis": "Current alias and semantic registries."
     },
@@ -1745,7 +1760,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 101.917,
+      "latency_ms": 125.192,
       "rationale": "Official fund product code supports EQ.",
       "evidence_basis": "G2 CONFIRMED mapping and simulation fixture; live status/count are oracle-resolved."
     },
@@ -1797,7 +1812,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 111.352,
+      "latency_ms": 205.669,
       "rationale": "Supported EQ with no matching fixture row.",
       "evidence_basis": "G2 mapping plus deterministic fixture absence; live status/count are oracle-resolved."
     },
@@ -1849,7 +1864,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 211.182,
+      "latency_ms": 230.569,
       "rationale": "Product-name EQ is approved by G2 and should be understood.",
       "evidence_basis": "G2 CONFIRMED prfd.product_name EQ permission; live status/count are oracle-resolved."
     },
@@ -1901,7 +1916,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 151.445,
+      "latency_ms": 109.38,
       "rationale": "Source-native net-assets ordering is approved.",
       "evidence_basis": "G2 SORT-only approval; live identities/order use the structured oracle."
     },
@@ -1953,7 +1968,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 103.317,
+      "latency_ms": 123.294,
       "rationale": "Source-native ascending ordering is approved.",
       "evidence_basis": "G2 SORT-only approval; live identities/order use the structured oracle."
     },
@@ -2005,7 +2020,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 3.38,
+      "latency_ms": 3.004,
       "rationale": "Net-assets absolute threshold is not approved.",
       "evidence_basis": "G2 prfd.net_assets allows SORT only and unit is UNMAPPED."
     },
@@ -2053,7 +2068,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 98.552,
+      "latency_ms": 78.906,
       "rationale": "Unfiltered table COUNT is planner-approved.",
       "evidence_basis": "Structured COUNT contract and deterministic fixture count."
     },
@@ -2107,7 +2122,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 3.12,
+      "latency_ms": 2.738,
       "rationale": "Filtered aggregation is intentionally fail-closed.",
       "evidence_basis": "Grounder filtered_aggregation_not_supported policy."
     },
@@ -2151,7 +2166,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.724,
+      "latency_ms": 2.574,
       "rationale": "No approved public-fund fee alias exists.",
       "evidence_basis": "Current alias and core registries."
     },
@@ -2203,7 +2218,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.567,
+      "latency_ms": 3.078,
       "rationale": "Product name has EQ/NE permission, not SORT.",
       "evidence_basis": "G2 allowed operations."
     },
@@ -2253,7 +2268,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 149.68,
+      "latency_ms": 214.596,
       "rationale": "Two explicit product scopes with a bare COUNT intent must retrieve and merge deterministically, not be guessed away as ambiguous.",
       "evidence_basis": "Deterministic cross-product COUNT capability (per-scope independent retrieval, merge only when compatible)."
     },
@@ -2303,7 +2318,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 146.13,
+      "latency_ms": 342.594,
       "rationale": "Two explicit product scopes with a bare COUNT intent must retrieve and merge deterministically, not be guessed away as ambiguous.",
       "evidence_basis": "Deterministic cross-product COUNT capability (per-scope independent retrieval, merge only when compatible)."
     },
@@ -2353,7 +2368,7 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 187.126,
+      "latency_ms": 185.061,
       "rationale": "Two explicit product scopes with a bare COUNT intent must retrieve and merge deterministically, not be guessed away as ambiguous.",
       "evidence_basis": "Deterministic cross-product COUNT capability (per-scope independent retrieval, merge only when compatible)."
     },
@@ -2397,9 +2412,633 @@
       "failure_types": [],
       "backend_call_count": null,
       "generation_fallback": false,
-      "latency_ms": 2.598,
+      "latency_ms": 3.297,
       "rationale": "A field-specific cross-product question must not be force-merged even with an explicit COUNT token -- per-field comparability across scopes is not established, so it stays the existing multiple_product_scopes ambiguity.",
       "evidence_basis": "Deterministic product alias policy; cross-product COUNT only applies to a bare, non-field-specific intent."
+    },
+    {
+      "case_id": "bond-12",
+      "product_family": "국내채권",
+      "query_type": "EQ",
+      "question": "국내채권 중 상품명이 국고채권A인 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "actual_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 103.937,
+      "rationale": "공식 상품명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed prbd.product_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "bond-13",
+      "product_family": "국내채권",
+      "query_type": "NO_MATCH",
+      "question": "국내채권 중 상품명이 존재하지않는채권인 상품",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "actual_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 97.882,
+      "rationale": "승인된 상품명 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved prbd.product_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "bond-14",
+      "product_family": "국내채권",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "국내채권 상품명 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "actual_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "actual_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.694,
+      "rationale": "상품명의 concept 및 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
+    },
+    {
+      "case_id": "etf-kr-12",
+      "product_family": "국내 ETF",
+      "query_type": "EQ",
+      "question": "국내 ETF 중 운용사가 미래에셋자산운용인 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "actual_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 76.788,
+      "rationale": "공식 펀드운용사명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed pref01.fund_manager_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "etf-kr-13",
+      "product_family": "국내 ETF",
+      "query_type": "NO_MATCH",
+      "question": "국내 ETF 중 운용사가 존재하지않는운용사인 상품",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "actual_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 73.744,
+      "rationale": "승인된 운용사 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved pref01.fund_manager_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "etf-kr-14",
+      "product_family": "국내 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "국내 ETF 운용사 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "actual_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "actual_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.667,
+      "rationale": "운용사명의 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
+    },
+    {
+      "case_id": "etf-gl-12",
+      "product_family": "해외 ETF",
+      "query_type": "EQ",
+      "question": "해외 ETF에서 운용사가 Vanguard인 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "actual_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 85.747,
+      "rationale": "공식 펀드운용사명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed pref02.fund_manager_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "etf-gl-13",
+      "product_family": "해외 ETF",
+      "query_type": "NO_MATCH",
+      "question": "해외 ETF에서 운용사가 NotListedManager인 상품",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "actual_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 83.688,
+      "rationale": "승인된 운용사 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved pref02.fund_manager_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "etf-gl-14",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "해외 ETF 운용사 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "actual_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "actual_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.851,
+      "rationale": "운용사명의 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
+    },
+    {
+      "case_id": "fund-12",
+      "product_family": "공모펀드",
+      "query_type": "EQ",
+      "question": "공모펀드에서 벤치마크명이 KOSPI인 상품",
+      "dataset_expected_status": "SUPPORTED",
+      "expected_status": "SUPPORTED",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "SUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "actual_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 4,
+      "actual_result_count": 4,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 108.988,
+      "rationale": "공식 벤치마크명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed prfd.benchmark_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "fund-13",
+      "product_family": "공모펀드",
+      "query_type": "NO_MATCH",
+      "question": "공모펀드에서 벤치마크명이 존재하지않는벤치마크인 상품",
+      "dataset_expected_status": "NO_MATCH",
+      "expected_status": "NO_MATCH",
+      "expected_status_source": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+      "actual_status": "NO_MATCH",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "actual_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "actual_operation": [
+        "EQ"
+      ],
+      "expected_result_count": 0,
+      "actual_result_count": 0,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": true,
+        "basis": "LIVE_POSTGRESQL_STRUCTURED_ORACLE",
+        "reason": null
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": true,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 98.143,
+      "rationale": "승인된 벤치마크명 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved prfd.benchmark_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "fund-14",
+      "product_family": "공모펀드",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "공모펀드 벤치마크명 높은 순 3개",
+      "dataset_expected_status": "UNSUPPORTED",
+      "expected_status": "UNSUPPORTED",
+      "expected_status_source": "DATASET_METADATA",
+      "actual_status": "UNSUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "actual_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "actual_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "actual_operation": [
+        "SORT_DESC"
+      ],
+      "expected_result_count": null,
+      "actual_result_count": null,
+      "expected_cross_product_counts": null,
+      "actual_cross_product_counts": null,
+      "result_validation": {
+        "evaluated": false,
+        "basis": null,
+        "reason": "UNSUPPORTED_CASE_HAS_NO_RESULT_SET"
+      },
+      "checks": {
+        "routing_correct": true,
+        "status_correct": true,
+        "product_scope_correct": true,
+        "semantic_grounding_correct": true,
+        "operation_correct": true,
+        "result_correct": null,
+        "ordering_correct": null,
+        "answer_schema_valid": true,
+        "evidence_valid": true,
+        "hallucination_fail_closed": true
+      },
+      "passed": true,
+      "failure_types": [],
+      "backend_call_count": null,
+      "generation_fallback": false,
+      "latency_ms": 2.425,
+      "rationale": "벤치마크명의 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
     }
   ]
 }

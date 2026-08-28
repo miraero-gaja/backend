@@ -4,19 +4,16 @@
 structured runtime이 승인한 schema와 semantic metadata만 설명합니다. 상품
 53,375건(PRBD01N001 21,882 + PREF01N001 1,780 + PREF02N001 6,037 +
 PRFD01N001 23,676, 2026-08-24 active dataset 기준)을 RDF instance로
-복제하지 않으며 GraphDB나 요청별 RDF reasoning을 도입하지 않습니다. 이전
-2026-07-11 기준 구 snapshot의 4개 상품군 전체 dataset 총계는 145,393건이었으며
-(예: `artifacts/profiling/g3a1_pref02`, `g3a1_prbd`의 historical g1
-profiling 기록), 이는 historical 수치로서 현재 active dataset을
-나타내지 않습니다.
+복제하지 않으며 GraphDB나 요청별 RDF reasoning을 도입하지 않습니다.
+2026-07-11 archive는 현재 semantic/operation 근거에서 제외합니다.
 
 ## Files
 
 - `common.ttl`: 공통 상품 class, approval status, operation, evidence 및
   provenance vocabulary
-- `bond_kr.ttl`: `PRBD01N001` 국내채권 unresolved G3 metadata
+- `bond_kr.ttl`: `PRBD01N001` 국내채권 text allowlist와 unresolved G3 metadata
 - `etf_kr.ttl`: `PREF01N001` 국내 ETF G2 core allowlist
-- `etf_gl.ttl`: `PREF02N001` 해외 ETF G3 projection/ranking approval
+- `etf_gl.ttl`: `PREF02N001` 해외 ETF text allowlist와 G3 projection/ranking approval
 - `fund_pub.ttl`: `PRFD01N001` 공모펀드 G2 core allowlist
 
 모든 파일은 안정적인 프로젝트 namespace
@@ -37,6 +34,11 @@ Python registry가 runtime source of truth입니다. TTL은 runtime permission�
 후보일 뿐 concept, unit, domain 또는 operation 승인을 의미하지 않습니다.
 
 ## Unresolved semantics
+
+- 신규 명칭형 field: source-native `PROJECT`/`EQ`/`NE`만 승인하며 trim,
+  `TEXT_MATCH`, lexical sort, cross-product merge는 미승인
+- `PREF02N001.pd_itm_no`, `pd_nm`: `PROJECT`와 exact source-native `EQ/NE`만
+  OPEN; identifier primary-key 승격이나 name ordering은 미승인
 
 - `PREF02N001.du_last_aum`: source-native `PROJECT`와 `SORT_DESC`만 OPEN;
   통화 unit/scale 및 absolute threshold는 미승인

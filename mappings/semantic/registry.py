@@ -166,6 +166,45 @@ def _closed_operations(
     )
 
 
+def _open_source_text_equality_operations(
+    *,
+    logical_table_id: str,
+    source_column: str,
+    source_identity: str,
+    concept_label: str,
+) -> tuple[OperationApproval, ...]:
+    """Approve only exact, source-native equality for an evidenced text field."""
+
+    return tuple(
+        OperationApproval(
+            operation=operation,
+            status=OperationStatus.OPEN,
+            reason=(
+                f"The official schema identifies {concept_label}, and exact "
+                "source-native text comparison does not interpret a unit, "
+                "code meaning, or ordering."
+            ),
+            evidence=(
+                "The active 2026-08-24 typed rule preserves the official text "
+                "column without trimming, coercion, or zero imputation, so "
+                f"deterministic {operation} is an exact raw-token comparison."
+            ),
+            provenance=(
+                _validation_provenance(
+                    logical_table_id=logical_table_id,
+                    source_column=source_column,
+                    source_identity=source_identity,
+                    rationale=(
+                        f"Supports source-native text {operation} only; no "
+                        "normalization, code interpretation, or ordering."
+                    ),
+                ),
+            ),
+        )
+        for operation in ("EQ", "NE")
+    )
+
+
 _PRBD_FIELD_SPECS = (
     {
         "source_column": "pd_risk_gcd",
@@ -502,8 +541,8 @@ SEMANTIC_FIELD_APPROVALS: tuple[SemanticFieldApproval, ...] = (
                 status=OperationStatus.OPEN,
                 reason=(
                     "The statistically unique source-native identifier "
-                    "may identify a returned row; no filter or sort "
-                    "permission is implied."
+                    "may identify a returned row; projection does not "
+                    "authorize code interpretation or sorting."
                 ),
                 evidence=(
                     "The 20260824 G1 data profile and G2A typed-rule "
@@ -519,15 +558,24 @@ SEMANTIC_FIELD_APPROVALS: tuple[SemanticFieldApproval, ...] = (
                     ),
                 ),
             ),
+            *_open_source_text_equality_operations(
+                logical_table_id="PREF02N001",
+                source_column="pd_itm_no",
+                source_identity=_PREF02_DATA_SHA256,
+                concept_label="the overseas-ETF RIC identifier",
+            ),
             *_closed_operations(
-                ("EQ", "NE", "LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"),
-                reason="Only projection is approved for this G3 field.",
+                ("LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"),
+                reason=(
+                    "RIC meaning and ordering are not approved; only exact "
+                    "source-native EQ/NE and projection are open."
+                ),
             ),
         ),
         notes=(
-            "Projection-only approval; pd_itm_no is a statistical unique "
-            "candidate observed in the 20260824 G1 profile, not a "
-            "declared official primary key."
+            "PROJECT and exact source-native EQ/NE are approved; pd_itm_no "
+            "is a statistical unique candidate observed in the 20260824 G1 "
+            "profile, not a declared official primary key."
         ),
     ),
     SemanticFieldApproval(
@@ -597,7 +645,7 @@ SEMANTIC_FIELD_APPROVALS: tuple[SemanticFieldApproval, ...] = (
                 status=OperationStatus.OPEN,
                 reason=(
                     "The source-native name may be displayed with row "
-                    "lineage; no filter or sort permission is implied."
+                    "lineage; projection does not authorize ordering."
                 ),
                 evidence=(
                     "Official schema meaning and the 20260824 G2A "
@@ -613,12 +661,24 @@ SEMANTIC_FIELD_APPROVALS: tuple[SemanticFieldApproval, ...] = (
                     ),
                 ),
             ),
+            *_open_source_text_equality_operations(
+                logical_table_id="PREF02N001",
+                source_column="pd_nm",
+                source_identity=_PREF02_DATA_SHA256,
+                concept_label="the product display name",
+            ),
             *_closed_operations(
-                ("EQ", "NE", "LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"),
-                reason="Only projection is approved for this G3 field.",
+                ("LT", "LE", "GT", "GE", "SORT_ASC", "SORT_DESC"),
+                reason=(
+                    "Name ordering is not an approved business operation; "
+                    "only exact source-native EQ/NE and projection are open."
+                ),
             ),
         ),
-        notes="Projection-only approval; names are not treated as unique.",
+        notes=(
+            "PROJECT and exact source-native EQ/NE are approved; names are "
+            "not treated as unique identifiers."
+        ),
     ),
     *(
         SemanticFieldApproval(

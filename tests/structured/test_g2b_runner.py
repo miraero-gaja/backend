@@ -271,7 +271,7 @@ def test_query_preflight_compiles_all_required_shapes_with_bound_values() -> Non
     assert result["injection_binding_probe"] == "PASS"
     assert result["query_values_copied_to_report"] is False
     assert registry.table_count == 4
-    assert registry.field_count == 34
+    assert registry.field_count == 49
 
 
 def test_runner_writes_exact_partial_reports_when_database_url_is_missing(
@@ -310,7 +310,7 @@ def test_runner_writes_exact_partial_reports_when_database_url_is_missing(
     assert result["database_status"] == "NOT_RUN"
     assert result["staging_table_count"] == 4
     assert result["staging_source_column_count"] == OFFICIAL_STAGING_COLUMN_TOTAL
-    assert result["agent_allowed_field_count"] == 34
+    assert result["agent_allowed_field_count"] == 49
     assert sorted(path.name for path in output_dir.iterdir()) == sorted(
         G2B_REPORT_FILENAMES
     )

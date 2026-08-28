@@ -185,6 +185,12 @@ def local_set(graph: Graph, subject: str, prop: str) -> set[str]:
     return {value.removeprefix(MA) for value in values if isinstance(value, str)}
 
 
+def literal_set(graph: Graph, subject: str, prop: str) -> set[str]:
+    values = graph.objects(subject, MA + prop)
+    assert all(isinstance(value, Literal) for value in values)
+    return {value.value for value in values if isinstance(value, Literal)}
+
+
 def fields(graphs: dict[str, Graph]) -> dict[str, tuple[Graph, str]]:
     result: dict[str, tuple[Graph, str]] = {}
     for graph in graphs.values():
@@ -208,6 +214,24 @@ def assert_registry_consistency(graphs: dict[str, Graph]) -> None:
         assert one_resource(graph, subject, "conceptStatus") == MA + mapping.semantic_status.value
         assert one_resource(graph, subject, "unitStatus") == MA + mapping.unit_status.value
         assert local_set(graph, subject, "allowedOperation") == set(mapping.allowed_operations)
+        policy = mapping.null_equivalent_policy
+        assert literal_set(graph, subject, "nullEquivalentLiteral") == (
+            set(policy.literals) if policy is not None else set()
+        )
+        if policy is None:
+            assert not graph.objects(
+                subject, MA + "sourceLiteralClassification"
+            )
+            assert not graph.objects(
+                subject, MA + "semanticLiteralClassification"
+            )
+        else:
+            assert one_resource(
+                graph, subject, "sourceLiteralClassification"
+            ) == MA + policy.source_classification
+            assert one_resource(
+                graph, subject, "semanticLiteralClassification"
+            ) == MA + policy.semantic_classification
         if mapping.semantic_status.value != "CONFIRMED":
             assert not graph.objects(subject, MA + "allowedOperation")
     for approval in SEMANTIC_FIELD_APPROVALS:
@@ -290,6 +314,52 @@ def test_operation_drift_detector_rejects_extra_open_permission() -> None:
         assert_registry_consistency(graphs)
 
 
+def test_pref02_base_index_null_equivalent_policy_does_not_drift() -> None:
+    graphs = domain_graphs()
+    graph, subject = fields(graphs)["pref02.base_index_name"]
+
+    assert literal_set(graph, subject, "nullEquivalentLiteral") == {
+        "Index is not provided by Management Company",
+        "Index is not available on Lipper Database",
+    }
+    assert one_resource(
+        graph, subject, "sourceLiteralClassification"
+    ) == MA + "SOURCE_NOT_AVAILABLE"
+    assert one_resource(
+        graph, subject, "semanticLiteralClassification"
+    ) == MA + "NULL_EQUIVALENT"
+
+    graphs["etf_gl.ttl"] = Graph(
+        graph.prefixes,
+        (
+            *graph.triples,
+            (
+                subject,
+                MA + "nullEquivalentLiteral",
+                Literal("invented generic sentinel"),
+            ),
+        ),
+    )
+    with pytest.raises(AssertionError):
+        assert_registry_consistency(graphs)
+
+
+def test_null_equivalent_ontology_vocabulary_is_explicit() -> None:
+    common = parse("common.ttl")
+    rdf_property = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+
+    for classification in ("SOURCE_NOT_AVAILABLE", "NULL_EQUIVALENT"):
+        assert common.objects(
+            MA + classification, RDF_TYPE
+        ) == (MA + "LiteralClassification",)
+    for predicate in (
+        "nullEquivalentLiteral",
+        "sourceLiteralClassification",
+        "semanticLiteralClassification",
+    ):
+        assert common.objects(MA + predicate, RDF_TYPE) == (rdf_property,)
+
+
 def test_aliases_match_explicit_registry_without_approving_operations() -> None:
     graphs = domain_graphs()
     indexed = fields(graphs)
@@ -369,11 +439,13 @@ def test_prbd_four_fields_are_t1_confirmed_with_operations_still_closed() -> Non
 
     graph = domain_graphs()["bond_kr.ttl"]
     indexed = fields({"bond_kr.ttl": graph})
-    assert set(indexed) == {
+    unresolved_keys = {
         "prbd.pd_risk_gcd_unresolved", "prbd.dur_unresolved",
         "prbd.ndy_dur_unresolved", "prbd.cov_unresolved",
     }
-    for _, subject in indexed.values():
+    assert unresolved_keys < set(indexed)
+    for key in unresolved_keys:
+        _, subject = indexed[key]
         assert one_resource(graph, subject, "conceptStatus") == MA + "CONFIRMED"
         assert "T1_OFFICIAL_SCHEMA" in local_set(graph, subject, "evidenceTier")
         assert one_resource(graph, subject, "unitStatus") == MA + "NEED_REVIEW"
@@ -391,7 +463,15 @@ def test_prbd_source_columns_use_lowercase_current_physical_identity() -> None:
         key: one_literal(field_graph, subject, "sourceColumn")
         for key, (field_graph, subject) in indexed.items()
     }
-    assert observed == {
+    assert {
+        key: observed[key]
+        for key in (
+            "prbd.pd_risk_gcd_unresolved",
+            "prbd.dur_unresolved",
+            "prbd.ndy_dur_unresolved",
+            "prbd.cov_unresolved",
+        )
+    } == {
         "prbd.pd_risk_gcd_unresolved": "pd_risk_gcd",
         "prbd.dur_unresolved": "dur",
         "prbd.ndy_dur_unresolved": "ndy_dur",

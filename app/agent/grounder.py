@@ -178,6 +178,20 @@ class OntologyGrounder:
         filters: list[StructuredFilter] = []
         for condition in understanding.filter_conditions:
             operation = condition.operator.value
+            if (
+                g2_mapping is not None
+                and g2_mapping.null_equivalent_policy is not None
+                and condition.value
+                in g2_mapping.null_equivalent_policy.literals
+            ):
+                return _unsupported(
+                    query,
+                    "semantic_null_equivalent_not_queryable",
+                    [
+                        *trace,
+                        "source availability sentinel: NULL_EQUIVALENT",
+                    ],
+                )
             if condition.unit_token is not None:
                 if g3_approval is not None or (
                     g2_mapping is not None

@@ -83,6 +83,25 @@ class StructuredQueryExecutor:
     ) -> StructuredExecutionResult:
         compiled = self._compiler.compile(query)
         rows = tuple(await self._backend.fetch_all(compiled.sql, compiled.parameters))
+        if not compiled.is_count:
+            # The SQL compiler already applies the same predicates. Keep this
+            # second boundary so a stale/mocked backend cannot turn a registered
+            # source-availability sentinel into answer evidence.
+            rows = tuple(
+                row
+                for row in rows
+                if all(
+                    selection.value_alias not in row
+                    or (
+                        row[selection.value_alias] is not None
+                        and not selection.field.is_null_equivalent(
+                            row[selection.value_alias]
+                        )
+                    )
+                    for selection in compiled.evidence_fields
+                    if selection.field.null_equivalent_literals
+                )
+            )
         if compiled.is_count:
             if len(rows) != 1 or "__count" not in rows[0]:
                 raise StructuredQueryValidationError(

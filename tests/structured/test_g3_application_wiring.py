@@ -54,7 +54,7 @@ def test_application_created_executor_uses_full_schema_and_semantic_planner() ->
     )
     assert len(runtime.staging_schema.tables) == 4
     assert runtime.g2_registry.table_count == 4
-    assert runtime.g2_registry.field_count == 34
+    assert runtime.g2_registry.field_count == 49
     assert isinstance(runtime.semantic_planner, SemanticGatedQueryPlanner)
     assert isinstance(runtime.structured_planner, LayeredStructuredQueryPlanner)
     assert runtime.structured_executor.planner is runtime.structured_planner
