@@ -46,8 +46,35 @@ _PRODUCT_ALIASES: tuple[ProductAlias, ...] = (
 # by span-aware occurrence containment within the query text, not by tuple
 # position. Reordering this tuple must not change any resolution result.
 _FIELD_ALIASES: tuple[FieldAlias, ...] = (
+    FieldAlias("상품코드", "PRBD01N001", ("prbd.product_code",)),
+    FieldAlias("채권종목번호", "PRBD01N001", ("prbd.product_code",)),
+    FieldAlias("상품명", "PRBD01N001", ("prbd.product_name",)),
+    FieldAlias("채권명", "PRBD01N001", ("prbd.product_name",)),
+    FieldAlias(
+        "상품중분류명",
+        "PRBD01N001",
+        ("prbd.product_mid_category_name",),
+    ),
+    FieldAlias(
+        "상품소분류명",
+        "PRBD01N001",
+        ("prbd.product_sub_category_name",),
+    ),
     FieldAlias("상품코드", "PREF01N001", ("pref01.product_code",)),
     FieldAlias("상품명", "PREF01N001", ("pref01.product_name",)),
+    FieldAlias("운용사", "PREF01N001", ("pref01.fund_manager_name",)),
+    FieldAlias("기초지수", "PREF01N001", ("pref01.base_index_name",)),
+    FieldAlias("운용전략", "PREF01N001", ("pref01.strategy_name",)),
+    FieldAlias(
+        "투자자산군",
+        "PREF01N001",
+        ("pref01.investment_asset_type",),
+    ),
+    FieldAlias("투자지역", "PREF01N001", ("pref01.investment_region",)),
+    FieldAlias("거래소명", "PREF01N001", ("pref01.exchange_name",)),
+    FieldAlias("상품거래시장", "PREF01N001", ("pref01.market_name",)),
+    FieldAlias("상품등급명", "PREF01N001", ("pref01.risk_grade_name",)),
+    FieldAlias("일간갱신일자", "PREF01N001", ("pref01.daily_updated_at",)),
     FieldAlias("AUM", "PREF01N001", ("pref01.aum_latest",)),
     FieldAlias("총보수", "PREF01N001", ("pref01.total_fee_rate",)),
     FieldAlias(
@@ -55,6 +82,20 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
         "PREF01N001",
         ("pref01.listed_share_count",),
     ),
+    FieldAlias("상품명", "PREF02N001", ("pref02.product_name",)),
+    FieldAlias(
+        "해외ETF RIC",
+        "PREF02N001",
+        ("pref02.product_identifier",),
+    ),
+    FieldAlias("운용사", "PREF02N001", ("pref02.fund_manager_name",)),
+    FieldAlias("기초지수", "PREF02N001", ("pref02.base_index_name",)),
+    FieldAlias(
+        "투자자산군",
+        "PREF02N001",
+        ("pref02.investment_asset_type",),
+    ),
+    FieldAlias("투자지역", "PREF02N001", ("pref02.investment_region",)),
     FieldAlias("AUM", "PREF02N001", ("pref02.aum_latest",)),
     FieldAlias("총보수", "PREF02N001", ("pref02.expense_ratio",)),
     FieldAlias(
@@ -84,6 +125,25 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
     ),
     FieldAlias("상품코드", "PRFD01N001", ("prfd.product_code",)),
     FieldAlias("상품명", "PRFD01N001", ("prfd.product_name",)),
+    FieldAlias("펀드투자지역", "PRFD01N001", ("prfd.investment_region",)),
+    FieldAlias(
+        "사모공모구분",
+        "PRFD01N001",
+        ("prfd.public_private_category",),
+    ),
+    FieldAlias(
+        "제로인펀드투자위험등급명",
+        "PRFD01N001",
+        ("prfd.risk_grade_name",),
+    ),
+    FieldAlias("벤치마크명", "PRFD01N001", ("prfd.benchmark_name",)),
+    FieldAlias("클래스명", "PRFD01N001", ("prfd.class_name",)),
+    FieldAlias(
+        "클래스판매채널",
+        "PRFD01N001",
+        ("prfd.class_sales_channel_name",),
+    ),
+    FieldAlias("제로인유형명", "PRFD01N001", ("prfd.zero_in_type_name",)),
     FieldAlias("순자산", "PRFD01N001", ("prfd.net_assets",)),
 )
 

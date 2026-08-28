@@ -89,24 +89,29 @@ def load_dataset(path: Path = DEFAULT_DATASET) -> tuple[dict[str, Any], tuple[Go
 
 
 SIMULATED_ROWS: dict[str, tuple[dict[str, str], ...]] = {
-    "PRBD01N001": tuple({"__id": f"BOND{index:03d}"} for index in range(1, 5)),
+    "PRBD01N001": (
+        {"__id":"BOND001","prbd.product_name":"국고채권A"},
+        {"__id":"BOND002","prbd.product_name":"회사채권B"},
+        {"__id":"BOND003","prbd.product_name":"금융채권C"},
+        {"__id":"BOND004","prbd.product_name":"특수채권D"},
+    ),
     "PREF01N001": (
-        {"__id":"KR001","pref01.product_code":"069500","pref01.product_name":"KODEX 200","pref01.listed_share_count":"500","pref01.aum_latest":"400"},
-        {"__id":"KR002","pref01.product_code":"102110","pref01.product_name":"TIGER 200","pref01.listed_share_count":"300","pref01.aum_latest":"300"},
-        {"__id":"KR003","pref01.product_code":"114800","pref01.product_name":"KODEX 인버스","pref01.listed_share_count":"100","pref01.aum_latest":"200"},
-        {"__id":"KR004","pref01.product_code":"123310","pref01.product_name":"TIGER 인버스","pref01.listed_share_count":"50","pref01.aum_latest":"100"},
+        {"__id":"KR001","pref01.product_code":"069500","pref01.product_name":"KODEX 200","pref01.listed_share_count":"500","pref01.aum_latest":"400","pref01.fund_manager_name":"미래에셋자산운용"},
+        {"__id":"KR002","pref01.product_code":"102110","pref01.product_name":"TIGER 200","pref01.listed_share_count":"300","pref01.aum_latest":"300","pref01.fund_manager_name":"삼성자산운용"},
+        {"__id":"KR003","pref01.product_code":"114800","pref01.product_name":"KODEX 인버스","pref01.listed_share_count":"100","pref01.aum_latest":"200","pref01.fund_manager_name":"한국투자신탁운용"},
+        {"__id":"KR004","pref01.product_code":"123310","pref01.product_name":"TIGER 인버스","pref01.listed_share_count":"50","pref01.aum_latest":"100","pref01.fund_manager_name":"KB자산운용"},
     ),
     "PREF02N001": (
-        {"__id":"GL001","pref02.product_identifier":"GL001","pref02.product_name":"해외 ETF Alpha","pref02.aum_latest":"400"},
-        {"__id":"GL002","pref02.product_identifier":"GL002","pref02.product_name":"해외 ETF Beta","pref02.aum_latest":"300"},
-        {"__id":"GL003","pref02.product_identifier":"GL003","pref02.product_name":"해외 ETF Gamma","pref02.aum_latest":"200"},
-        {"__id":"GL004","pref02.product_identifier":"GL004","pref02.product_name":"해외 ETF Delta","pref02.aum_latest":"100"},
+        {"__id":"GL001","pref02.product_identifier":"GL001","pref02.product_name":"해외 ETF Alpha","pref02.aum_latest":"400","pref02.fund_manager_name":"Vanguard"},
+        {"__id":"GL002","pref02.product_identifier":"GL002","pref02.product_name":"해외 ETF Beta","pref02.aum_latest":"300","pref02.fund_manager_name":"BlackRock"},
+        {"__id":"GL003","pref02.product_identifier":"GL003","pref02.product_name":"해외 ETF Gamma","pref02.aum_latest":"200","pref02.fund_manager_name":"State Street"},
+        {"__id":"GL004","pref02.product_identifier":"GL004","pref02.product_name":"해외 ETF Delta","pref02.aum_latest":"100","pref02.fund_manager_name":"Invesco"},
     ),
     "PRFD01N001": (
-        {"__id":"FUND001","prfd.product_code":"F001","prfd.product_name":"글로벌성장펀드","prfd.net_assets":"400"},
-        {"__id":"FUND002","prfd.product_code":"F002","prfd.product_name":"국내가치펀드","prfd.net_assets":"300"},
-        {"__id":"FUND003","prfd.product_code":"F003","prfd.product_name":"채권혼합펀드","prfd.net_assets":"200"},
-        {"__id":"FUND004","prfd.product_code":"F004","prfd.product_name":"단기채권펀드","prfd.net_assets":"100"},
+        {"__id":"FUND001","prfd.product_code":"F001","prfd.product_name":"글로벌성장펀드","prfd.net_assets":"400","prfd.benchmark_name":"KOSPI"},
+        {"__id":"FUND002","prfd.product_code":"F002","prfd.product_name":"국내가치펀드","prfd.net_assets":"300","prfd.benchmark_name":"KOSDAQ"},
+        {"__id":"FUND003","prfd.product_code":"F003","prfd.product_name":"채권혼합펀드","prfd.net_assets":"200","prfd.benchmark_name":"MSCI World"},
+        {"__id":"FUND004","prfd.product_code":"F004","prfd.product_name":"단기채권펀드","prfd.net_assets":"100","prfd.benchmark_name":"국고채"},
     ),
 }
 

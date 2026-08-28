@@ -34,6 +34,9 @@ _REASON_TRACE = {
     "semantic_concept_not_confirmed": "concept 미확정",
     "semantic_field_distinction_unapproved": "field 의미 구분 미확정",
     "semantic_field_not_recognized": "승인 field 없음",
+    "semantic_null_equivalent_not_queryable": (
+        "source availability sentinel → NULL_EQUIVALENT"
+    ),
     "unknown_semantic_key": "semantic key 미승인",
     "filtered_aggregation_not_supported": "집계 조합 미지원",
     "query_operation_not_recognized": "연산 표현 미확정",
@@ -56,6 +59,10 @@ _REASON_ANSWER = {
     ),
     "semantic_field_not_recognized": (
         "요청한 항목은 현재 승인된 structured field로 확인할 수 없습니다."
+    ),
+    "semantic_null_equivalent_not_queryable": (
+        "해당 원문 값은 실제 기초지수명이 아니라 값 미제공을 뜻하므로 "
+        "기초지수명 검색값으로 사용할 수 없습니다."
     ),
     "unknown_semantic_key": (
         "요청한 semantic field가 승인 registry에 없어 현재 확인할 수 없습니다."

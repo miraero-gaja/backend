@@ -16,7 +16,7 @@
 - G1 4종 workbook profiling과 원본 불변성 검증
 - G2-A 전체 280개 컬럼 typed rule, raw-preserving lineage와 coverage mapping
 - G2-B 4개 PostgreSQL staging table 계약, streaming loader와 적재 검증
-- 공식 설명으로 확인한 Priority-A 34개 필드 allowlist와 parameterized Structured Query compiler
+- 공식 2026-08-24 schema/data로 검토한 core 49개 필드 allowlist(semantic G3 포함 유효 52개)와 parameterized Structured Query compiler
 - EQ/NE/LT/LE/GT/GE, 다중 filter, ASC/DESC, Top-N, COUNT의 결정론적 실행 계약
 - 단위·통합·계약·장애 테스트를 확장할 수 있는 테스트 구조
 - Python 3.13 non-root 최소 Docker runtime

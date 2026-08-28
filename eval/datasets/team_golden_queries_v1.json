@@ -843,6 +843,262 @@
       "rationale": "A field-specific cross-product question must not be force-merged even with an explicit COUNT token -- per-field comparability across scopes is not established, so it stays the existing multiple_product_scopes ambiguity.",
       "evidence_basis": "Deterministic product alias policy; cross-product COUNT only applies to a bare, non-field-specific intent.",
       "expected_cross_product_counts": null
+    },
+    {
+      "case_id": "bond-12",
+      "product_family": "국내채권",
+      "query_type": "EQ",
+      "question": "국내채권 중 상품명이 국고채권A인 상품",
+      "expected_status": "SUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "국고채권A"
+      ],
+      "expected_result_count": 1,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "공식 상품명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed prbd.product_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "bond-13",
+      "product_family": "국내채권",
+      "query_type": "NO_MATCH",
+      "question": "국내채권 중 상품명이 존재하지않는채권인 상품",
+      "expected_status": "NO_MATCH",
+      "expected_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "존재하지않는채권"
+      ],
+      "expected_result_count": 0,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "승인된 상품명 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved prbd.product_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "bond-14",
+      "product_family": "국내채권",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "국내채권 상품명 높은 순 3개",
+      "expected_status": "UNSUPPORTED",
+      "expected_product_scope": "PRBD01N001",
+      "expected_semantic_keys": [
+        "prbd.product_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "expected_limit": 3,
+      "expected_result_count": null,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "상품명의 concept 및 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
+    },
+    {
+      "case_id": "etf-kr-12",
+      "product_family": "국내 ETF",
+      "query_type": "EQ",
+      "question": "국내 ETF 중 운용사가 미래에셋자산운용인 상품",
+      "expected_status": "SUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "미래에셋자산운용"
+      ],
+      "expected_result_count": 1,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "공식 펀드운용사명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed pref01.fund_manager_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "etf-kr-13",
+      "product_family": "국내 ETF",
+      "query_type": "NO_MATCH",
+      "question": "국내 ETF 중 운용사가 존재하지않는운용사인 상품",
+      "expected_status": "NO_MATCH",
+      "expected_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "존재하지않는운용사"
+      ],
+      "expected_result_count": 0,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "승인된 운용사 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved pref01.fund_manager_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "etf-kr-14",
+      "product_family": "국내 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "국내 ETF 운용사 높은 순 3개",
+      "expected_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF01N001",
+      "expected_semantic_keys": [
+        "pref01.fund_manager_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "expected_limit": 3,
+      "expected_result_count": null,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "운용사명의 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
+    },
+    {
+      "case_id": "etf-gl-12",
+      "product_family": "해외 ETF",
+      "query_type": "EQ",
+      "question": "해외 ETF에서 운용사가 Vanguard인 상품",
+      "expected_status": "SUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "Vanguard"
+      ],
+      "expected_result_count": 1,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "공식 펀드운용사명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed pref02.fund_manager_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "etf-gl-13",
+      "product_family": "해외 ETF",
+      "query_type": "NO_MATCH",
+      "question": "해외 ETF에서 운용사가 NotListedManager인 상품",
+      "expected_status": "NO_MATCH",
+      "expected_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "NotListedManager"
+      ],
+      "expected_result_count": 0,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "승인된 운용사 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved pref02.fund_manager_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "etf-gl-14",
+      "product_family": "해외 ETF",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "해외 ETF 운용사 높은 순 3개",
+      "expected_status": "UNSUPPORTED",
+      "expected_product_scope": "PREF02N001",
+      "expected_semantic_keys": [
+        "pref02.fund_manager_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "expected_limit": 3,
+      "expected_result_count": null,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "운용사명의 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
+    },
+    {
+      "case_id": "fund-12",
+      "product_family": "공모펀드",
+      "query_type": "EQ",
+      "question": "공모펀드에서 벤치마크명이 KOSPI인 상품",
+      "expected_status": "SUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "KOSPI"
+      ],
+      "expected_result_count": 1,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "공식 벤치마크명 text field에 승인된 source-native exact EQ를 적용하며 deterministic fixture의 한 행이 일치한다.",
+      "evidence_basis": "2026-08-24 official schema-backed prfd.benchmark_name EQ approval and deterministic simulation fixture; this is not a live staging fact."
+    },
+    {
+      "case_id": "fund-13",
+      "product_family": "공모펀드",
+      "query_type": "NO_MATCH",
+      "question": "공모펀드에서 벤치마크명이 존재하지않는벤치마크인 상품",
+      "expected_status": "NO_MATCH",
+      "expected_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "expected_operation": [
+        "EQ"
+      ],
+      "expected_filter_values": [
+        "존재하지않는벤치마크"
+      ],
+      "expected_result_count": 0,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "승인된 벤치마크명 exact EQ가 정상 실행된 뒤 일치 행이 없으면 UNSUPPORTED가 아니라 NO_MATCH여야 한다.",
+      "evidence_basis": "Approved prfd.benchmark_name EQ contract plus an absent deterministic fixture literal; live results remain oracle-resolved."
+    },
+    {
+      "case_id": "fund-14",
+      "product_family": "공모펀드",
+      "query_type": "UNSUPPORTED_OPERATION",
+      "question": "공모펀드 벤치마크명 높은 순 3개",
+      "expected_status": "UNSUPPORTED",
+      "expected_product_scope": "PRFD01N001",
+      "expected_semantic_keys": [
+        "prfd.benchmark_name"
+      ],
+      "expected_operation": [
+        "SORT_DESC"
+      ],
+      "expected_limit": 3,
+      "expected_result_count": null,
+      "expected_identifiers": [],
+      "fixture_mode": "MATCH",
+      "rationale": "벤치마크명의 exact text equality 승인은 임의의 lexical ordering을 승인하지 않으므로 SORT_DESC는 fail-closed다.",
+      "evidence_basis": "2026-08-24 schema-backed text meaning with EQ/NE and projection only; no SORT approval."
     }
   ]
 }
