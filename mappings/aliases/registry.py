@@ -8,9 +8,17 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from typing import Protocol, TypeVar
 
 
 _SPACE = re.compile(r"\s+")
+
+
+class _AliasLike(Protocol):
+    alias: str
+
+
+_AliasT = TypeVar("_AliasT", bound=_AliasLike)
 
 
 def normalize_alias_text(value: str) -> str:
@@ -31,6 +39,7 @@ class FieldAlias:
     alias: str
     logical_table_id: str
     semantic_keys: tuple[str, ...]
+    implicit_eq_value: str | None = None
 
 
 _PRODUCT_ALIASES: tuple[ProductAlias, ...] = (
@@ -38,6 +47,7 @@ _PRODUCT_ALIASES: tuple[ProductAlias, ...] = (
     ProductAlias("국내ETF", "국내 ETF", "PREF01N001"),
     ProductAlias("해외ETF", "해외 ETF", "PREF02N001"),
     ProductAlias("공모펀드", "공모펀드", "PRFD01N001"),
+    ProductAlias("펀드", "공모펀드", "PRFD01N001"),
 )
 
 
@@ -76,6 +86,9 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
     FieldAlias("상품등급명", "PREF01N001", ("pref01.risk_grade_name",)),
     FieldAlias("일간갱신일자", "PREF01N001", ("pref01.daily_updated_at",)),
     FieldAlias("AUM", "PREF01N001", ("pref01.aum_latest",)),
+    FieldAlias("1개월수익률", "PREF01N001", ("pref01.return_1m",)),
+    FieldAlias("3개월수익률", "PREF01N001", ("pref01.return_3m",)),
+    FieldAlias("1년수익률", "PREF01N001", ("pref01.return_1y",)),
     FieldAlias("총보수", "PREF01N001", ("pref01.total_fee_rate",)),
     FieldAlias(
         "상장주식수",
@@ -132,6 +145,54 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
         ("prfd.public_private_category",),
     ),
     FieldAlias(
+        "공모인",
+        "PRFD01N001",
+        ("prfd.public_private_category",),
+        implicit_eq_value="공모",
+    ),
+    FieldAlias(
+        "사모 제외",
+        "PRFD01N001",
+        ("prfd.public_private_category",),
+        implicit_eq_value="공모",
+    ),
+    FieldAlias(
+        "판매가능",
+        "PRFD01N001",
+        ("prfd.sale_available",),
+        implicit_eq_value="판매중",
+    ),
+    FieldAlias(
+        "판매중",
+        "PRFD01N001",
+        ("prfd.sale_available",),
+        implicit_eq_value="판매중",
+    ),
+    FieldAlias("판매여부", "PRFD01N001", ("prfd.sale_available",)),
+    FieldAlias(
+        "미래에셋에서 판매가능",
+        "PRFD01N001",
+        ("prfd.mirae_sale_available",),
+        implicit_eq_value="Y",
+    ),
+    FieldAlias(
+        "미래에셋 판매가능",
+        "PRFD01N001",
+        ("prfd.mirae_sale_available",),
+        implicit_eq_value="Y",
+    ),
+    FieldAlias(
+        "당사 판매",
+        "PRFD01N001",
+        ("prfd.mirae_sale_available",),
+        implicit_eq_value="Y",
+    ),
+    FieldAlias(
+        "당사판매여부",
+        "PRFD01N001",
+        ("prfd.mirae_sale_available",),
+    ),
+    FieldAlias(
         "제로인펀드투자위험등급명",
         "PRFD01N001",
         ("prfd.risk_grade_name",),
@@ -145,16 +206,36 @@ _FIELD_ALIASES: tuple[FieldAlias, ...] = (
     ),
     FieldAlias("제로인유형명", "PRFD01N001", ("prfd.zero_in_type_name",)),
     FieldAlias("순자산", "PRFD01N001", ("prfd.net_assets",)),
+    FieldAlias("1개월수익률", "PRFD01N001", ("prfd.return_1m",)),
+    FieldAlias("3개월수익률", "PRFD01N001", ("prfd.return_3m",)),
+    FieldAlias("1년수익률", "PRFD01N001", ("prfd.return_1y",)),
 )
 
 
 def product_alias_matches(text: str) -> tuple[ProductAlias, ...]:
     normalized = normalize_alias_text(text)
-    return tuple(
+    candidates = tuple(
         item
         for item in _PRODUCT_ALIASES
         if normalize_alias_text(item.alias) in normalized
+        and (
+            item.alias != "펀드"
+            or bool(field_alias_matches("PRFD01N001", text))
+        )
     )
+    span_selected = _select_longest_matches(candidates, normalized)
+    # A generic product word can also occur inside an explicit product value
+    # (for example, "공모펀드 상품명 글로벌성장펀드...").  Once a more
+    # specific alias has identified the same logical scope, keep only that
+    # scope's longest alias. Distinct logical scopes remain untouched.
+    by_scope: dict[str, ProductAlias] = {}
+    for candidate in span_selected:
+        current = by_scope.get(candidate.logical_table_id)
+        if current is None or len(normalize_alias_text(candidate.alias)) > len(
+            normalize_alias_text(current.alias)
+        ):
+            by_scope[candidate.logical_table_id] = candidate
+    return tuple(by_scope.values())
 
 
 def _find_occurrence_spans(needle: str, haystack: str) -> tuple[tuple[int, int], ...]:
@@ -175,9 +256,9 @@ def _find_occurrence_spans(needle: str, haystack: str) -> tuple[tuple[int, int],
 
 
 def _select_longest_matches(
-    candidates: tuple[FieldAlias, ...],
+    candidates: tuple[_AliasT, ...],
     normalized_query: str,
-) -> tuple[FieldAlias, ...]:
+) -> tuple[_AliasT, ...]:
     """Keep a matched alias only if it has an occurrence in the query text
     that is not fully nested inside a longer matched alias's occurrence.
 
@@ -210,7 +291,7 @@ def _select_longest_matches(
         _find_occurrence_spans(text, normalized_query) for _, text in occurrences
     )
 
-    kept: list[FieldAlias] = []
+    kept: list[_AliasT] = []
     for index, (candidate, text) in enumerate(occurrences):
         own_spans = spans_by_index[index]
         has_uncovered_occurrence = False

@@ -116,6 +116,19 @@ async def answer(
             generation_provider=generation_result.provider,
             generation_used_fallback=generation_result.used_fallback,
             generation_validation_status=generation_result.validation_status.value,
+            generation_validation_reason=(
+                generation_result.validation_reason.value
+                if generation_result.validation_reason is not None
+                else None
+            ),
+            generation_transport_error_code=generation_result.transport_error_code,
+            generation_transport_exception_class=(
+                generation_result.transport_exception_class
+            ),
+            generation_transport_http_status=generation_result.transport_http_status,
+            generation_transport_ncp_status_code=(
+                generation_result.transport_ncp_status_code
+            ),
             generation_elapsed_ms=round(generation_result.elapsed_ms, 3),
         ).as_extra(),
     )

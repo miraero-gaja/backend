@@ -4,12 +4,16 @@ from collections.abc import Mapping
 
 from app.agent.contracts import QueryContract, RouteHint, ToolResult
 from app.core.deadline import Deadline, DeadlineExceeded
+from app.core.logging import LogFields, get_logger
 from app.evidence.models import ReasonCode
 from app.tools import ToolAdapter, query_fingerprint
 from app.tools.cost_rules import CostRulesToolAdapter
 from app.tools.graph import GraphToolAdapter
 from app.tools.structured import StructuredToolAdapter
 from app.tools.vector import VectorToolAdapter
+
+
+logger = get_logger(__name__)
 
 
 class ToolExecutor:
@@ -44,7 +48,16 @@ class ToolExecutor:
             )
         except DeadlineExceeded:
             return (self._failure(query, adapter.tool_name, "deadline_exceeded"),)
-        except Exception:
+        except Exception as error:
+            logger.error(
+                "tool_execution_failed",
+                extra=LogFields(
+                    request_id=query.request_id,
+                    route=route.value,
+                    error_code="TOOL_EXECUTION_FAILED",
+                    exception_class=type(error).__name__,
+                ).as_extra(),
+            )
             return (self._failure(query, adapter.tool_name, "tool_execution_failed"),)
 
     @staticmethod

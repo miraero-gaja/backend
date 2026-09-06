@@ -14,6 +14,8 @@ SETTING_NAMES = (
     "HCX_ENABLED",
     "HCX_API_KEY",
     "HCX_API_URL",
+    "HCX_HTTP_TIMEOUT_SECONDS",
+    "HCX_GENERATION_TIMEOUT_SECONDS",
     "DATABASE_URL",
 )
 
@@ -32,6 +34,8 @@ def test_settings_can_start_without_external_services() -> None:
 
     assert settings.hcx_enabled is False
     assert 0 < settings.answer_deadline_seconds <= 60
+    assert settings.hcx_http_timeout_seconds == 8.0
+    assert settings.hcx_generation_timeout_seconds == 10.0
 
 
 def test_settings_exposes_only_the_declared_foundation_fields() -> None:
@@ -42,6 +46,8 @@ def test_settings_exposes_only_the_declared_foundation_fields() -> None:
         "hcx_enabled",
         "hcx_api_key",
         "hcx_api_url",
+        "hcx_http_timeout_seconds",
+        "hcx_generation_timeout_seconds",
         "database_url",
     }
 

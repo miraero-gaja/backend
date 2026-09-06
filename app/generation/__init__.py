@@ -3,6 +3,7 @@
 from .contracts import (
     GenerationInput,
     GenerationResult,
+    GenerationValidationReason,
     GenerationValidationStatus,
 )
 from .generators import (
@@ -19,6 +20,7 @@ __all__ = [
     "EvidenceOnlyPrompt",
     "GenerationInput",
     "GenerationResult",
+    "GenerationValidationReason",
     "GenerationValidationStatus",
     "HyperClovaAnswerGenerator",
     "PostGenerationValidation",
