@@ -224,7 +224,21 @@ def test_answer_unknown_field_fails_closed() -> None:
         "status": "UNSUPPORTED",
     }
     assert backend.calls == []
-    assert "승인된 structured field" in payload["answer"]
+    answer = payload["answer"].strip()
+    assert answer
+    assert any(
+        fail_closed_phrase in answer
+        for fail_closed_phrase in (
+            "지원되지",
+            "지원할 수 없",
+            "제공되지",
+            "제공할 수 없",
+            "확인할 수 없",
+        )
+    )
+    assert "변동성을 지원합니다" not in answer
+    assert "변동성 조회를 지원합니다" not in answer
+    assert "변동성 비교가 가능합니다" not in answer
 
 
 def test_answer_ignores_extra_query_parameter() -> None:

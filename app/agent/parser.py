@@ -39,7 +39,10 @@ _ASCENDING = re.compile(
     r"(?:작은\s*(?:순서|순|상품)|낮은\s*순|오름차순)",
     re.IGNORECASE,
 )
-_TRAILING_COUNT = re.compile(r"(\d+)\s*개")
+_TRAILING_COUNT = re.compile(
+    r"(\d+)\s*개(?:\s*(?:상품|펀드|ETF))?\s*$",
+    re.IGNORECASE,
+)
 
 
 def _spaced_alias_pattern(alias: str) -> str:
@@ -301,7 +304,8 @@ class QueryParser:
                 understanding=understanding,
             )
 
-        field_alias = fields[0].alias if fields else None
+        field = fields[0] if fields else None
+        field_alias = field.alias if field is not None else None
         if field_alias is not None:
             trace.append(f"필드 표현: {field_alias}")
         condition = (
@@ -316,6 +320,19 @@ class QueryParser:
             if field_alias is not None
             else None
         )
+        if (
+            condition is None
+            and field is not None
+            and field.implicit_eq_value is not None
+        ):
+            condition = ParsedFilterCondition(
+                field_alias=field.alias,
+                operator=FilterOperator.EQ,
+                value=field.implicit_eq_value,
+            )
+            trace.append(
+                f"명시 표현 grounding: {field.alias} = {field.implicit_eq_value}"
+            )
 
         explicit_top_match = _EXPLICIT_TOP_N.search(question)
         descending = (

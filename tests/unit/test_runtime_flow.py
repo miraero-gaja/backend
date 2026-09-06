@@ -2,6 +2,7 @@
 
 import asyncio
 
+import app.agent.executor as executor_module
 from app.agent.contracts import QueryContract, RouteHint, ToolResult
 from app.agent.executor import ToolExecutor
 from app.agent.grounder import OntologyGrounder
@@ -53,6 +54,58 @@ def test_executor_enforces_deadline_around_adapter() -> None:
     assert len(results) == 1
     assert results[0].error_code is ReasonCode.TOOL_FAILURE
     assert results[0].warnings == ("deadline_exceeded",)
+
+
+def test_executor_logs_only_safe_exception_metadata(monkeypatch) -> None:
+    class FailingAdapter:
+        tool_name = "structured"
+
+        async def execute(self, query, deadline):
+            del query, deadline
+            raise RuntimeError("must-not-appear: postgresql://user:secret@host/db")
+
+    class RecordingLogger:
+        def __init__(self) -> None:
+            self.calls = []
+
+        def error(self, message, *, extra) -> None:
+            self.calls.append((message, extra))
+
+    logger = RecordingLogger()
+    monkeypatch.setattr(executor_module, "logger", logger)
+    query = _query(RouteHint.STRUCTURED)
+    executor = ToolExecutor({RouteHint.STRUCTURED: FailingAdapter()})
+
+    results = asyncio.run(
+        executor.execute(query, RouteHint.STRUCTURED, Deadline.after(1))
+    )
+
+    assert results[0].error_code is ReasonCode.TOOL_FAILURE
+    assert results[0].warnings == ("tool_execution_failed",)
+    assert logger.calls == [
+        (
+            "tool_execution_failed",
+            {
+                "request_id": query.request_id,
+                "question_id": None,
+                "route": "structured",
+                "elapsed_ms": None,
+                "support_status": None,
+                "error_code": "TOOL_EXECUTION_FAILED",
+                "exception_class": "RuntimeError",
+                "generation_provider": None,
+                "generation_used_fallback": None,
+                "generation_validation_status": None,
+                "generation_validation_reason": None,
+                "generation_transport_error_code": None,
+                "generation_transport_exception_class": None,
+                "generation_transport_http_status": None,
+                "generation_transport_ncp_status_code": None,
+                "generation_elapsed_ms": None,
+            },
+        )
+    ]
+    assert "secret" not in repr(logger.calls)
 
 
 def test_unconnected_tool_adapter_returns_no_candidates() -> None:

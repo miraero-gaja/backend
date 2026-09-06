@@ -84,6 +84,13 @@ class StructuredQueryExecutor:
         compiled = self._compiler.compile(query)
         rows = tuple(await self._backend.fetch_all(compiled.sql, compiled.parameters))
         if not compiled.is_count:
+            for row in rows:
+                for selection in compiled.zero_exclusion_fields:
+                    value = row.get(selection.value_alias)
+                    if value is None or value == 0:
+                        raise StructuredQueryValidationError(
+                            "null-or-zero metric re-entered structured evidence"
+                        )
             # The SQL compiler already applies the same predicates. Keep this
             # second boundary so a stale/mocked backend cannot turn a registered
             # source-availability sentinel into answer evidence.

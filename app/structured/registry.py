@@ -66,6 +66,7 @@ class TrustedField:
     null_equivalent_literals: tuple[str, ...] = ()
     source_literal_classification: str | None = None
     semantic_literal_classification: str | None = None
+    zero_exclusion_operations: frozenset[str] = frozenset()
 
     def __post_init__(self) -> None:
         if not self.semantic_key or not self.semantic_key.strip():
@@ -114,6 +115,22 @@ class TrustedField:
                 raise StructuredRegistryError(
                     f"unsupported semantic literal classification for {self.semantic_key}"
                 )
+        zero_operations = frozenset(
+            str(operation).upper()
+            for operation in self.zero_exclusion_operations
+        )
+        if zero_operations - operations:
+            raise StructuredRegistryError(
+                f"zero-exclusion operations are not approved for {self.semantic_key}"
+            )
+        if zero_operations and self.target_type not in {
+            TargetType.DECIMAL,
+            TargetType.INTEGER,
+        }:
+            raise StructuredRegistryError(
+                f"zero-exclusion policy requires a numeric field: {self.semantic_key}"
+            )
+        object.__setattr__(self, "zero_exclusion_operations", zero_operations)
 
     def is_null_equivalent(self, value: Any) -> bool:
         return isinstance(value, str) and value in self.null_equivalent_literals
@@ -216,6 +233,9 @@ def build_trusted_query_registry(
         null_equivalent_policy = _record_value(
             mapping, "null_equivalent_policy"
         )
+        zero_exclusion_policy = _record_value(
+            mapping, "zero_exclusion_policy"
+        )
         trusted_fields.append(
             TrustedField(
                 semantic_key=str(_record_value(mapping, "semantic_field_key") or ""),
@@ -250,6 +270,16 @@ def build_trusted_query_registry(
                     )
                     if null_equivalent_policy is not None
                     else None
+                ),
+                zero_exclusion_operations=frozenset(
+                    str(value)
+                    for value in (
+                        _record_value(
+                            zero_exclusion_policy,
+                            "criterion_operations",
+                        )
+                        or ()
+                    )
                 ),
             )
         )
