@@ -243,7 +243,10 @@ def _configured_answer_generator(settings: Settings) -> AnswerGenerator:
             extra=LogFields(error_code="HCX_CONFIG_INVALID").as_extra(),
         )
         return DeterministicAnswerGenerator()
-    return HyperClovaAnswerGenerator(transport)
+    return HyperClovaAnswerGenerator(
+        transport,
+        timeout_seconds=settings.hcx_generation_timeout_seconds,
+    )
 
 
 @dataclass(frozen=True, slots=True)

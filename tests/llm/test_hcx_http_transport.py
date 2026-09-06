@@ -16,6 +16,7 @@ from app.evidence.models import EvidenceItem, ReasonCode, SupportStatus
 from app.generation import (
     DeterministicAnswerGenerator,
     GenerationInput,
+    GenerationValidationReason,
     GenerationValidationStatus,
     HyperClovaAnswerGenerator,
 )
@@ -24,9 +25,15 @@ from app.main import create_app
 
 
 class FakeResponse:
-    def __init__(self, body: bytes, status: int = 200) -> None:
+    def __init__(
+        self,
+        body: bytes,
+        status: int = 200,
+        read_error: Exception | None = None,
+    ) -> None:
         self.body = body
         self.status = status
+        self.read_error = read_error
 
     def __enter__(self):
         return self
@@ -36,6 +43,8 @@ class FakeResponse:
         return False
 
     def read(self, size: int = -1) -> bytes:
+        if self.read_error is not None:
+            raise self.read_error
         return self.body if size < 0 else self.body[:size]
 
     def close(self) -> None:
@@ -256,7 +265,7 @@ def test_valid_hcx_http_response_reaches_post_validator() -> None:
     candidate = json.dumps(
         {
             "status": "SUPPORTED",
-            "answer": "상품명[{{E002}}]의 값은 {{E003}}입니다.",
+            "answer": "상품명[{{E002}}]의 값은 {{NUM_001}}입니다.",
         },
         ensure_ascii=False,
     )
@@ -271,15 +280,23 @@ def test_valid_hcx_http_response_reaches_post_validator() -> None:
     request, timeout = opener.calls[0]
     payload = json.loads(request.data.decode("utf-8"))
     headers = {name.lower(): value for name, value in request.header_items()}
-    assert timeout == 4.0
+    assert timeout == 8.0
     assert request.method == "POST"
     assert headers["authorization"].startswith("Bearer ")
     assert headers["x-ncp-clovastudio-request-id"]
     assert headers["content-type"] == "application/json; charset=utf-8"
     assert headers["accept"] == "application/json"
-    assert payload["messages"][0]["content"].startswith("[SYSTEM]\n")
-    assert "raw_record" not in payload["messages"][0]["content"]
-    assert "profiling" not in payload["messages"][0]["content"]
+    assert [message["role"] for message in payload["messages"]] == [
+        "system",
+        "user",
+    ]
+    assert "[SYSTEM]" not in payload["messages"][0]["content"]
+    assert "[INPUT]" not in payload["messages"][1]["content"]
+    combined_prompt = "\n".join(
+        message["content"] for message in payload["messages"]
+    )
+    assert "raw_record" not in combined_prompt
+    assert "profiling" not in combined_prompt
     assert set(payload) == {
         "messages",
         "topP",
@@ -291,6 +308,46 @@ def test_valid_hcx_http_response_reaches_post_validator() -> None:
         "includeAiFilters",
     }
     assert payload["maxTokens"] == 256
+
+
+def test_hcx_timeout_settings_have_safe_defaults_and_env_overrides(
+    monkeypatch,
+) -> None:
+    defaults = Settings(_env_file=None)
+
+    assert defaults.hcx_http_timeout_seconds == 8.0
+    assert defaults.hcx_generation_timeout_seconds == 10.0
+
+    monkeypatch.setenv("HCX_HTTP_TIMEOUT_SECONDS", "9.5")
+    monkeypatch.setenv("HCX_GENERATION_TIMEOUT_SECONDS", "12")
+    configured = Settings(_env_file=None)
+
+    assert configured.hcx_http_timeout_seconds == 9.5
+    assert configured.hcx_generation_timeout_seconds == 12.0
+
+
+def test_hcx_timeout_settings_are_wired_to_transport_and_generator(
+    monkeypatch,
+) -> None:
+    transport = StatusEchoTransport()
+    monkeypatch.setattr(
+        "app.composition.build_hcx_client",
+        lambda _settings: transport,
+    )
+    application = create_app(
+        settings=Settings(
+            _env_file=None,
+            hcx_enabled=True,
+            hcx_api_key=_secret(),
+            hcx_api_url="https://clovastudio.invalid/v3/chat-completions/HCX-005",
+            hcx_generation_timeout_seconds=12.5,
+        ),
+        structured_backend=EmptyBackend(),
+    )
+
+    generator = application.state.runtime.answer_generator
+    assert isinstance(generator, HyperClovaAnswerGenerator)
+    assert generator._timeout_seconds == 12.5
 
 
 @pytest.mark.parametrize("status", (401, 403, 429, 500))
@@ -307,6 +364,10 @@ def test_hcx_http_errors_use_fallback(status: int) -> None:
     assert result.answer == _input().deterministic_fallback_answer
     assert result.used_fallback is True
     assert result.validation_status is GenerationValidationStatus.TRANSPORT_ERROR
+    assert result.validation_reason is GenerationValidationReason.TRANSPORT_HTTP_ERROR
+    assert result.transport_error_code == "HCX_HTTP_ERROR"
+    assert result.transport_exception_class == "HTTPError"
+    assert result.transport_http_status == status
 
 
 @pytest.mark.parametrize(
@@ -318,6 +379,55 @@ def test_timeout_or_connection_error_uses_fallback(error) -> None:
 
     assert result.used_fallback is True
     assert result.validation_status is GenerationValidationStatus.TRANSPORT_ERROR
+    if isinstance(error, TimeoutError):
+        assert (
+            result.validation_reason
+            is GenerationValidationReason.TRANSPORT_OPEN_TIMEOUT
+        )
+        assert result.transport_error_code == "HCX_OPEN_TIMEOUT"
+        assert result.transport_exception_class == "TimeoutError"
+    else:
+        assert (
+            result.validation_reason
+            is GenerationValidationReason.TRANSPORT_CONNECTION_ERROR
+        )
+        assert result.transport_error_code == "HCX_CONNECTION_ERROR"
+        assert result.transport_exception_class == "URLError"
+    assert result.transport_http_status is None
+
+
+def test_response_body_timeout_is_classified_as_read_timeout() -> None:
+    response = FakeResponse(b"", read_error=TimeoutError("read timed out"))
+
+    result = _generator_result(FakeOpenUrl(response))
+
+    assert result.used_fallback is True
+    assert result.validation_status is GenerationValidationStatus.TRANSPORT_ERROR
+    assert result.validation_reason is GenerationValidationReason.TRANSPORT_READ_TIMEOUT
+    assert result.transport_error_code == "HCX_READ_TIMEOUT"
+    assert result.transport_exception_class == "TimeoutError"
+    assert result.transport_http_status is None
+
+
+def test_http_error_records_only_safe_ncp_status_code() -> None:
+    response_body = json.dumps(
+        {"status": {"code": "42901", "message": "sensitive detail"}},
+        ensure_ascii=False,
+    ).encode("utf-8")
+    error = HTTPError(
+        "https://clovastudio.invalid/redacted",
+        429,
+        "request failed",
+        hdrs=None,
+        fp=FakeResponse(response_body),
+    )
+
+    result = _generator_result(FakeOpenUrl(error=error))
+
+    assert result.validation_reason is GenerationValidationReason.TRANSPORT_HTTP_ERROR
+    assert result.transport_http_status == 429
+    assert result.transport_ncp_status_code == "42901"
+    assert "sensitive detail" not in repr(result)
 
 
 @pytest.mark.parametrize(
@@ -333,6 +443,7 @@ def test_malformed_or_empty_hcx_response_uses_fallback(body: bytes) -> None:
 
     assert result.used_fallback is True
     assert result.validation_status is GenerationValidationStatus.TRANSPORT_ERROR
+    assert result.validation_reason is GenerationValidationReason.TRANSPORT_RESPONSE_PARSE
 
 
 def test_hcx_candidate_outside_evidence_is_rejected_after_http() -> None:
@@ -373,7 +484,10 @@ def test_api_key_never_appears_in_repr_or_transport_error() -> None:
     combined = f"{client!r}\n{captured.value}"
     assert key not in combined
     assert response_body.decode("utf-8") not in combined
-    assert str(captured.value) == "hcx_http_error status=401"
+    assert str(captured.value) == "HCX_HTTP_ERROR"
+    assert captured.value.exception_class == "HTTPError"
+    assert captured.value.http_status == 401
+    assert captured.value.ncp_status_code is None
 
 
 @pytest.mark.parametrize(

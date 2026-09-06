@@ -33,6 +33,14 @@ class Settings(BaseSettings):
         str | None,
         Field(validation_alias="HCX_API_URL"),
     ] = None
+    hcx_http_timeout_seconds: Annotated[
+        float,
+        Field(validation_alias="HCX_HTTP_TIMEOUT_SECONDS", gt=0, lt=60),
+    ] = 8.0
+    hcx_generation_timeout_seconds: Annotated[
+        float,
+        Field(validation_alias="HCX_GENERATION_TIMEOUT_SECONDS", gt=0, le=60),
+    ] = 10.0
     database_url: Annotated[
         SecretStr | None,
         Field(validation_alias="DATABASE_URL"),

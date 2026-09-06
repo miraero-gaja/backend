@@ -2,6 +2,7 @@
 
 import asyncio
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
@@ -17,7 +18,19 @@ from app.structured import (
     StructuredQueryStatus,
     StructuredQueryValidationError,
 )
+from mappings.core import CORE_FIELD_MAPPINGS
+from mappings.semantic import SEMANTIC_FIELD_APPROVALS
+from mappings.semantic.models import OperationStatus
 from pipeline.structured import OFFICIAL_STAGING_COLUMN_TOTAL
+
+
+CANONICAL_G2B_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "outputs"
+    / "reports"
+    / "g2b"
+    / "g2b_structured_schema.json"
+)
 
 
 class FakeBackend:
@@ -180,3 +193,84 @@ def test_application_layered_planner_preserves_existing_g2_path() -> None:
     assert 'FROM "structured_staging"."stg_pref01n001"' in compiled.sql
     assert compiled.parameters == ("TEST-CODE",)
     assert compiled.semantic_gate_trace == ()
+
+
+def test_canonical_runtime_physical_columns_match_all_effective_mappings() -> None:
+    runtime = create_app(
+        settings=Settings(_env_file=None, database_url=None),
+        structured_backend=FakeBackend(),
+        structured_schema_path=CANONICAL_G2B_SCHEMA_PATH,
+    ).state.runtime
+    schema = runtime.staging_schema
+
+    g2_scopes: set[str] = set()
+    for mapping in CORE_FIELD_MAPPINGS:
+        if mapping.semantic_status != "CONFIRMED":
+            continue
+        g2_scopes.add(mapping.logical_table_id)
+        catalog_column = schema.table_for(mapping.logical_table_id).column_for(
+            mapping.qualified_name
+        )
+        trusted_field = runtime.g2_registry.field(
+            mapping.logical_table_id,
+            mapping.semantic_field_key,
+        )
+        assert trusted_field is not None
+        assert trusted_field.physical_column == catalog_column.db_column_name
+
+    assert g2_scopes == {
+        "PRBD01N001",
+        "PREF01N001",
+        "PREF02N001",
+        "PRFD01N001",
+    }
+
+    for approval in SEMANTIC_FIELD_APPROVALS:
+        catalog_column = schema.table_for(approval.logical_table_id).column_for(
+            approval.qualified_name
+        )
+        open_operations = {
+            operation.operation
+            for operation in approval.operations
+            if operation.status is OperationStatus.OPEN
+        }
+        if "PROJECT" not in open_operations:
+            continue
+        compiled = runtime.semantic_planner.compile(
+            StructuredQueryContract(
+                product_scope=approval.logical_table_id,
+                projections=(approval.semantic_key,),
+            )
+        )
+        selected = compiled.projected_fields[0].field
+        assert selected.qualified_name == approval.qualified_name
+        assert selected.physical_column == catalog_column.db_column_name
+
+
+def test_canonical_pref02_projection_ordinals_are_not_synthetic() -> None:
+    runtime = create_app(
+        settings=Settings(_env_file=None, database_url=None),
+        structured_backend=FakeBackend(),
+        structured_schema_path=CANONICAL_G2B_SCHEMA_PATH,
+    ).state.runtime
+    query = StructuredQueryContract(
+        product_scope="PREF02N001",
+        projections=(
+            "pref02.product_identifier",
+            "pref02.product_name",
+            "pref02.aum_latest",
+        ),
+        sort={"field": "pref02.aum_latest", "direction": "DESC"},
+        limit=3,
+    )
+
+    compiled = runtime.structured_planner.compile(query)
+
+    assert {
+        selection.field.semantic_key: selection.field.physical_column
+        for selection in compiled.projected_fields
+    } == {
+        "pref02.product_identifier": "c032_pd_itm_no",
+        "pref02.product_name": "c039_pd_nm",
+        "pref02.aum_latest": "c019_du_last_aum",
+    }

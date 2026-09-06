@@ -381,11 +381,13 @@ def test_aliases_match_explicit_registry_without_approving_operations() -> None:
         graph, subject = indexed[key]
         observed = {v.value for v in graph.objects(subject, MA + "alias") if isinstance(v, Literal)}
         assert observed == expected
-    products = {alias.logical_table_id: alias.alias for alias in _PRODUCT_ALIASES}
+    products: dict[str, set[str]] = {}
+    for alias in _PRODUCT_ALIASES:
+        products.setdefault(alias.logical_table_id, set()).add(alias.alias)
     for name, table in TABLES.items():
         graph = graphs[name]
         contract = graph.subjects(RDF_TYPE, MA + "DomainOntology")[0]
-        assert one_literal(graph, contract, "alias") == products[table]
+        assert literal_set(graph, contract, "alias") == products[table]
 
 
 def test_pref02_aum_and_expense_ratio_remain_fail_closed() -> None:
