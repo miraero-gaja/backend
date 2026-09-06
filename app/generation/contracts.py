@@ -22,6 +22,31 @@ class GenerationValidationStatus(StrEnum):
     TRANSPORT_ERROR = "TRANSPORT_ERROR"
 
 
+class GenerationValidationReason(StrEnum):
+    """Safe internal detail for coarse generation validation statuses."""
+
+    NON_JSON_OUTPUT = "NON_JSON_OUTPUT"
+    INVALID_JSON_SHAPE = "INVALID_JSON_SHAPE"
+    MISSING_EVIDENCE_PLACEHOLDER = "MISSING_EVIDENCE_PLACEHOLDER"
+    ANSWER_LENGTH_INVALID = "ANSWER_LENGTH_INVALID"
+    MARKDOWN_JSON_WRAPPER = "MARKDOWN_JSON_WRAPPER"
+    FORMAT_REPAIR_ACCEPTED = "FORMAT_REPAIR_ACCEPTED"
+    EVIDENCE_LITERAL_NORMALIZED = "EVIDENCE_LITERAL_NORMALIZED"
+    UNKNOWN_PLACEHOLDER = "UNKNOWN_PLACEHOLDER"
+    ENTITY_MARKER_ROLE_MISMATCH = "ENTITY_MARKER_ROLE_MISMATCH"
+    LITERAL_EVIDENCE_ENTITY = "LITERAL_EVIDENCE_ENTITY"
+    UNMARKED_IDENTIFIER = "UNMARKED_IDENTIFIER"
+    UNMARKED_PRODUCT_REFERENCE = "UNMARKED_PRODUCT_REFERENCE"
+    UNSUPPORTED_FINANCIAL_CLAIM = "UNSUPPORTED_FINANCIAL_CLAIM"
+    ENTITY_IN_UNSUPPORTED_RESPONSE = "ENTITY_IN_UNSUPPORTED_RESPONSE"
+    TRANSPORT_EXCEPTION = "TRANSPORT_EXCEPTION"
+    TRANSPORT_OPEN_TIMEOUT = "TRANSPORT_OPEN_TIMEOUT"
+    TRANSPORT_READ_TIMEOUT = "TRANSPORT_READ_TIMEOUT"
+    TRANSPORT_HTTP_ERROR = "TRANSPORT_HTTP_ERROR"
+    TRANSPORT_RESPONSE_PARSE = "TRANSPORT_RESPONSE_PARSE"
+    TRANSPORT_CONNECTION_ERROR = "TRANSPORT_CONNECTION_ERROR"
+
+
 class GenerationInput(BaseModel):
     """Only validated public facts may cross the generation boundary."""
 
@@ -86,11 +111,17 @@ class GenerationResult(BaseModel):
     provider: str = Field(min_length=1)
     used_fallback: bool
     validation_status: GenerationValidationStatus
+    validation_reason: GenerationValidationReason | None = None
+    transport_error_code: str | None = None
+    transport_exception_class: str | None = None
+    transport_http_status: int | None = Field(default=None, ge=100, le=599)
+    transport_ncp_status_code: str | None = Field(default=None, max_length=64)
     elapsed_ms: float = Field(ge=0)
 
 
 __all__ = [
     "GenerationInput",
     "GenerationResult",
+    "GenerationValidationReason",
     "GenerationValidationStatus",
 ]

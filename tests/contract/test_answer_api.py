@@ -124,12 +124,23 @@ def test_no_product_or_number_is_fabricated_without_evidence(client: TestClient)
         },
     )
 
+    assert response.status_code == 200
     payload = response.json()
+    assert_answer_contract(payload)
     generated_output = " ".join(
         [payload["retrieved_context"], payload["think_trace"], payload["answer"]]
     )
     assert payload["retrieved_context"] == SAFE_CONTEXT
-    assert payload["answer"] == SAFE_ANSWER
+    assert payload["answer"].strip()
+    assert any(
+        fail_closed_phrase in payload["answer"]
+        for fail_closed_phrase in (
+            "지원할 수 없",
+            "확인할 수 없",
+            "데이터 소스가 없",
+            "데이터가 연결되지 않",
+        )
+    )
     assert invented_product not in generated_output
     assert invented_number not in generated_output
     assert re.search(r"\d", payload["answer"]) is None

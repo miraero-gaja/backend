@@ -157,6 +157,7 @@ class CompiledStructuredQuery:
     projected_fields: tuple[SelectedField, ...]
     evidence_fields: tuple[SelectedField, ...]
     aggregate: AggregateFunction | None
+    zero_exclusion_fields: tuple[SelectedField, ...] = ()
     planning_status: StructuredQueryStatus = StructuredQueryStatus.SUPPORTED
     semantic_gate_trace: tuple[SemanticGateTrace, ...] = ()
 
@@ -205,6 +206,7 @@ class StructuredQueryCompiler:
         parameters: list[Any] = []
         predicates: list[str] = []
         filter_fields: list[tuple[TrustedField, str]] = []
+        zero_guard_fields: dict[str, TrustedField] = {}
         for index, clause in enumerate(query.filters, start=1):
             field = self._field(
                 query.product_scope, clause.field, clause.operator.value
@@ -216,11 +218,23 @@ class StructuredQueryCompiler:
             )
             parameters.append(bound_value)
             filter_fields.append((field, f"filter_{index}"))
+            if clause.operator.value in field.zero_exclusion_operations:
+                zero_guard_fields.setdefault(field.semantic_key, field)
+
+        if query.sort is not None:
+            sort_field = self._field(
+                query.product_scope,
+                query.sort.field,
+                "SORT",
+            )
+            if "SORT" in sort_field.zero_exclusion_operations:
+                zero_guard_fields.setdefault(sort_field.semantic_key, sort_field)
 
         if query.aggregate is AggregateFunction.COUNT:
             select_sql = 'COUNT(*) AS "__count"'
             projected: tuple[SelectedField, ...] = ()
             evidence: tuple[SelectedField, ...] = ()
+            zero_exclusion_fields: tuple[SelectedField, ...] = ()
         else:
             # Projection is permitted by CONFIRMED membership itself.  It must
             # not borrow a comparison permission: some official metrics are
@@ -255,6 +269,10 @@ class StructuredQueryCompiler:
             )
             by_key = {selection.field.semantic_key: selection for selection in evidence}
             projected = tuple(by_key[field.semantic_key] for field in projection_fields)
+            zero_exclusion_fields = tuple(
+                by_key[field.semantic_key]
+                for field in zero_guard_fields.values()
+            )
             technical_selects = [
                 f'{_quote(table.source_row_id_column)} AS "__source_row_id"',
                 f'{_quote(table.logical_table_id_column)} AS "__logical_table_id"',
@@ -291,6 +309,17 @@ class StructuredQueryCompiler:
             )
             parameters.extend(field.null_equivalent_literals)
 
+        for field in zero_guard_fields.values():
+            physical_column = _quote(field.physical_column)
+            predicates.append(
+                f"({physical_column} IS NOT NULL AND {physical_column} <> %s)"
+            )
+            parameters.append(
+                Decimal(0)
+                if field.target_type is TargetType.DECIMAL
+                else 0
+            )
+
         sql_parts = [
             f"SELECT {select_sql}",
             f"FROM {_qualified_table(table)}",
@@ -320,6 +349,7 @@ class StructuredQueryCompiler:
             projected_fields=projected,
             evidence_fields=evidence,
             aggregate=query.aggregate,
+            zero_exclusion_fields=zero_exclusion_fields,
         )
 
 

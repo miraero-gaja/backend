@@ -62,6 +62,24 @@ class FieldNullEquivalentPolicy:
             raise ValueError("null-equivalent literals must be unique")
 
 
+@dataclass(frozen=True, slots=True)
+class FieldZeroExclusionPolicy:
+    """Query-time policy for source zero on an explicitly approved metric."""
+
+    criterion_operations: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if not self.criterion_operations:
+            raise ValueError("zero-exclusion operations must not be empty")
+        if len(set(self.criterion_operations)) != len(self.criterion_operations):
+            raise ValueError("zero-exclusion operations must be unique")
+        invalid = set(self.criterion_operations) - ALLOWED_OPERATIONS
+        if invalid:
+            raise ValueError(
+                f"unsupported zero-exclusion operations: {sorted(invalid)}"
+            )
+
+
 ALLOWED_OPERATIONS = frozenset({"EQ", "NE", "LT", "LE", "GT", "GE", "SORT"})
 SUPPORTED_TARGET_TYPES = frozenset(
     {"TEXT", "DECIMAL", "INTEGER", "DATE", "TIMESTAMP"}
@@ -90,6 +108,7 @@ class CoreFieldMapping:
     unit_status: CoreUnitStatus
     notes: str
     null_equivalent_policy: FieldNullEquivalentPolicy | None = None
+    zero_exclusion_policy: FieldZeroExclusionPolicy | None = None
 
     def __post_init__(self) -> None:
         if not _SEMANTIC_KEY_PATTERN.fullmatch(self.semantic_field_key):
@@ -161,6 +180,22 @@ class CoreFieldMapping:
                     "null-equivalent policy requires a CONFIRMED field"
                 )
 
+        if self.zero_exclusion_policy is not None:
+            if self.target_type not in {"DECIMAL", "INTEGER"}:
+                raise ValueError(
+                    "zero-exclusion policy is allowed only for numeric fields"
+                )
+            if self.semantic_status is not SemanticStatus.CONFIRMED:
+                raise ValueError(
+                    "zero-exclusion policy requires a CONFIRMED field"
+                )
+            if not set(
+                self.zero_exclusion_policy.criterion_operations
+            ).issubset(self.allowed_operations):
+                raise ValueError(
+                    "zero-exclusion operations must already be approved"
+                )
+
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-ready record without changing the reviewed values."""
 
@@ -173,6 +208,12 @@ class CoreFieldMapping:
         else:
             record["null_equivalent_policy"]["literals"] = list(
                 self.null_equivalent_policy.literals
+            )
+        if self.zero_exclusion_policy is None:
+            record.pop("zero_exclusion_policy")
+        else:
+            record["zero_exclusion_policy"]["criterion_operations"] = list(
+                self.zero_exclusion_policy.criterion_operations
             )
         return record
 
@@ -188,6 +229,7 @@ def _field(
     unit_status: CoreUnitStatus,
     notes: str,
     null_equivalent_policy: FieldNullEquivalentPolicy | None = None,
+    zero_exclusion_policy: FieldZeroExclusionPolicy | None = None,
 ) -> CoreFieldMapping:
     return CoreFieldMapping(
         semantic_field_key=semantic_field_key,
@@ -201,6 +243,7 @@ def _field(
         unit_status=unit_status,
         notes=notes,
         null_equivalent_policy=null_equivalent_policy,
+        zero_exclusion_policy=zero_exclusion_policy,
     )
 
 
@@ -224,6 +267,10 @@ _SOURCE_NATIVE_ORDER_NOTE = (
     "Official description confirms the metric, but no official unit/scale "
     "is declared. Only source-native ordering is allowed; no conversion or "
     "threshold interpretation is performed."
+)
+
+_METRIC_SOURCE_ZERO_ON_SORT = FieldZeroExclusionPolicy(
+    criterion_operations=("SORT",),
 )
 
 _PREF02_BASE_INDEX_NULL_EQUIVALENT_POLICY = FieldNullEquivalentPolicy(
@@ -530,6 +577,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
+        zero_exclusion_policy=_METRIC_SOURCE_ZERO_ON_SORT,
     ),
     _field(
         "pref01.return_3m",
@@ -541,6 +589,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
+        zero_exclusion_policy=_METRIC_SOURCE_ZERO_ON_SORT,
     ),
     _field(
         "pref01.return_1y",
@@ -552,6 +601,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
+        zero_exclusion_policy=_METRIC_SOURCE_ZERO_ON_SORT,
     ),
     _field(
         "pref01.aum_latest",
@@ -862,6 +912,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
+        zero_exclusion_policy=_METRIC_SOURCE_ZERO_ON_SORT,
     ),
     _field(
         "prfd.return_3m",
@@ -873,6 +924,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
+        zero_exclusion_policy=_METRIC_SOURCE_ZERO_ON_SORT,
     ),
     _field(
         "prfd.return_1y",
@@ -884,6 +936,7 @@ CORE_FIELD_MAPPINGS: tuple[CoreFieldMapping, ...] = (
         SemanticStatus.CONFIRMED,
         CoreUnitStatus.UNMAPPED,
         _SOURCE_NATIVE_ORDER_NOTE,
+        zero_exclusion_policy=_METRIC_SOURCE_ZERO_ON_SORT,
     ),
 )
 
@@ -1070,6 +1123,9 @@ def build_core_field_registry() -> dict[str, Any]:
             "null_equivalents": (
                 "FIELD_SPECIFIC_SEMANTIC_ONLY_NO_RAW_OR_STAGING_REWRITE"
             ),
+            "metric_source_zero": (
+                "FIELD_AND_OPERATION_SPECIFIC_QUERY_TIME_EXCLUSION_ONLY"
+            ),
         },
         "entries": [
             entry.to_dict()
@@ -1085,6 +1141,7 @@ __all__ = [
     "CORE_FIELD_MAPPINGS",
     "FIELD_NULL_EQUIVALENT_POLICIES",
     "FieldNullEquivalentPolicy",
+    "FieldZeroExclusionPolicy",
     "CoreFieldMapping",
     "CoreUnitStatus",
     "OFFICIAL_COLUMN_COUNT",
